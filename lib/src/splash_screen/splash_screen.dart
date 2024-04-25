@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
       debugPrint(ex.toString());
       Navigator.of(context).pushNamed(MainPage.routeName);
 
-      Navigator.of(context).pushNamed(LoginPage.routeName);
+      // Navigator.of(context).pushNamed(LoginPage.routeName);
     }
   }
 

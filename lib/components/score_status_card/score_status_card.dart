@@ -63,8 +63,8 @@ class _ScoreStatusCardState extends State<ScoreStatusCard> {
 
   @override
   void dispose() {
-    _startListeningStep();
-    subscription?.cancel();
+    // _startListeningStep();
+    // subscription?.cancel();
     super.dispose();
   }
 

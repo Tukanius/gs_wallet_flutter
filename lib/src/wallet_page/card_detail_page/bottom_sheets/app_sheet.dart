@@ -80,61 +80,37 @@ void app(BuildContext context) {
                   ),
                 ),
                 SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(25),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: black.withOpacity(0.08),
-                      ),
-                      child: Center(
-                        child: Container(
-                          width: 70,
-                          height: 70,
-                          child: Image.asset(
-                            'assets/images/bank1.png',
-                            fit: BoxFit.cover,
-                          ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 70,
+                        height: 70,
+                        child: Image.asset(
+                          'assets/images/bank1.png',
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(25),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: black.withOpacity(0.08),
-                      ),
-                      child: Center(
-                        child: Container(
-                          width: 70,
-                          height: 70,
-                          child: Image.asset(
-                            'assets/images/bank2.png',
-                            fit: BoxFit.cover,
-                          ),
+                      Container(
+                        width: 70,
+                        height: 70,
+                        child: Image.asset(
+                          'assets/images/bank2.png',
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(25),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: black.withOpacity(0.08),
-                      ),
-                      child: Center(
-                        child: Container(
-                          width: 70,
-                          height: 70,
-                          child: Image.asset(
-                            'assets/images/bank3.png',
-                            fit: BoxFit.cover,
-                          ),
+                      Container(
+                        width: 70,
+                        height: 70,
+                        child: Image.asset(
+                          'assets/images/bank3.png',
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
