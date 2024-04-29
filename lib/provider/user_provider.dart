@@ -1,6 +1,6 @@
-// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:green_score/api/auth_api.dart';
+import 'package:green_score/api/user_api.dart';
 import 'package:green_score/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,6 +9,7 @@ class UserProvider extends ChangeNotifier {
 
   me(bool handler) async {
     user = await AuthApi().me(handler);
+    setAccessToken(user.accessToken);
     notifyListeners();
   }
 
@@ -22,12 +23,16 @@ class UserProvider extends ChangeNotifier {
     await prefs.remove("ACCESS_TOKEN");
   }
 
-  // me() async {
-  //   user = await AuthApi().me();
-  //   notifyListeners();
-  // }
   register(User data) async {
+    data.email!.toLowerCase().trim();
+    data.type = "USER";
     user = await AuthApi().register(data);
+    setAccessToken(user.accessToken);
+    return user;
+  }
+
+  editProfile(User data, String id) async {
+    user = await UserApi().editProfile(data, id);
     setAccessToken(user.accessToken);
     return user;
   }
@@ -47,5 +52,28 @@ class UserProvider extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("ACCESS_TOKEN");
     return token;
+  }
+
+  setPassword(User data) async {
+    user = await AuthApi().setPassword(data);
+    setAccessToken(user.accessToken);
+    return user;
+  }
+
+  forgetPass(User data) async {
+    user = await AuthApi().forgetPass(data);
+    setAccessToken(user.accessToken);
+    return user;
+  }
+
+  getOtp(String otpMethod, String email) async {
+    var res = await AuthApi().getPhoneOtp(otpMethod, email);
+    return res;
+  }
+
+  otpVerify(User data) async {
+    data = await AuthApi().otpVerify(data);
+    await setAccessToken(data.accessToken);
+    return data;
   }
 }

@@ -1,17 +1,23 @@
+import 'package:green_score/models/link.dart';
+
 part '../parts/merchant.dart';
 
 class Merchant {
   String? id;
+  String? type;
   String? name;
-  String? phone;
-  String? address;
+  String? image;
   String? registerNo;
+  String? taxNo;
   String? email;
-  int? balance;
+  String? phone;
+  String? phoneSecond;
+  String? address;
+  double? latitude;
+  double? longitude;
+  List<Links>? links;
   String? createdAt;
   String? updatedAt;
-  String? merchantStatus;
-  String? merchantStatusDate;
 
   Merchant({
     this.id,
@@ -20,11 +26,15 @@ class Merchant {
     this.address,
     this.registerNo,
     this.email,
-    this.balance,
     this.createdAt,
     this.updatedAt,
-    this.merchantStatus,
-    this.merchantStatusDate,
+    this.image,
+    this.latitude,
+    this.longitude,
+    this.phoneSecond,
+    this.taxNo,
+    this.type,
+    this.links,
   });
   static $fromJson(Map<String, dynamic> json) => _$MerchantFromJson(json);
 

@@ -11,23 +11,40 @@ import '../main.dart';
 
 class HttpRequest {
   // static const host = "http://dev-cb-admin.zto.mn";
-  static const host = 'http://192.168.1.18:9004';
+
+  static const gsAuth = 'http://192.168.1.15:30820';
+
+  static const gsMedia = 'http://192.168.1.15:30821';
+
+  static const gsMerchant = 'http://192.168.1.15:30823';
+
+  static const gsUser = 'http://192.168.1.15:30824';
+
+  static const gsWallet = 'http://192.168.1.15:30825';
 
   static const version = '/api';
-  // static const version = '/api/mobile';
-
-  static const uri = host;
-
-  // static const part = "/mobile";
 
   Dio dio = Dio();
 
-  Future<dynamic> request(String api, String method, dynamic data,
+  Future<dynamic> request(String api, String method, dynamic data, String? type,
       {bool handler = true, bool approve = false}) async {
     Response? response;
     final String uri;
 
-    uri = '$host$version$api';
+    if (type == "AUTH") {
+      uri = '$gsAuth$version$api';
+    } else if (type == "MEDIA") {
+      uri = '$gsMedia$version$api';
+    } else if (type == "MERCHANT") {
+      uri = '$gsMerchant$version$api';
+    } else if (type == "USER") {
+      uri = '$gsUser$version$api';
+    } else if (type == "WALLET") {
+      uri = '$gsWallet$version$api';
+    } else {
+      uri = '$gsAuth$version$api';
+    }
+
     debugPrint(uri);
 
     debugPrint('+++++++++++++++++++++++++++++++++++++++++++++++++++');
@@ -43,13 +60,13 @@ class HttpRequest {
 
       var token = await UserProvider.getAccessToken();
       var deviceToken = "";
-      // debugPrint('++++++++++++++++++++++deviceToken+++++++++++++++ ');
-      // debugPrint(deviceToken);
-      // debugPrint('+++++++++++++++++++++++deviceToken++++++++++++++ ');
+      // debugPrint('++++++++++++++++++++++token++++++++++++++++++');
+      // debugPrint(token);
+      // debugPrint('++++++++++++++++++++++token++++++++++++++++++');
 
       dio.options.headers = {
         'authorization': 'Bearer $token',
-        'device-token': '$deviceToken',
+        'device-token': deviceToken,
         'device_type': 'MOS',
         'device_imei': 'test-imei',
         'device_info': 'iphone 13'
@@ -66,10 +83,7 @@ class HttpRequest {
       switch (method) {
         case 'GET':
           {
-            response = await dio.get(
-              uri,
-              queryParameters: data,
-            );
+            response = await dio.get(uri, queryParameters: data);
             break;
           }
         case 'POST':
@@ -90,8 +104,7 @@ class HttpRequest {
       }
 
       return HttpHandler(statusCode: response?.statusCode).handle(response);
-      // ignore: deprecated_member_use
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       // try {
       //   result = await _connectivity.checkConnectivity();
       //   if (result == ConnectivityResult.none) {
@@ -115,41 +128,45 @@ class HttpRequest {
     }
   }
 
-  Future<dynamic> get(String url, {dynamic data, bool handler = true}) async {
+  Future<dynamic> get(String url, String type,
+      {dynamic data, bool handler = true}) async {
     try {
-      return await request(url, 'GET', data, handler: handler);
+      return await request(url, 'GET', data, type, handler: handler);
     } catch (e) {
-      debugPrint("GET =>" + e.toString());
+      debugPrint("GET =>$e");
       rethrow;
     }
   }
 
-  Future<dynamic> post(String url,
+  Future<dynamic> post(String url, String type,
       {dynamic data, bool handler = true, bool approve = false}) async {
     try {
       return await request(
         url,
         'POST',
         data,
+        type,
         handler: handler,
         approve: approve,
       );
     } catch (e) {
-      debugPrint("POST =>" + e.toString());
+      debugPrint("POST =>$e");
       rethrow;
     }
   }
 
-  Future<dynamic> put(String url, {dynamic data, bool handler = true}) async {
+  Future<dynamic> put(String url, String type,
+      {dynamic data, bool handler = true}) async {
     try {
-      return await request(url, 'PUT', data, handler: handler);
+      return await request(url, 'PUT', data, type, handler: handler);
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
     }
   }
 
-  Future<dynamic> del(String url, {dynamic data, bool handler = true}) async {
-    return await request(url, 'DELETE', data, handler: handler);
+  Future<dynamic> del(String url, String type,
+      {dynamic data, bool handler = true}) async {
+    return await request(url, 'DELETE', data, type, handler: handler);
   }
 }

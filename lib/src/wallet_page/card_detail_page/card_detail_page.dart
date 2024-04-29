@@ -1,7 +1,6 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:green_score/api/customer_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/custom_card/custom_card.dart';
 import 'package:green_score/components/history_card/history_card.dart';
@@ -49,10 +48,6 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
     setState(() {
       isLoading = true;
     });
-    Offset offset = Offset(page: page, limit: limit);
-    Filter filter = Filter(query: '');
-    bankList = await CustomerApi()
-        .bankList(ResultArguments(filter: filter, offset: offset));
     setState(() {
       isLoading = false;
     });

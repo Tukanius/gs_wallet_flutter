@@ -1,7 +1,5 @@
-import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:green_score/api/bonus_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/src/qr_code_page/qr_read_page.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
@@ -16,15 +14,7 @@ class QrCodePage extends StatefulWidget {
   State<QrCodePage> createState() => _QrCodePageState();
 }
 
-class _QrCodePageState extends State<QrCodePage> with AfterLayoutMixin {
-  @override
-  afterFirstLayout(BuildContext context) async {
-    var qr = await BonusApi().gerQr();
-    print('=====QR=======');
-    print(qr);
-    print('=====QR=======');
-  }
-
+class _QrCodePageState extends State<QrCodePage> {
   @override
   Widget build(BuildContext context) {
     return BackgroundShapes(

@@ -1,50 +1,27 @@
+import 'package:green_score/models/product_image.dart';
 part '../parts/product.dart';
 
 class Product {
   String? id;
-  String? publisherId;
   String? name;
-  String? category;
-  int? price;
-  String? height;
-  bool? isActive;
-  String? size;
-  String? ram;
-  String? storage;
-  String? engine;
-  String? engineType;
-  String? transmission;
-  String? color;
-  String? releasedDate;
-  String? importedDate;
+  String? code;
+  String? barcode;
   String? description;
+  int? price;
   String? createdAt;
-  String? productStatus;
-  String? productStatusDate;
   String? updatedAt;
+  List<ProductImage>? images;
 
   Product({
     this.id,
-    this.publisherId,
     this.name,
-    this.category,
     this.price,
-    this.height,
-    this.isActive,
-    this.size,
-    this.ram,
-    this.storage,
-    this.engine,
-    this.engineType,
-    this.transmission,
-    this.color,
-    this.releasedDate,
-    this.importedDate,
     this.description,
     this.createdAt,
-    this.productStatus,
-    this.productStatusDate,
     this.updatedAt,
+    this.barcode,
+    this.code,
+    this.images,
   });
   static $fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 

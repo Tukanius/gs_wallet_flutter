@@ -16,7 +16,6 @@ class User {
   String? createdAt;
   String? updatedAt;
 
-  String? qr;
   String? deletedAt;
   String? username;
   bool? isEmailVerified;
@@ -44,9 +43,13 @@ class User {
   String? genderId;
   String? birthDate;
   String? whoTypeId;
+  bool? isVerified;
+  String? type;
+  String? message;
   String? otpMethod;
   String? otpCode;
-  bool? isVerified;
+  Uri? url;
+  String? avatar;
 
   User({
     this.isVerified,
@@ -93,6 +96,10 @@ class User {
     this.regUser,
     this.greenScore,
     this.balance,
+    this.type,
+    this.message,
+    this.url,
+    this.avatar,
   });
 
   static $fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:green_score/api/bonus_api.dart';
 import 'package:green_score/components/score_opportunities_card/opportunity_card.dart';
 import 'package:green_score/components/score_status_card/score_status_card.dart';
 import 'package:green_score/models/user.dart';
@@ -23,9 +22,7 @@ class ScorePage extends StatefulWidget {
 class _ScorePageState extends State<ScorePage> {
   User user = User();
 
-  onSubmit() async {
-    await BonusApi().putBonus(user);
-  }
+  onSubmit() async {}
 
   @override
   Widget build(BuildContext context) {

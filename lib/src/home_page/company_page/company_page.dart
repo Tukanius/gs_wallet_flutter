@@ -1,30 +1,28 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:green_score/api/product_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/product_card/product_card.dart';
+import 'package:green_score/models/merchant.dart';
 import 'package:green_score/models/result.dart';
 import 'package:green_score/src/home_page/product_detail_page/product_detail_page.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:green_score/widget/ui/form_textfield.dart';
-import 'package:green_score/api/customer_api.dart';
 
 class CompanyPageArguments {
-  String name;
-  String id;
+  Merchant data;
   CompanyPageArguments({
-    required this.name,
-    required this.id,
+    required this.data,
   });
 }
 
 class CompanyPage extends StatefulWidget {
-  final String name;
-  final String id;
+  final Merchant data;
 
   static const routeName = "CompanyPage";
-  const CompanyPage({super.key, required this.name, required this.id});
+  const CompanyPage({super.key, required this.data});
 
   @override
   State<CompanyPage> createState() => _CompanyPageState();
@@ -36,18 +34,18 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
   int limit = 10;
   Result productList = Result(rows: [], count: 0);
 
-  afterFirstLayout(BuildContext context) {
-    list(page, limit);
+  afterFirstLayout(BuildContext context) async {
+    await list(page, limit);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   list(page, limit) async {
-    setState(() {
-      isLoading = true;
-    });
     Offset offset = Offset(page: page, limit: limit);
-    Filter filter = Filter(query: '');
-    productList = await CustomerApi()
-        .productList(ResultArguments(filter: filter, offset: offset));
+    Filter filter = Filter(merchant: widget.data.id);
+    productList = await ProductApi()
+        .getProduct(ResultArguments(filter: filter, offset: offset));
     setState(() {
       isLoading = false;
     });
@@ -81,7 +79,7 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
               ),
               centerTitle: true,
               title: Text(
-                '${widget.name}',
+                '${widget.data.name}',
                 style: TextStyle(
                   color: white,
                   fontSize: 20,
@@ -107,7 +105,7 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
                       width: 12,
                     ),
                     Text(
-                      '${widget.name}',
+                      '${widget.data.name}',
                       style: TextStyle(
                         color: white,
                         fontSize: 20,
@@ -119,13 +117,106 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
                 SizedBox(
                   height: 15,
                 ),
-                Text(
-                  'Манай дэлгүүр 2014 оноос хойш тасралтгүй Америкаас бараа бүтээгдэхүүн оруулж ирж байгаа. Only originals! 🇺🇸💯',
-                  style: TextStyle(
-                    color: colortext,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
+                // Text(
+                //   'Манай дэлгүүр 2014 оноос хойш тасралтгүй Америкаас бараа бүтээгдэхүүн оруулж ирж байгаа. Only originals! 🇺🇸💯',
+                //   style: TextStyle(
+                //     color: colortext,
+                //     fontSize: 12,
+                //     fontWeight: FontWeight.w400,
+                //   ),
+                // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'И-мэйл:',
+                      style: TextStyle(
+                        color: colortext,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      '${widget.data.email}',
+                      style: TextStyle(
+                        color: colortext,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Утас:',
+                      style: TextStyle(
+                        color: colortext,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      '${widget.data.phone}',
+                      style: TextStyle(
+                        color: colortext,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Утас:',
+                      style: TextStyle(
+                        color: colortext,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      widget.data.phoneSecond != null
+                          ? '${widget.data.phoneSecond}'
+                          : '-',
+                      style: TextStyle(
+                        color: colortext,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Social хаяг',
+                      style: TextStyle(
+                        color: colortext,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Column(
+                      children: widget.data.links!
+                          .map(
+                            (data) => Text(
+                              "${data.uri}",
+                              style: TextStyle(
+                                color: colortext,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 15,
@@ -145,7 +236,9 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
                   height: 15,
                 ),
                 Text(
-                  'Хаяг: УБ — Чингэлтэй, Чингэлтэй, Хороо 4',
+                  widget.data.address != null
+                      ? 'Хаяг: ${widget.data.address}'
+                      : 'Хаяг: -',
                   style: TextStyle(
                     color: colortext,
                     fontSize: 12,
@@ -198,9 +291,7 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
                                   Navigator.of(context).pushNamed(
                                     ProductDetail.routeName,
                                     arguments: ProductDetailArguments(
-                                      description: data.description,
-                                      name: data.name,
-                                      price: data.price,
+                                      data: data,
                                     ),
                                   );
                                 },

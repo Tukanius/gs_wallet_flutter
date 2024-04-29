@@ -77,6 +77,10 @@ User _$UserFromJson(Map<String, dynamic> json) {
     isVerified: json['isVerified'] != null ? json['isVerified'] as bool : null,
     greenScore: json['greenScore'] != null ? json['greenScore'] as int : null,
     balance: json['balance'] != null ? json['balance'] as int : null,
+    type: json['type'] != null ? json['type'] as String : null,
+    message: json['message'] != null ? json['message'] as String : null,
+    avatar: json['avatar'] != null ? json['avatar'] as String : null,
+    url: json['url'] != null ? Uri.parse(json['url'].toString()) : null,
   );
 }
 
@@ -139,6 +143,10 @@ Map<String, dynamic> _$UserToJson(User instance) {
   if (instance.regUser != null) json['regUser'] = instance.regUser;
   if (instance.greenScore != null) json['greenScore'] = instance.greenScore;
   if (instance.balance != null) json['balance'] = instance.balance;
+  if (instance.type != null) json['type'] = instance.type;
+  if (instance.message != null) json['message'] = instance.message;
+  if (instance.avatar != null) json['avatar'] = instance.avatar;
+  if (instance.url != null) json["url"] = instance.url;
 
   return json;
 }

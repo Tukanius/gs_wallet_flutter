@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/back_button/back_button.dart';
+import 'package:green_score/models/product.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 
 class ProductDetailArguments {
-  String? name;
-  int? price;
-  String? description;
+  Product data;
   ProductDetailArguments({
-    this.name,
-    this.price,
-    this.description,
+    required this.data,
   });
 }
 
 class ProductDetail extends StatefulWidget {
-  final String? name;
-  final int? price;
-  final String? description;
+  final Product data;
   static const routeName = "ProductDetail";
   const ProductDetail({
     super.key,
-    this.name,
-    this.price,
-    this.description,
+    required this.data,
   });
 
   @override
@@ -61,7 +54,7 @@ class _ProductDetailState extends State<ProductDetail> {
               ),
               centerTitle: true,
               title: Text(
-                '${widget.name}',
+                '${widget.data.name}',
                 style: TextStyle(
                   color: white,
                   fontSize: 20,
@@ -134,7 +127,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 Row(
                   children: [
                     Text(
-                      '₮${widget.price! + 10000}',
+                      '₮${widget.data.price! + 10000}',
                       style: TextStyle(
                         color: greytext,
                         fontWeight: FontWeight.w500,
@@ -148,7 +141,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       width: 10,
                     ),
                     Text(
-                      '₮${widget.price}',
+                      '₮${widget.data.price}',
                       style: TextStyle(
                         color: white,
                         fontSize: 20,
@@ -162,7 +155,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 ),
                 Text(
                   // 'Processor: 13th Gen Intel Core i7-13650HXGraphics: NVIDIA GeForce RTX 4060 with 8GB GDDR6 VRAMDisplay: 16-inch QHD+ (2560 x 1600) IPS-level display with 165 Hz refresh rateRAM: 16GB DDR5-4800Storage: 512Gb PCIe® 4.0 NVMe™ M.2 SSDOperating System: Windows 11 Home',
-                  '${widget.description}',
+                  '${widget.data.description}',
                   style: TextStyle(
                     color: colortext,
                     fontSize: 12,

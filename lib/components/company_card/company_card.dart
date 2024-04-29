@@ -1,30 +1,50 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:green_score/api/product_api.dart';
+import 'package:green_score/models/merchant.dart';
+import 'package:green_score/models/result.dart';
+import 'package:green_score/src/home_page/product_detail_page/product_detail_page.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:intl/intl.dart';
 
 class CompanyCard extends StatefulWidget {
-  final String? name;
-  final String? profileUrl;
-  final String? createdDate;
-  final String? description;
-  final List<String>? products;
+  final Merchant data;
   final Function()? onClick;
   const CompanyCard({
     super.key,
     this.onClick,
-    this.name,
-    this.profileUrl,
-    this.createdDate,
-    this.description,
-    this.products,
+    required this.data,
   });
 
   @override
   State<CompanyCard> createState() => _CompanyCardState();
 }
 
-class _CompanyCardState extends State<CompanyCard> {
+class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
+  bool isLoading = true;
+  int page = 1;
+  int limit = 10;
+  Result productList = Result(rows: [], count: 0);
+
+  afterFirstLayout(BuildContext context) async {
+    await list(page, limit);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  list(page, limit) async {
+    Offset offset = Offset(page: page, limit: limit);
+    Filter filter = Filter(merchant: widget.data.id);
+    productList = await ProductApi()
+        .getProduct(ResultArguments(filter: filter, offset: offset));
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,15 +61,26 @@ class _CompanyCardState extends State<CompanyCard> {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage("${widget.profileUrl}"),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: widget.data.image == null
+                        ? SvgPicture.asset(
+                            'assets/svg/avatar.svg',
+                            height: 40,
+                            width: 40,
+                          )
+                        : Image.network(
+                            "${widget.data.image}",
+                            height: 40,
+                            width: 40,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                   SizedBox(
                     width: 12,
                   ),
                   Text(
-                    '${widget.name}',
+                    '${widget.data.name}',
                     style: TextStyle(
                       color: white,
                       fontSize: 14,
@@ -60,7 +91,7 @@ class _CompanyCardState extends State<CompanyCard> {
               ),
               Text(
                 DateFormat("yyyy-MM-dd HH:mm").format(
-                  DateTime.parse(widget.createdDate!),
+                  DateTime.parse(widget.data.createdAt!),
                 ),
                 style: TextStyle(
                   color: colortext,
@@ -73,15 +104,99 @@ class _CompanyCardState extends State<CompanyCard> {
           SizedBox(
             height: 12,
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'И-мэйл:',
+                style: TextStyle(
+                    color: white, fontSize: 14, fontWeight: FontWeight.w400),
+              ),
+              Text(
+                '${widget.data.email}',
+                style: TextStyle(
+                    color: white, fontSize: 14, fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Утас:',
+                style: TextStyle(
+                    color: white, fontSize: 14, fontWeight: FontWeight.w400),
+              ),
+              Text(
+                '${widget.data.phone}',
+                style: TextStyle(
+                    color: white, fontSize: 14, fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Утас:',
+                style: TextStyle(
+                    color: white, fontSize: 14, fontWeight: FontWeight.w400),
+              ),
+              Text(
+                widget.data.phoneSecond != null
+                    ? '${widget.data.phoneSecond}'
+                    : '-',
+                style: TextStyle(
+                    color: white, fontSize: 14, fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Social хаяг',
+                style: TextStyle(
+                    color: white, fontSize: 14, fontWeight: FontWeight.w400),
+              ),
+              Column(
+                children: widget.data.links!
+                    .map(
+                      (data) => Text(
+                        "${data.uri}",
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ),
           Text(
-            'Манай дэлгүүр 2014 оноос хойш тасралтгүй Америкаас бараа бүтээгдэхүүн оруулж ирж байгаа. Only originals! 🇺🇸💯',
+            widget.data.address != null
+                ? 'Хаяг: ${widget.data.address} '
+                : 'Хаяг: - ',
             style: TextStyle(
-              color: colortext,
+              color: white,
               fontSize: 14,
               fontWeight: FontWeight.w400,
             ),
             textAlign: TextAlign.justify,
           ),
+
+          // Text(
+          //   'Манай дэлгүүр 2014 оноос хойш тасралтгүй Америкаас бараа бүтээгдэхүүн оруулж ирж байгаа. Only originals! 🇺🇸💯',
+          //   style: TextStyle(
+          //     color: colortext,
+          //     fontSize: 14,
+          //     fontWeight: FontWeight.w400,
+          //   ),
+          //   textAlign: TextAlign.justify,
+          // ),
           SizedBox(
             height: 18,
           ),
@@ -95,32 +210,63 @@ class _CompanyCardState extends State<CompanyCard> {
             margin: EdgeInsets.symmetric(vertical: 18),
             width: MediaQuery.of(context).size.width,
             height: 100,
-            child: ListView(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              children: widget.products!
-                  .map(
-                    (e) => Row(
-                      children: [
-                        Container(
-                          height: 100,
-                          width: 100,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(14),
-                            child: Image(
-                              image: NetworkImage('$e'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
+            child: productList.rows?.length == 0
+                ? Center(
+                    child: Text(
+                      'Одоогоор бараа бүртгэгдээгүй байна',
+                      style: TextStyle(
+                        color: white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   )
-                  .toList(),
-            ),
+                : ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    children: productList.rows!
+                        .map(
+                          (data) => Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  print('clicked');
+                                  Navigator.of(context).pushNamed(
+                                    ProductDetail.routeName,
+                                    arguments: ProductDetailArguments(
+                                      data: data,
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: 100,
+                                  width: 100,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(14),
+                                      child:
+                                          //  data.images == null
+                                          //     ?
+                                          SvgPicture.asset(
+                                        'assets/svg/avatar.svg',
+                                        height: 100,
+                                        width: 100,
+                                      )
+                                      // : Image(
+                                      //     image: NetworkImage(' ${data}'),
+                                      //     fit: BoxFit.cover,
+                                      //   ),
+                                      ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
           ),
           GestureDetector(
             onTap: widget.onClick,

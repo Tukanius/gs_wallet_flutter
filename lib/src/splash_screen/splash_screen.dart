@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:green_score/provider/general_provider.dart';
 import 'package:green_score/src/auth/login_page.dart';
 import 'package:green_score/src/main_page.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
@@ -22,14 +21,11 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
   @override
   afterFirstLayout(BuildContext context) async {
     try {
-      // await Provider.of<GeneralProvider>(context, listen: false).init(false);
-      // await Provider.of<UserProvider>(context, listen: false).me(false);
+      await Provider.of<UserProvider>(context, listen: false).me(false);
       Navigator.of(context).pushNamed(MainPage.routeName);
     } catch (ex) {
       debugPrint(ex.toString());
-      Navigator.of(context).pushNamed(MainPage.routeName);
-
-      // Navigator.of(context).pushNamed(LoginPage.routeName);
+      Navigator.of(context).pushNamed(LoginPage.routeName);
     }
   }
 

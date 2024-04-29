@@ -1,1 +1,0 @@
- /Users/munkhtuulaltantulga/Desktop/gs-wallet-flutter/.dart_tool/flutter_build/47e6fe97c76f18f51702166f621e1aab/native_assets.yaml: 
