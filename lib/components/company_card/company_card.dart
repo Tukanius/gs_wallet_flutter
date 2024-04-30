@@ -8,6 +8,7 @@ import 'package:green_score/models/result.dart';
 import 'package:green_score/src/home_page/product_detail_page/product_detail_page.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:intl/intl.dart';
+import 'package:green_score/components/company_card/product_image_card.dart';
 
 class CompanyCard extends StatefulWidget {
   final Merchant data;
@@ -134,7 +135,6 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
               ),
             ],
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -187,16 +187,6 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
             ),
             textAlign: TextAlign.justify,
           ),
-
-          // Text(
-          //   'Манай дэлгүүр 2014 оноос хойш тасралтгүй Америкаас бараа бүтээгдэхүүн оруулж ирж байгаа. Only originals! 🇺🇸💯',
-          //   style: TextStyle(
-          //     color: colortext,
-          //     fontSize: 14,
-          //     fontWeight: FontWeight.w400,
-          //   ),
-          //   textAlign: TextAlign.justify,
-          // ),
           SizedBox(
             height: 18,
           ),
@@ -243,20 +233,11 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
                                   height: 100,
                                   width: 100,
                                   child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(14),
-                                      child:
-                                          //  data.images == null
-                                          //     ?
-                                          SvgPicture.asset(
-                                        'assets/svg/avatar.svg',
-                                        height: 100,
-                                        width: 100,
-                                      )
-                                      // : Image(
-                                      //     image: NetworkImage(' ${data}'),
-                                      //     fit: BoxFit.cover,
-                                      //   ),
-                                      ),
+                                    borderRadius: BorderRadius.circular(14),
+                                    child: ImageCard(
+                                      data: data,
+                                    ),
+                                  ),
                                 ),
                               ),
                               SizedBox(

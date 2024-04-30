@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,17 +28,19 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
   Result merchantList = Result(rows: [], count: 0);
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
+  Timer? timer;
+  bool isSubmit = false;
   afterFirstLayout(BuildContext context) async {
-    await list(page, limit);
+    await list(page, limit, '');
     setState(() {
       isLoading = false;
       isLoadingPage = false;
     });
   }
 
-  list(page, limit) async {
+  list(page, limit, String value) async {
     Offset offset = Offset(page: page, limit: limit);
-    Filter filter = Filter(query: '');
+    Filter filter = Filter(query: '', search: value);
     merchantList = await ProductApi()
         .getMerchant(ResultArguments(filter: filter, offset: offset));
     setState(() {
@@ -50,7 +54,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
       isLoading = true;
       limit = 10;
     });
-    await list(page, limit);
+    await list(page, limit, '');
     refreshController.refreshCompleted();
   }
 
@@ -58,8 +62,21 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
     setState(() {
       limit += 10;
     });
-    await list(page, limit);
+    await list(page, limit, '');
     refreshController.loadComplete();
+  }
+
+  onChange(String query) {
+    if (timer != null) timer!.cancel();
+    timer = Timer(const Duration(milliseconds: 500), () async {
+      setState(() {
+        isSubmit = true;
+      });
+      list(page, limit, query);
+      setState(() {
+        isSubmit = false;
+      });
+    });
   }
 
   @override
@@ -93,6 +110,9 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
                       height: 20,
                     ),
                     FormTextField(
+                      onChanged: (query) {
+                        onChange(query);
+                      },
                       prefixIcon: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,

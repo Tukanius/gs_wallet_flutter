@@ -77,17 +77,18 @@ class _ProductDetailState extends State<ProductDetail> {
                   width: MediaQuery.of(context).size.width,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    child: Image.asset(
-                      'assets/images/avatar.jpg',
-                      fit: BoxFit.cover,
-                    ),
+                    child: SvgPicture.asset('assets/svg/avatar.svg'),
+                    // Image.asset(
+                    //   'assets/images/avatar.jpg',
+                    //   fit: BoxFit.cover,
+                    // ),
                   ),
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 Text(
-                  'Asus ROG RTX 4080 32GB RAM 2TB SSD',
+                  '${widget.data.description}',
                   style: TextStyle(
                     color: white,
                     fontSize: 20,
@@ -127,7 +128,7 @@ class _ProductDetailState extends State<ProductDetail> {
                 Row(
                   children: [
                     Text(
-                      '₮${widget.data.price! + 10000}',
+                      '₮${widget.data.price! + 100}',
                       style: TextStyle(
                         color: greytext,
                         fontWeight: FontWeight.w500,

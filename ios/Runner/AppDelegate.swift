@@ -1,6 +1,7 @@
 import UIKit
 import Flutter
 import CoreMotion
+import GoogleMaps
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -10,6 +11,7 @@ import CoreMotion
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        GMSServices.provideAPIKey("AIzaSyBOjXv-WWTgAGmV_zIIGpKlBg2G8oLv4ko")
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         let stepCounterChannel = FlutterMethodChannel(name: "step_counter_channel", binaryMessenger: controller.binaryMessenger)
         

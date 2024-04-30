@@ -18,7 +18,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		BuZiaMAH/FZEyYM5Bwn5P1J8XCc=
+		b9V0QPOcLULNXQwQr7oR97BVuJY=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -26,11 +26,11 @@
 		</data>
 		<key>Modules/pedometer.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		YrLfZOQfmtrziaSUfsLJcKZvkbM=
+		nHUS/GnM9vELEVEioD20Ca90vIE=
 		</data>
 		<key>Modules/pedometer.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		UPxrDkw+Azc3/N7kTvrRABmq/NM=
+		t9M3YCgdDNcOdhUlRiqkD4vVWa4=
 		</data>
 		<key>Modules/pedometer.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -38,11 +38,11 @@
 		</data>
 		<key>Modules/pedometer.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		37NH3rNFKYiCgUf+dPhagbmL2jU=
+		Lv06E6Zo1xW1OLxmlODyi/0qIuo=
 		</data>
 		<key>Modules/pedometer.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		Zn9angb+f1lHCH9giZPXGXjS6fg=
+		IlwdnDaR3Ao2s5q8nhGkI9wvgt8=
 		</data>
 		<key>Modules/pedometer.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -50,11 +50,11 @@
 		</data>
 		<key>Modules/pedometer.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		QPnDIllMxawtvm4XldXwW+JGZ8s=
+		MFF0mHEQNP4XFxRWeCyiqyDzdlU=
 		</data>
 		<key>Modules/pedometer.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		7RAn0TKoMwJza7MO8HDNN2TPgTE=
+		tPGa4IuM5f2QSyt7MIz4pFdrkRE=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -91,14 +91,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8i1Sb0wDgqusqpgEiPxNOYeaWBR5qp9k/jkxsuI+FL0=
+			e5SCZv+RxKQN4T2qLeEqfaFsjs3zC4H7UzU/Q2904RQ=
 			</data>
 		</dict>
 		<key>Modules/pedometer.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ti8r3MEy6N4szS46IbXjmdplFZDJlg9lZUCi1TXSSkA=
+			Fv8CIplwEl71GNx5X7SoMSoVuVwQUafKTyV4fdsKs+0=
 			</data>
 		</dict>
 		<key>Modules/pedometer.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
@@ -112,14 +112,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			pl9VquAEaw1WNVKEPsMSgD2+Tu/N3A2HoG0YYRKjpVg=
+			Y70HVY3QyFkYEUVxToDYz5L8GfD9ZjIXT/nPuM85v1U=
 			</data>
 		</dict>
 		<key>Modules/pedometer.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			8BltvAh4kkqrok7FZ7oOxKgbwgfKBw1zx7Qk3uDD/z8=
+			nQrjXa8pNyzPhlAsgYtiwyKV24Wh9bLCaYg9pPdwGNA=
 			</data>
 		</dict>
 		<key>Modules/pedometer.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -133,14 +133,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			YtLQZsyFrD2oeZTG63QH1SNJzMIQiv91N55LWpXww1c=
+			oLHKKV/+nyfe9Qq6bEjeAUkLozebTu8qCF7MNPjtv8k=
 			</data>
 		</dict>
 		<key>Modules/pedometer.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			4zZ6WBJfOUTBI+qRvyxDgbnuNorWl7AMdgQrrUJurqM=
+			yKcvmySZtjTmil6vVGMUM4BzIT0XS5ZVp//MGQXm5Ck=
 			</data>
 		</dict>
 	</dict>

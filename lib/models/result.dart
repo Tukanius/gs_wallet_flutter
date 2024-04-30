@@ -1,8 +1,9 @@
 part '../parts/result.dart';
 
 class Filter {
-  String? query;
   String? merchant;
+  String? search;
+  String? query;
   bool? isReceived;
   String? type;
   String? orderConfirmTerm;
@@ -10,6 +11,7 @@ class Filter {
 
   Filter({
     this.isParent,
+    this.search,
     this.merchant,
     this.type,
     this.query,

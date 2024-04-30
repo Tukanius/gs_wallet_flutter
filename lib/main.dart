@@ -10,6 +10,7 @@ import 'package:green_score/src/auth/register_page.dart';
 import 'package:green_score/src/collect_score_page/all_opportunity_page.dart';
 import 'package:green_score/src/collect_score_page/opportunity_status_page.dart';
 import 'package:green_score/src/home_page/company_page/company_page.dart';
+import 'package:green_score/src/home_page/company_page/map_page.dart';
 import 'package:green_score/src/home_page/product_detail_page/product_detail_page.dart';
 import 'package:green_score/src/main_page.dart';
 import 'package:green_score/src/notification_page/notification_page.dart';
@@ -103,6 +104,15 @@ class MyApp extends StatelessWidget {
                 case ForgetPassword.routeName:
                   return MaterialPageRoute(builder: (context) {
                     return const ForgetPassword();
+                  });
+                case MapPage.routeName:
+                  MapPageArguments arguments =
+                      settings.arguments as MapPageArguments;
+                  return MaterialPageRoute(builder: (context) {
+                    return MapPage(
+                      lang: arguments.lang,
+                      long: arguments.long,
+                    );
                   });
                 case PassWordPage.routeName:
                   PassWordPageArguments arguments =

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:green_score/models/product.dart';
 import 'package:green_score/widget/ui/color.dart';
 
 class ProductCard extends StatefulWidget {
+  final Product data;
   final Function() onClick;
-  const ProductCard({super.key, required this.onClick});
+  const ProductCard({super.key, required this.onClick, required this.data});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -25,17 +27,18 @@ class _ProductCardState extends State<ProductCard> {
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(19),
-              child: Image.asset(
-                'assets/images/avatar.jpg',
-                fit: BoxFit.cover,
-              ),
+              child: SvgPicture.asset('assets/svg/avatar.svg'),
+              // Image.asset(
+              //   'assets/images/avatar.jpg',
+              //   fit: BoxFit.cover,
+              // ),
             ),
           ),
           SizedBox(
             height: 8,
           ),
           Text(
-            'ASUS ROG GTX 4080 32GB RAM 2TB 12312311111111111111111',
+            '${widget.data.name}',
             textAlign: TextAlign.justify,
             style: TextStyle(
               color: Colors.white,
