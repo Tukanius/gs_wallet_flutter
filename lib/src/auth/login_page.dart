@@ -3,12 +3,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/provider/user_provider.dart';
-import 'package:green_score/src/auth/forget_password_page.dart';
+import 'package:green_score/src/auth/forget_page.dart';
 import 'package:green_score/src/auth/register_page.dart';
 import 'package:green_score/src/main_page.dart';
+import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:green_score/widget/ui/form_textfield.dart';
-import 'package:green_score/widget/ui/qwerty.dart';
 import 'package:provider/provider.dart';
 import 'package:green_score/models/user.dart';
 
@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.of(context).pushNamed(ForgetPassword.routeName);
                   },
                   child: Text(
-                    "Нууц үг сэргээх?",
+                    "Нууц үг сэргээх",
                     style: TextStyle(color: greentext),
                   ),
                 ),
@@ -144,14 +144,11 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Бүртгэл үүсгэх бол энд дарна уу",
+                      "Бүртгэл үүсгэх бол энд дарна уу !",
                       style: TextStyle(
                         color: white,
                         fontSize: 12,
                       ),
-                    ),
-                    SizedBox(
-                      width: 5,
                     ),
                     TextButton(
                       style: ButtonStyle(

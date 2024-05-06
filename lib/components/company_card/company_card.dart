@@ -64,14 +64,15 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    child: widget.data.image == null
-                        ? SvgPicture.asset(
-                            'assets/svg/avatar.svg',
-                            height: 40,
-                            width: 40,
+                    child: widget.data.image != null
+                        ? CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                NetworkImage('${widget.data.image}'),
+                            backgroundColor: greytext,
                           )
-                        : Image.network(
-                            "${widget.data.image}",
+                        : SvgPicture.asset(
+                            'assets/svg/avatar.svg',
                             height: 40,
                             width: 40,
                             fit: BoxFit.cover,
@@ -221,7 +222,6 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  print('clicked');
                                   Navigator.of(context).pushNamed(
                                     ProductDetail.routeName,
                                     arguments: ProductDetailArguments(
@@ -232,6 +232,10 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
                                 child: Container(
                                   height: 100,
                                   width: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    color: greytext,
+                                  ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(14),
                                     child: ImageCard(

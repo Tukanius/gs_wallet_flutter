@@ -25,13 +25,21 @@ class _ProductCardState extends State<ProductCard> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(19),
-              child: SvgPicture.asset('assets/svg/avatar.svg'),
-              // Image.asset(
-              //   'assets/images/avatar.jpg',
-              //   fit: BoxFit.cover,
-              // ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(19),
+                color: greytext,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(19),
+                child: widget.data.images?.length == 0
+                    ? SizedBox()
+                    : Image(
+                        image:
+                            NetworkImage('${widget.data.images!.first.image}'),
+                        fit: BoxFit.cover,
+                      ),
+              ),
             ),
           ),
           SizedBox(
@@ -52,8 +60,16 @@ class _ProductCardState extends State<ProductCard> {
             height: 8,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              widget.data.sale != null
+                  ? Text(
+                      '${widget.data.sale?.name}',
+                      style: TextStyle(
+                        color: greentext,
+                      ),
+                    )
+                  : SizedBox(),
               GestureDetector(
                 onTap: widget.onClick,
                 child: Container(

@@ -4,23 +4,23 @@ import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
-import 'package:green_score/src/main_page.dart';
+import 'package:green_score/src/splash_screen/splash_screen.dart';
+import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:green_score/widget/ui/form_textfield.dart';
-import 'package:green_score/widget/ui/qwerty.dart';
 import 'package:provider/provider.dart';
 
 class PassWordPageArguments {
-  bool? isForgot;
+  String? method;
   PassWordPageArguments({
-    this.isForgot,
+    this.method,
   });
 }
 
 class PassWordPage extends StatefulWidget {
-  final bool? isForgot;
+  final String? method;
   static const routeName = "PassWordPage";
-  const PassWordPage({super.key, this.isForgot});
+  const PassWordPage({super.key, this.method});
 
   @override
   State<PassWordPage> createState() => _PassWordPageState();
@@ -31,6 +31,7 @@ class _PassWordPageState extends State<PassWordPage> {
   bool isVisible = true;
   bool isVisible1 = true;
   bool isLoading = false;
+
   onSubmit() async {
     if (fbkey.currentState!.saveAndValidate()) {
       try {
@@ -40,11 +41,10 @@ class _PassWordPageState extends State<PassWordPage> {
         User save = User.fromJson(fbkey.currentState!.value);
         await Provider.of<UserProvider>(context, listen: false)
             .setPassword(save);
-        // await Provider.of<UserProvider>(context, listen: false).me(false);
         setState(() {
           isLoading = false;
         });
-        Navigator.of(context).pushNamed(MainPage.routeName);
+        await Navigator.of(context).pushNamed(SplashScreen.routeName);
       } catch (e) {
         print(e.toString());
         setState(() {
@@ -89,23 +89,9 @@ class _PassWordPageState extends State<PassWordPage> {
           ),
         ),
         body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: EdgeInsets.all(20),
           child: Column(
             children: [
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Цаашид нэврэх нууц үгээ оруулна уу !',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: white,
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
               FormBuilder(
                 key: fbkey,
                 child: Column(

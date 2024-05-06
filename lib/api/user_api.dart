@@ -22,4 +22,9 @@ class UserApi extends HttpRequest {
 
     return User.fromJson(res as Map<String, dynamic>);
   }
+
+  danVerify() async {
+    var res = await post('/user/verify', "USER");
+    return res;
+  }
 }

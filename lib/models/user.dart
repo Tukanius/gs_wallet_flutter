@@ -15,9 +15,12 @@ class User {
   String? sessionId;
   String? createdAt;
   String? updatedAt;
+  bool? danVerified;
+  String? danVerifiedDate;
+  String? username;
+  String? address;
 
   String? deletedAt;
-  String? username;
   bool? isEmailVerified;
   String? emailVerifiedDate;
   String? isPhoneVerified;
@@ -100,6 +103,9 @@ class User {
     this.message,
     this.url,
     this.avatar,
+    this.danVerified,
+    this.danVerifiedDate,
+    this.address,
   });
 
   static $fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

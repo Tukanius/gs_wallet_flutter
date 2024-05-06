@@ -1,16 +1,21 @@
 import 'package:green_score/models/product_image.dart';
+import 'package:green_score/models/sale.dart';
+import 'package:green_score/models/saleProducts.dart';
 part '../parts/product.dart';
 
 class Product {
   String? id;
+  String? merchant;
   String? name;
   String? code;
   String? barcode;
   String? description;
   int? price;
+  List<ProductImage>? images;
   String? createdAt;
   String? updatedAt;
-  List<ProductImage>? images;
+  Sale? sale;
+  SaleProduct? saleProduct;
 
   Product({
     this.id,
@@ -22,6 +27,9 @@ class Product {
     this.barcode,
     this.code,
     this.images,
+    this.merchant,
+    this.sale,
+    this.saleProduct,
   });
   static $fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 

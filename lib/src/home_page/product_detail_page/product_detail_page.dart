@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/back_button/back_button.dart';
@@ -25,6 +26,8 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  CarouselController carouselController = CarouselController();
+  int _current = 0;
   @override
   Widget build(BuildContext context) {
     return BackgroundShapes(
@@ -66,105 +69,172 @@ class _ProductDetailState extends State<ProductDetail> {
             ),
           ];
         },
-        body: Container(
-          padding: EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 220,
-                  width: MediaQuery.of(context).size.width,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: SvgPicture.asset('assets/svg/avatar.svg'),
-                    // Image.asset(
-                    //   'assets/images/avatar.jpg',
-                    //   fit: BoxFit.cover,
-                    // ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  '${widget.data.description}',
-                  style: TextStyle(
-                    color: white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                Row(
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              widget.data.images?.length == 0
+                  ? Container(
+                      height: 220,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: greytext,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                          child: Text(
+                        'Зураг олдсонгүй!',
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )),
+                    )
+                  : Column(
+                      children: [
+                        CarouselSlider(
+                          carouselController: carouselController,
+                          options: CarouselOptions(
+                            height: 220.0,
+                            autoPlay: true,
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                _current = index;
+                              });
+                            },
+                          ),
+                          items: widget.data.images!.map((data) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage('${data.image}'),
+                                    ),
+                                  ),
+                                  alignment: Alignment.center,
+                                );
+                              },
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:
+                              widget.data.images!.asMap().entries.map((entry) {
+                            return GestureDetector(
+                              onTap: () =>
+                                  carouselController.animateToPage(entry.key),
+                              child: Container(
+                                width: 10.0,
+                                height: 10.0,
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 4.0),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _current == entry.key
+                                      ? greentext
+                                      : greytext,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+              Container(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Ашиглагдах GS:',
+                      '${widget.data.description}',
                       style: TextStyle(
                         color: white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 12),
-                      child: SvgPicture.asset('assets/svg/gsc.svg'),
-                    ),
-                    Text(
-                      '20,000 GS',
-                      style: TextStyle(
-                        color: greentext,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      '₮${widget.data.price! + 100}',
-                      style: TextStyle(
-                        color: greytext,
-                        fontWeight: FontWeight.w500,
                         fontSize: 20,
-                        decoration: TextDecoration.lineThrough,
-                        decorationColor: greytext,
-                        decorationThickness: 2,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     SizedBox(
-                      width: 10,
+                      height: 12,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Ашиглагдах GS:',
+                          style: TextStyle(
+                            color: white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 12),
+                          child: SvgPicture.asset('assets/svg/gsc.svg'),
+                        ),
+                        Text(
+                          '20,000 GS',
+                          style: TextStyle(
+                            color: greentext,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '₮${widget.data.price! + 100}',
+                          style: TextStyle(
+                            color: greytext,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: greytext,
+                            decorationThickness: 2,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          '₮${widget.data.price}',
+                          style: TextStyle(
+                            color: white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 12,
                     ),
                     Text(
-                      '₮${widget.data.price}',
+                      // 'Processor: 13th Gen Intel Core i7-13650HXGraphics: NVIDIA GeForce RTX 4060 with 8GB GDDR6 VRAMDisplay: 16-inch QHD+ (2560 x 1600) IPS-level display with 165 Hz refresh rateRAM: 16GB DDR5-4800Storage: 512Gb PCIe® 4.0 NVMe™ M.2 SSDOperating System: Windows 11 Home',
+                      '${widget.data.description}',
                       style: TextStyle(
-                        color: white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                        color: colortext,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
                       ),
-                    ),
+                    )
                   ],
                 ),
-                SizedBox(
-                  height: 12,
-                ),
-                Text(
-                  // 'Processor: 13th Gen Intel Core i7-13650HXGraphics: NVIDIA GeForce RTX 4060 with 8GB GDDR6 VRAMDisplay: 16-inch QHD+ (2560 x 1600) IPS-level display with 165 Hz refresh rateRAM: 16GB DDR5-4800Storage: 512Gb PCIe® 4.0 NVMe™ M.2 SSDOperating System: Windows 11 Home',
-                  '${widget.data.description}',
-                  style: TextStyle(
-                    color: colortext,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                )
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

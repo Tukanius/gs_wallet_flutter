@@ -13,22 +13,22 @@ import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
 class OtpPageArguments {
-  String email;
-  bool isForget;
+  String username;
+  String method;
   OtpPageArguments({
-    required this.email,
-    required this.isForget,
+    required this.username,
+    required this.method,
   });
 }
 
 class OtpPage extends StatefulWidget {
-  final String email;
-  final bool isForget;
+  final String username;
+  final String method;
   static const routeName = "OtpPage";
   const OtpPage({
     super.key,
-    required this.email,
-    required this.isForget,
+    required this.username,
+    required this.method,
   });
 
   @override
@@ -42,16 +42,14 @@ class _OtpPageState extends State<OtpPage> with AfterLayoutMixin {
   bool isSubmit = false;
   bool isLoading = true;
   late Timer _timer;
-  String email = "";
   User user = User();
   ListenController listenController = ListenController();
 
   @override
   void initState() {
     listenController.addListener(() async {
-      await Provider.of<UserProvider>(context, listen: false).getOtp(
-          widget.isForget == true ? "FORGOT" : "REGISTER",
-          widget.email.toLowerCase().trim());
+      await Provider.of<UserProvider>(context, listen: false)
+          .getOtp(widget.method, widget.username.toLowerCase().trim());
     });
     super.initState();
   }
@@ -59,29 +57,19 @@ class _OtpPageState extends State<OtpPage> with AfterLayoutMixin {
   @override
   afterFirstLayout(BuildContext context) async {
     _startTimer();
-    user = await Provider.of<UserProvider>(context, listen: false).getOtp(
-        widget.isForget == true ? "FORGOT" : "REGISTER",
-        widget.email.toLowerCase().trim());
+    user = await Provider.of<UserProvider>(context, listen: false)
+        .getOtp(widget.method, widget.username.toLowerCase().trim());
     setState(() {
       isLoading = false;
     });
   }
 
-  // checkOpt(value) async {
-  //   user.otpCode = value;
-  //   widget.isForget == true
-  //       ? user.otpMethod = "FORGOT"
-  //       : user.otpMethod = "REGISTER";
-  //   await await Provider.of<UserProvider>(context, listen: false)
-  //       .otpVerify(user);
-  //   await Navigator.of(context).pushNamed(PassWordPage.routeName,
-  //       arguments: PassWordPageArguments(isForgot: widget.isForget));
-  // }
   checkOpt(value) async {
     user.otpCode = value;
+    user.otpMethod = widget.method;
     await Provider.of<UserProvider>(context, listen: false).otpVerify(user);
     await Navigator.of(context).pushNamed(PassWordPage.routeName,
-        arguments: PassWordPageArguments(isForgot: false));
+        arguments: PassWordPageArguments(method: widget.method));
   }
 
   void _startTimer() async {
@@ -194,7 +182,7 @@ class _OtpPageState extends State<OtpPage> with AfterLayoutMixin {
                 : Column(
                     children: [
                       SizedBox(
-                        height: 50,
+                        height: 40,
                       ),
                       Text(
                         '${user.message}',
@@ -251,7 +239,7 @@ class _OtpPageState extends State<OtpPage> with AfterLayoutMixin {
                                 await Provider.of<UserProvider>(context,
                                         listen: false)
                                     .getOtp("REGISTER",
-                                        widget.email.toLowerCase().trim());
+                                        widget.username.toLowerCase().trim());
                               },
                               child: Column(
                                 children: [
@@ -271,7 +259,7 @@ class _OtpPageState extends State<OtpPage> with AfterLayoutMixin {
                           ],
                         ),
                       SizedBox(
-                        height: 20,
+                        height: 25,
                       ),
                       Row(
                         children: [
@@ -289,18 +277,18 @@ class _OtpPageState extends State<OtpPage> with AfterLayoutMixin {
                         ],
                       ),
                       SizedBox(
-                        height: 8,
+                        height: 10,
                       ),
                       Pinput(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         autofocus: true,
                         keyboardType: TextInputType.number,
                         onCompleted: (value) => checkOpt(value),
-                        validator: (value) {
-                          return value == "${user.otpCode}"
-                              ? null
-                              : "Буруу байна";
-                        },
+                        // validator: (value) {
+                        //   return value == "${user.otpCode}"
+                        //       ? null
+                        //       : "Буруу байна";
+                        // },
                         length: 6,
                         hapticFeedbackType: HapticFeedbackType.lightImpact,
                         defaultPinTheme: defaultPinTheme,

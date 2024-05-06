@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:green_score/api/user_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
+import 'package:green_score/components/custom_button/profile_button.dart';
+import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/src/profile_page/profile_edit_page.dart';
 import 'package:green_score/src/splash_screen/splash_screen.dart';
+import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
-import 'package:green_score/widget/ui/qwerty.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -17,6 +21,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  User user = User();
+  bool isLoading = true;
   logOut() async {
     await Provider.of<UserProvider>(context, listen: false).logout();
     await Navigator.of(context).pushNamed(SplashScreen.routeName);
@@ -53,8 +59,17 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  danVerify() {
+    var res = UserApi().danVerify();
+    print(res);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    user = Provider.of<UserProvider>(context, listen: true).user;
     return BackgroundShapes(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
@@ -100,19 +115,45 @@ class _ProfilePageState extends State<ProfilePage> {
                 Center(
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage('assets/images/avatar.jpg'),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: user.avatar != null
+                            ? CircleAvatar(
+                                radius: 60,
+                                backgroundImage: NetworkImage('${user.avatar}'),
+                                backgroundColor: greytext,
+                              )
+                            : SvgPicture.asset(
+                                'assets/svg/avatar.svg',
+                                height: 120,
+                                width: 120,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      Text(
-                        'USERNAME',
-                        style: TextStyle(
-                          color: white,
-                          fontSize: 18,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${user.lastName}',
+                            style: TextStyle(
+                              color: white,
+                              fontSize: 18,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            '${user.firstName}',
+                            style: TextStyle(
+                              color: white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 20,
@@ -120,50 +161,46 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
-                CustomButton(
-                  buttonColor: greentext,
-                  height: 40,
-                  isLoading: false,
-                  labelText: 'Мэдээлэл засах',
+                ProfileButton(
+                  text: 'Мэдээлэл засах',
+                  svgPath: 'assets/svg/edit.svg',
                   onClick: () {
                     Navigator.of(context).pushNamed(ProfileEdit.routeName);
                   },
-                  textColor: white,
-                ),
-                Divider(
-                  color: buttonbg,
                 ),
                 SizedBox(
                   height: 15,
                 ),
-                CustomButton(
-                  buttonColor: greentext,
-                  height: 40,
-                  isLoading: false,
-                  labelText: 'Тохиргоо',
-                  onClick: () {
-                    comingSoon(context);
-                  },
-                  textColor: white,
+                ProfileButton(
+                  text: 'ДАН баталгаажуулалт',
+                  svgPath: 'assets/svg/settings.svg',
+                  onClick: danVerify,
                 ),
                 SizedBox(
                   height: 15,
                 ),
-                CustomButton(
-                  buttonColor: greentext,
-                  height: 40,
-                  isLoading: false,
-                  labelText: 'Тусламж',
+                ProfileButton(
+                  text: 'Тохиргоо',
+                  svgPath: 'assets/svg/settings.svg',
                   onClick: () {
                     comingSoon(context);
                   },
-                  textColor: white,
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                ProfileButton(
+                  text: 'Тусламж',
+                  svgPath: 'assets/svg/help.svg',
+                  onClick: () {
+                    comingSoon(context);
+                  },
                 ),
                 SizedBox(
                   height: 50,
                 ),
                 CustomButton(
-                  buttonColor: greentext,
+                  buttonColor: red,
                   height: 40,
                   isLoading: false,
                   labelText: 'Гарах',

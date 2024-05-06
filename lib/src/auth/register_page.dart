@@ -5,9 +5,9 @@ import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/src/auth/opt_page.dart';
+import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:green_score/widget/ui/form_textfield.dart';
-import 'package:green_score/widget/ui/qwerty.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -33,8 +33,11 @@ class _RegisterPageState extends State<RegisterPage> {
         setState(() {
           isLoading = false;
         });
-        await Navigator.of(context).pushNamed(OtpPage.routeName,
-            arguments: OtpPageArguments(isForget: false, email: save.phone!));
+        await Navigator.of(context).pushNamed(
+          OtpPage.routeName,
+          arguments:
+              OtpPageArguments(method: "REGISTER", username: save.phone!),
+        );
       } catch (e) {
         setState(() {
           isLoading = false;
@@ -88,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     FormTextField(
                       labelText: "Овог",
                       color: buttonbg,
-                      name: "firstName",
+                      name: "lastName",
                       hintText: 'Овог',
                       colortext: white,
                       hintTextColor: white.withOpacity(0.5),
@@ -98,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       labelText: "Нэр",
                       color: buttonbg,
                       hintText: 'Нэр',
-                      name: "lastName",
+                      name: "firstName",
                       colortext: white,
                       hintTextColor: white.withOpacity(0.5),
                     ),
@@ -130,45 +133,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       hintTextColor: white.withOpacity(0.5),
                     ),
                     const SizedBox(height: 20),
-                    // FormTextField(
-                    //   suffixIcon: IconButton(
-                    //     onPressed: () {
-                    //       setState(() {
-                    //         isVisible = !isVisible;
-                    //       });
-                    //     },
-                    //     icon: isVisible == false
-                    //         ? Icon(Icons.visibility, color: white)
-                    //         : Icon(Icons.visibility_off, color: white),
-                    //   ),
-                    //   inputType: TextInputType.visiblePassword,
-                    //   color: buttonbg,
-                    //   hintText: 'Нууц үг',
-                    //   name: "password",
-                    //   colortext: white,
-                    //   obscureText: isVisible,
-                    //   hintTextColor: white.withOpacity(0.5),
-                    // ),
-                    // const SizedBox(height: 20),
-                    // FormTextField(
-                    //   suffixIcon: IconButton(
-                    //     onPressed: () {
-                    //       setState(() {
-                    //         isVisible = !isVisible;
-                    //       });
-                    //     },
-                    //     icon: isVisible == false
-                    //         ? Icon(Icons.visibility, color: white)
-                    //         : Icon(Icons.visibility_off, color: white),
-                    //   ),
-                    //   inputType: TextInputType.visiblePassword,
-                    //   color: buttonbg,
-                    //   hintText: 'Нууц үг давтах',
-                    //   name: "password",
-                    //   colortext: white,
-                    //   obscureText: isVisible,
-                    //   hintTextColor: white.withOpacity(0.5),
-                    // ),
                   ],
                 ),
               ),

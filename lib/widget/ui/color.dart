@@ -16,6 +16,7 @@ Color bottomnavcolor = Color(0xff0D0D0D).withOpacity(0.5);
 const Color colortext = Color(0xff8A8E9E);
 const Color greytext = Color(0xff767676);
 Color buttonbg = Color(0xffEBEBF0).withOpacity(0.04);
+
 const Color bg = Color(0xff15151C);
 const Color bggreen = Color(0xff6BC962);
 const Color bgred = Color(0xffED5AB3);

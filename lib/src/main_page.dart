@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/action_button/action_button.dart';
 import 'package:green_score/components/trade_bottom_sheet/trade_bottom_sheet.dart';
+import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/src/collect_score_page/score_page.dart';
 import 'package:green_score/src/home_page/home_page.dart';
@@ -29,7 +30,7 @@ class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   int currentIndex = 0;
   late TabController tabController;
-
+  User user = User();
   @override
   void initState() {
     tabController = TabController(length: 4, vsync: this);
@@ -50,6 +51,7 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
+    user = Provider.of<UserProvider>(context, listen: true).user;
     return PopScope(
       canPop: false,
       child: BackgroundShapes(
@@ -64,9 +66,20 @@ class _MainPageState extends State<MainPage>
               onTap: () {
                 Navigator.of(context).pushNamed(ProfilePage.routeName);
               },
-              child: CircleAvatar(
-                radius: 22,
-                backgroundImage: AssetImage("assets/images/avatar.jpg"),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: user.avatar != null
+                    ? CircleAvatar(
+                        radius: 22,
+                        backgroundImage: NetworkImage('${user.avatar}'),
+                        backgroundColor: greytext,
+                      )
+                    : SvgPicture.asset(
+                        'assets/svg/avatar.svg',
+                        height: 44,
+                        width: 44,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
           ),

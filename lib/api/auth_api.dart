@@ -3,19 +3,19 @@ import 'package:green_score/utils/http_request.dart';
 import '../models/user.dart';
 
 class AuthApi extends HttpRequest {
+  me(bool handler) async {
+    var res = await get('/auth/me', "USER", handler: handler);
+    return User.fromJson(res as Map<String, dynamic>);
+  }
+
   login(User user) async {
     var res =
         await post('/auth/login', "AUTH", data: user.toJson(), handler: true);
     return User.fromJson(res as Map<String, dynamic>);
   }
 
-  me(bool handler) async {
-    var res = await get('/auth/me', "USER", handler: handler);
-    return User.fromJson(res as Map<String, dynamic>);
-  }
-
-  setPassword(User user) async {
-    var res = await post('/auth/change-password', "AUTH",
+  register(User user) async {
+    var res = await post("/auth/register", "AUTH",
         data: user.toJson(), handler: true);
     return User.fromJson(res as Map<String, dynamic>);
   }
@@ -26,8 +26,8 @@ class AuthApi extends HttpRequest {
     return User.fromJson(res as Map<String, dynamic>);
   }
 
-  register(User user) async {
-    var res = await post("/auth/register", "AUTH",
+  setPassword(User user) async {
+    var res = await post('/auth/change-password', "AUTH",
         data: user.toJson(), handler: true);
     return User.fromJson(res as Map<String, dynamic>);
   }

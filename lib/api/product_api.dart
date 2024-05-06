@@ -14,4 +14,10 @@ class ProductApi extends HttpRequest {
     var res = await get('/product', "MERCHANT", data: resultArguments.toJson());
     return Result.fromJson(res, Product.fromJson);
   }
+
+  getSaleProduct(ResultArguments resultArguments) async {
+    var res = await get('/product/onsale', "MERCHANT",
+        data: resultArguments.toJson());
+    return Result.fromJson(res, Product.fromJson);
+  }
 }

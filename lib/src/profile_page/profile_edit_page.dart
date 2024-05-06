@@ -8,12 +8,13 @@ import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/src/profile_page/camera_page.dart';
+import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:green_score/widget/ui/form_textfield.dart';
-import 'package:green_score/widget/ui/qwerty.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileEdit extends StatefulWidget {
   static const routeName = "ProfileEdit";
@@ -172,41 +173,64 @@ class _ProfileEditState extends State<ProfileEdit> {
                 Center(
                   child: Column(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: user.avatar != null && image == null
-                            ? Image.network(
-                                '${user.avatar}',
-                                fit: BoxFit.cover,
-                              )
-                            : image != null
-                                ? Image.file(
-                                    image!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.asset(
-                                    'assets/images/avatar.jpg',
-                                    height: 100,
-                                    width: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                      ),
                       GestureDetector(
                         onTap: showOptions,
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              AssetImage('assets/images/avatar.jpg'),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        'USERNAME',
-                        style: TextStyle(
-                          color: white,
-                          fontSize: 18,
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(
+                                  color: white.withOpacity(0.3),
+                                  width: 2,
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: user.avatar != null && image == null
+                                    ? Image.network(
+                                        '${user.avatar}',
+                                        height: 120,
+                                        width: 120,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : image != null
+                                        ? Image.file(
+                                            image!,
+                                            height: 120,
+                                            width: 120,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : SvgPicture.asset(
+                                            'assets/svg/avatar.svg',
+                                            height: 120,
+                                            width: 120,
+                                            fit: BoxFit.cover,
+                                          ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: white.withOpacity(0.6),
+                                ),
+                                height: 45,
+                                width: 45,
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    'assets/svg/camera.svg',
+                                    height: 30,
+                                    width: 30,
+                                    color: black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
@@ -215,44 +239,13 @@ class _ProfileEditState extends State<ProfileEdit> {
                     ],
                   ),
                 ),
-                // InformationCard(
-                //   paddingVertical: 10,
-                //   labelText: 'Хэрэглэгчийн овог',
-                //   value: user.username,
-                // ),
-                // InformationCard(
-                //   paddingVertical: 10,
-                //   labelText: 'Хэрэглэгчийн нэр',
-                //   value: user.username,
-                // ),
-                // InformationCard(
-                //   paddingVertical: 10,
-                //   labelText: 'Хэрэглэгчийн регистер',
-                //   value: user.username,
-                // ),
-                // InformationCard(
-                //   paddingVertical: 10,
-                //   labelText: 'Хэрэглэгчийн утас',
-                //   value: user.username,
-                // ),
-                // InformationCard(
-                //   paddingVertical: 10,
-                //   labelText: 'Хэрэглэгчийн и-мэйл',
-                //   value: user.username,
-                // ),
-                // InformationCard(
-                //   paddingVertical: 10,
-                //   labelText: 'Хэрэглэгчийн хаяг',
-                //   value: user.username,
-                // ),
-                // SizedBox(
-                //   height: 20,
-                // ),
                 FormBuilder(
                   key: fbkey,
                   child: Column(
                     children: [
                       FormTextField(
+                        labelText: 'Овог',
+                        initialValue: user.lastName,
                         color: buttonbg,
                         name: "firstName",
                         hintText: 'Овог',
@@ -261,6 +254,8 @@ class _ProfileEditState extends State<ProfileEdit> {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
+                        initialValue: user.firstName,
+                        labelText: 'Нэр',
                         color: buttonbg,
                         hintText: 'Нэр',
                         name: "lastName",
@@ -269,6 +264,9 @@ class _ProfileEditState extends State<ProfileEdit> {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
+                        readOnly: user.danVerified == true ? true : false,
+                        labelText: 'Регистрийн дугаар',
+                        initialValue: user.registerNo,
                         color: buttonbg,
                         hintText: 'Регистрийн дугаар',
                         name: "registerNo",
@@ -277,6 +275,8 @@ class _ProfileEditState extends State<ProfileEdit> {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
+                        labelText: 'Утас',
+                        initialValue: user.phone,
                         color: buttonbg,
                         hintText: 'Утас',
                         name: "phone",
@@ -285,6 +285,8 @@ class _ProfileEditState extends State<ProfileEdit> {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
+                        labelText: 'И-мэйл',
+                        initialValue: user.email,
                         color: buttonbg,
                         hintText: 'И-мэйл',
                         name: "email",
@@ -293,6 +295,8 @@ class _ProfileEditState extends State<ProfileEdit> {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
+                        initialValue: user.address,
+                        labelText: 'address',
                         color: buttonbg,
                         hintText: 'Хаяг',
                         name: "address",

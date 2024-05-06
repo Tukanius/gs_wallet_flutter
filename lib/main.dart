@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/services/dialog.dart';
 import 'package:green_score/services/navigation.dart';
-import 'package:green_score/src/auth/forget_password_page.dart';
+import 'package:green_score/src/auth/forget_page.dart';
 import 'package:green_score/src/auth/login_page.dart';
 import 'package:green_score/src/auth/opt_page.dart';
 import 'package:green_score/src/auth/password_page.dart';
@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
                       settings.arguments as PassWordPageArguments;
                   return MaterialPageRoute(builder: (context) {
                     return PassWordPage(
-                      isForgot: arguments.isForgot,
+                      method: arguments.method,
                     );
                   });
                 case ProfilePage.routeName:
@@ -142,9 +142,24 @@ class MyApp extends StatelessWidget {
                     },
                   );
                 case ProfileEdit.routeName:
-                  return MaterialPageRoute(builder: (context) {
-                    return const ProfileEdit();
-                  });
+                  return PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        const ProfileEdit(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      var begin = const Offset(-1.0, 0.0);
+                      var end = Offset.zero;
+                      var curve = Curves.ease;
+
+                      var tween = Tween(begin: begin, end: end)
+                          .chain(CurveTween(curve: curve));
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
+                    },
+                  );
                 case QrTransferPage.routeName:
                   QrTransferPageArguments arguments =
                       settings.arguments as QrTransferPageArguments;
@@ -166,8 +181,7 @@ class MyApp extends StatelessWidget {
                       settings.arguments as CardDetailPageArguments;
                   return MaterialPageRoute(builder: (context) {
                     return CardDetailPage(
-                      id: arguments.id,
-                      title: arguments.title,
+                      data: arguments.data,
                     );
                   });
                 case ProductDetail.routeName:
@@ -193,8 +207,8 @@ class MyApp extends StatelessWidget {
                       settings.arguments as OtpPageArguments;
                   return MaterialPageRoute(builder: (context) {
                     return OtpPage(
-                      isForget: arguments.isForget,
-                      email: arguments.email,
+                      method: arguments.method,
+                      username: arguments.username,
                     );
                   });
                 case CompanyPage.routeName:
@@ -205,6 +219,7 @@ class MyApp extends StatelessWidget {
                       data: arguments.data,
                     );
                   });
+
                 default:
                   return MaterialPageRoute(
                     builder: (_) => const SplashScreen(),
