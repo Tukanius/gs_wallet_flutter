@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider extends ChangeNotifier {
   User user = User();
+  bool isView = false;
 
   me(bool handler) async {
     user = await AuthApi().me(handler);
@@ -75,5 +76,10 @@ class UserProvider extends ChangeNotifier {
     data = await AuthApi().otpVerify(data);
     await setAccessToken(data.accessToken);
     return data;
+  }
+
+  setView(value) {
+    isView = value;
+    notifyListeners();
   }
 }

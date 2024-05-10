@@ -24,6 +24,8 @@ class HttpRequest {
 
   static const gsInvoice = 'http://192.168.1.15:30822';
 
+  static const gsTransaction = 'http://192.168.1.15:30827';
+
   static const version = '/api';
 
   Dio dio = Dio();
@@ -45,6 +47,8 @@ class HttpRequest {
       uri = '$gsWallet$version$api';
     } else if (type == "INVOICE") {
       uri = '$gsInvoice$version$api';
+    } else if (type == "TRANSACTION") {
+      uri = '$gsTransaction$version$api';
     } else {
       uri = '$gsAuth$version$api';
     }

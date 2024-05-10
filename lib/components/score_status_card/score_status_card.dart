@@ -8,6 +8,7 @@ import 'package:green_score/widget/ui/color.dart';
 import 'package:health/health.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ScoreStatusCard extends StatefulWidget {
   final bool? isActive;
@@ -28,34 +29,52 @@ class _ScoreStatusCardState extends State<ScoreStatusCard> {
   String? step;
   int stepIos = 0;
   int todaysSteps = 0;
-  StreamSubscription<StepCount>? subscription;
+  late StreamSubscription<StepCount> subscription;
 
   @override
   void initState() {
     super.initState();
     // _startListeningStep();
-    // Platform.isIOS ? initIosHealth() : _requestPermission();
+    _requestPermission();
   }
 
   void _requestPermission() async {
     final PermissionStatus status =
         await Permission.activityRecognition.request();
-
+    print(status);
     if (status == PermissionStatus.granted) {
-      initAndroid();
+      initSteps();
     } else {
+      initSteps();
       print('Permission denied');
     }
   }
 
-  void initAndroid() {
+  // void initStep() {
+  //   subscription = Pedometer.stepCountStream.listen(
+  //     (event) {
+  //       print('===EVENT=====');
+  //       print(event);
+  //       print('===EVENT=====');
+  //       setState(() {
+  //         step = event.steps.toString();
+  //       });
+  //     },
+  //   );
+  // }
+
+  void initSteps() {
+    int previousStepCount = 0;
     subscription = Pedometer.stepCountStream.listen(
       (event) {
         print('===EVENT=====');
         print(event);
         print('===EVENT=====');
+        int currentStepCount = event.steps;
+        int stepsSinceLastEvent = currentStepCount - previousStepCount;
+        previousStepCount = currentStepCount;
         setState(() {
-          step = event.steps.toString();
+          step = stepsSinceLastEvent.toString();
         });
       },
     );
@@ -234,7 +253,8 @@ class _ScoreStatusCardState extends State<ScoreStatusCard> {
                     ),
                   ),
                   Text(
-                    Platform.isIOS ? '${stepIos}' : '${step}',
+                    // Platform.isIOS ? '${stepIos}' : '${step}',
+                    '${step}',
                     style: TextStyle(
                       color: white,
                       fontSize: 24,

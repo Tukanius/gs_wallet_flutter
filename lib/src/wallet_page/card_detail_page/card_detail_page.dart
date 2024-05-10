@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/wallet_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
+import 'package:green_score/components/controller/listen.dart';
 import 'package:green_score/components/custom_card/custom_card.dart';
-import 'package:green_score/components/history_card/history_card.dart';
+import 'package:green_score/components/history_card/fiat_history_card.dart';
+import 'package:green_score/components/history_card/token_history_card.dart';
 import 'package:green_score/components/refresher/refresher.dart';
 import 'package:green_score/models/account.dart';
 import 'package:green_score/models/result.dart';
@@ -41,24 +43,35 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
   int page = 1;
   int limit = 10;
   Result bankList = Result(rows: [], count: 0);
+  Result cardList = Result(rows: [], count: 0);
+  ListenController listenController = ListenController();
   Account accountget = Account();
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
   Timer? timer;
   bool isSubmit = false;
+  @override
+  void initState() {
+    listenController.addListener(() async {
+      await listHistory(page, limit);
+    });
+    super.initState();
+  }
 
+  @override
   afterFirstLayout(BuildContext context) async {
-    list(page, limit, '');
+    await listHistory(page, limit);
     accountget = await WalletApi().getAccount(widget.data.id!);
     setState(() {
       isLoading = false;
     });
   }
 
-  list(page, limit, String query) async {
-    setState(() {
-      isLoading = true;
-    });
+  listHistory(page, limit) async {
+    Offset offset = Offset(page: page, limit: limit);
+    Filter filter = Filter(query: '', account: '${widget.data.id}');
+    cardList = await WalletApi()
+        .walletHistory(ResultArguments(filter: filter, offset: offset));
     setState(() {
       isLoading = false;
     });
@@ -70,7 +83,7 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
       isLoading = true;
       limit = 10;
     });
-    await list(page, limit, '');
+    await listHistory(page, limit);
     refreshController.refreshCompleted();
   }
 
@@ -78,21 +91,8 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
     setState(() {
       limit += 10;
     });
-    await list(page, limit, '');
+    await listHistory(page, limit);
     refreshController.loadComplete();
-  }
-
-  onChange(String query) {
-    if (timer != null) timer!.cancel();
-    timer = Timer(const Duration(milliseconds: 500), () async {
-      setState(() {
-        isSubmit = true;
-      });
-      list(page, limit, query);
-      setState(() {
-        isSubmit = false;
-      });
-    });
   }
 
   @override
@@ -147,6 +147,8 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
               )
             : Refresher(
                 refreshController: refreshController,
+                onRefresh: onRefresh,
+                onLoading: onLoading,
                 color: greentext,
                 child: Container(
                   padding: EdgeInsets.all(20),
@@ -275,24 +277,46 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                         SizedBox(
                           height: 20,
                         ),
-                        Column(
-                          children: ["1", "2", "3", "4"]
-                              .map(
-                                (e) => Column(
-                                  children: [
-                                    HistoryCard(),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.symmetric(vertical: 10),
-                                      child: Divider(
-                                        color: white.withOpacity(0.1),
+                        cardList.rows?.length != 0
+                            ? Column(
+                                children: cardList.rows!
+                                    .map(
+                                      (data) => Column(
+                                        children: [
+                                          widget.data.type == "TOKEN"
+                                              ? TokenHistoryCard(
+                                                  data: data,
+                                                )
+                                              : widget.data.type == "FIAT"
+                                                  ? FiatHistoryCard(
+                                                      data: data,
+                                                    )
+                                                  : SizedBox(),
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                              vertical: 10,
+                                            ),
+                                            child: Divider(
+                                              color: white.withOpacity(0.1),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                    )
+                                    .toList(),
                               )
-                              .toList(),
-                        ),
+                            : Container(
+                                margin: EdgeInsets.only(top: 50),
+                                child: Center(
+                                  child: Text(
+                                    'Түүх алга байна.',
+                                    style: TextStyle(
+                                      color: white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
                         SizedBox(
                           height: 80,
                         ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:green_score/api/wallet_api.dart';
 import 'package:green_score/components/controller/listen.dart';
 import 'package:green_score/components/custom_card/custom_card.dart';
-import 'package:green_score/components/history_card/history_card.dart';
+import 'package:green_score/components/refresher/refresher.dart';
 import 'package:green_score/models/result.dart';
 import 'package:green_score/src/wallet_page/card_detail_page/card_detail_page.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -23,6 +23,8 @@ class _WalletPageState extends State<WalletPage> with AfterLayoutMixin {
   int limit = 10;
   bool isLoadingPage = true;
   Result cardList = Result(rows: [], count: 0);
+  Result getHistory = Result(rows: [], count: 0);
+
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
   bool isSubmit = false;
@@ -80,81 +82,50 @@ class _WalletPageState extends State<WalletPage> with AfterLayoutMixin {
               color: greentext,
             ),
           )
-        : Container(
-            padding: EdgeInsets.all(20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  cardList.rows?.length != 0
-                      ? Container(
-                          height: 220,
-                          child: ListView(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            children: cardList.rows!
-                                .map(
-                                  (data) => Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).pushNamed(
-                                            CardDetailPage.routeName,
-                                            arguments: CardDetailPageArguments(
-                                                data: data),
-                                          );
-                                        },
-                                        child: CustomCard(
-                                          data: data,
-                                          isAll: true,
-                                        ),
+        : Refresher(
+            color: greentext,
+            refreshController: refreshController,
+            onRefresh: onRefresh,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                  child: cardList.rows?.length != 0
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: cardList.rows!
+                              .map(
+                                (data) => Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(
+                                          CardDetailPage.routeName,
+                                          arguments: CardDetailPageArguments(
+                                              data: data),
+                                        );
+                                      },
+                                      child: CustomCard(
+                                        data: data,
+                                        isAll: false,
                                       ),
-                                      SizedBox(
-                                        width: 16,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        )
-                      : SizedBox(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    'Гүйлгээний түүх',
-                    style: TextStyle(
-                      color: white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Column(
-                    children: ["1", "2", "3", "4"]
-                        .map(
-                          (e) => Column(
-                            children: [
-                              HistoryCard(),
-                              Container(
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                child: Divider(
-                                  color: white.withOpacity(0.1),
+                                    ),
+                                    SizedBox(
+                                      height: 16,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
+                              )
+                              .toList(),
                         )
-                        .toList(),
-                  ),
-                  SizedBox(
-                    height: 90,
-                  ),
-                ],
-              ),
+                      : Center(
+                          child: Text(
+                            'Дан баталгаажуулалт хийгдээгүй байна.',
+                            style: TextStyle(
+                              color: white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        )),
             ),
           );
   }

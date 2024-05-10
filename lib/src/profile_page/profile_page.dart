@@ -59,8 +59,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  danVerify() {
-    var res = UserApi().danVerify();
+  danVerify() async {
+    var res = await UserApi().danVerify();
     print(res);
     setState(() {
       isLoading = false;

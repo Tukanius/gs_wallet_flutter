@@ -2,6 +2,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:green_score/api/wallet_api.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
+import 'package:green_score/models/deposit.dart';
 import 'package:green_score/models/qr_read.dart';
 import 'package:green_score/src/main_page.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
@@ -30,7 +31,8 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
   String id = '';
   String iv = '';
   QrRead qr = QrRead();
-
+  Deposit deposit = Deposit();
+  bool success = false;
   @override
   afterFirstLayout(BuildContext context) async {
     List<String> parts = widget.data.code!.split('?');
@@ -43,34 +45,34 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
     try {
       qr.iv = iv;
       qr = await WalletApi().readQr(id, qr);
+      deposit = await WalletApi().confirmQr(qr.id!);
       setState(() {
+        success = true;
         isLoading = false;
       });
     } catch (err) {
-      print('+=======QRID=========');
-      print(qr.id);
-      print('+=======QRID=========');
       setState(() {
+        success = false;
         isLoading = false;
       });
       print("not found qr token !!!");
     }
   }
 
-  onConfirm(String id) async {
-    print('========ID=====');
-    print(id);
-    print('========ID=====');
+  onConfirm() async {
     try {
       setState(() {
         isLoading = true;
       });
-      qr = await WalletApi().confirmQr(qr.id!);
+      deposit = await WalletApi().depositConfirm(deposit.id!);
+      setState(() {
+        isLoading = false;
+      });
       Navigator.of(context).pushNamed(MainPage.routeName);
-      print('========ID=====');
-      print(qr.id);
-      print('========ID=====');
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       print(e.toString());
     }
   }
@@ -86,33 +88,101 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
                   color: greentext,
                 ),
               )
-            : Container(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${qr.totalAmount}',
-                      style: TextStyle(color: white),
+            : success == false
+                ? Container(
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Таны оруулсан QR буруу байна.',
+                          style: TextStyle(color: white),
+                        ),
+                        CustomButton(
+                          onClick: () {
+                            Navigator.of(context).pushNamed(MainPage.routeName);
+                          },
+                          buttonColor: greentext,
+                          height: 40,
+                          isLoading: false,
+                          labelText: "Ок",
+                          textColor: white,
+                        ),
+                      ],
                     ),
-                    Text(
-                      'Таны урамшуулал',
-                      style: TextStyle(color: white),
-                    ),
-                    CustomButton(
-                      onClick: () {
-                        onConfirm(qr.id!);
-                      },
-                      buttonColor: greentext,
-                      height: 40,
-                      isLoading: false,
-                      labelText: "Зөвшөөрөх",
-                      textColor: white,
-                    ),
-                  ],
-                ),
-              ),
+                  )
+                : qr.id != null
+                    ? Container(
+                        padding: EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Төлбөр төлөх',
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Нийт төлөх дүн: ${deposit.amount}',
+                              style: TextStyle(color: white),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              '${deposit.description}',
+                              style: TextStyle(color: white),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            CustomButton(
+                              onClick: () {
+                                onConfirm();
+                              },
+                              buttonColor: greentext,
+                              height: 40,
+                              isLoading: isLoading,
+                              labelText: "Төлөх",
+                              textColor: white,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        padding: EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Таны урамшуулал амжилтай орлоо',
+                              style: TextStyle(color: white),
+                            ),
+                            CustomButton(
+                              onClick: () {
+                                Navigator.of(context)
+                                    .pushNamed(MainPage.routeName);
+                              },
+                              buttonColor: greentext,
+                              height: 40,
+                              isLoading: isLoading,
+                              labelText: "Ок",
+                              textColor: white,
+                            ),
+                          ],
+                        ),
+                      ),
       ),
     );
   }

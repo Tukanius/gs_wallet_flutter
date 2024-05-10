@@ -118,7 +118,7 @@ class _SaleProductPageState extends State<SaleProductPage>
                     SizedBox(
                       height: 15,
                     ),
-                    salesList.rows != null
+                    salesList.rows?.length != 0
                         ? GridView.count(
                             crossAxisCount: 2,
                             shrinkWrap: true,

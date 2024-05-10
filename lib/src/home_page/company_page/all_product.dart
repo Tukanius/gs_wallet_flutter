@@ -1,6 +1,5 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/product_api.dart';
 import 'package:green_score/components/product_card/product_card.dart';
@@ -116,7 +115,7 @@ class _MerchantProductState extends State<MerchantProduct>
                     SizedBox(
                       height: 15,
                     ),
-                    productList.rows != null
+                    productList.rows?.length != 0
                         ? GridView.count(
                             crossAxisCount: 2,
                             shrinkWrap: true,

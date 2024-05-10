@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/models/account.dart';
+import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:green_score/widget/ui/form_textfield.dart';
+import 'package:provider/provider.dart';
+import 'package:green_score/utils/utils.dart';
 
 class CustomCard extends StatefulWidget {
   final Account data;
@@ -15,8 +18,11 @@ class CustomCard extends StatefulWidget {
 }
 
 class _CustomCardState extends State<CustomCard> {
+  bool isView = false;
+
   @override
   Widget build(BuildContext context) {
+    isView = Provider.of<UserProvider>(context, listen: true).isView;
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -86,7 +92,26 @@ class _CustomCardState extends State<CustomCard> {
                 ],
               ),
               widget.data.type != "TOKEN"
-                  ? SvgPicture.asset('assets/svg/eye.svg')
+                  ? GestureDetector(
+                      child: isView == false
+                          ? Icon(
+                              Icons.visibility,
+                              color: white,
+                            )
+                          : Icon(
+                              Icons.visibility_off,
+                              color: white,
+                            ),
+                      // child: isView == false
+                      //     ? SvgPicture.asset('assets/svg/eye.svg')
+                      //     : SvgPicture.asset('assets/svg/eye_on.svg'),
+
+                      onTap: () async {
+                        print(isView);
+                        await Provider.of<UserProvider>(context, listen: false)
+                            .setView(!isView);
+                      },
+                    )
                   : SizedBox(),
             ],
           ),
@@ -167,7 +192,9 @@ class _CustomCardState extends State<CustomCard> {
                       ],
                     )
                   : Text(
-                      '${widget.data.balanceAmount} ₮',
+                      isView == false
+                          ? "${Utils().formatCurrency(widget.data.balanceAmount.toString())}₮"
+                          : "*******",
                       style: TextStyle(
                         color: white,
                         fontSize: 26,

@@ -16,8 +16,8 @@ class Sale {
   double? longitude;
   bool? isExpirity;
   String? expiryDate;
-  int? saleAmount;
-  double? saleTokenAmount;
+  num? saleAmount;
+  num? saleTokenAmount;
   String? createdAt;
   String? updatedAt;
 

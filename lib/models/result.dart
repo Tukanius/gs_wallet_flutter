@@ -4,6 +4,7 @@ class Filter {
   String? merchant;
   String? search;
   String? query;
+  String? account;
   bool? isReceived;
   String? type;
   String? orderConfirmTerm;
@@ -17,6 +18,7 @@ class Filter {
     this.query,
     this.isReceived,
     this.orderConfirmTerm,
+    this.account,
   });
 }
 

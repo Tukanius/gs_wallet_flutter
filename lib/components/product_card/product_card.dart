@@ -60,16 +60,8 @@ class _ProductCardState extends State<ProductCard> {
             height: 8,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              widget.data.sale != null
-                  ? Text(
-                      '${widget.data.sale?.name}',
-                      style: TextStyle(
-                        color: greentext,
-                      ),
-                    )
-                  : SizedBox(),
               GestureDetector(
                 onTap: widget.onClick,
                 child: Container(

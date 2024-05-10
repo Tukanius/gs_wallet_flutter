@@ -7,9 +7,9 @@ SaleProduct _$SaleProductFromJson(Map<String, dynamic> json) {
     sale: json['sale'] != null ? json['sale'] as String : null,
     name: json['name'] != null ? json['name'] as String : null,
     product: json['product'] != null ? json['product'] as String : null,
-    saleAmount: json['saleAmount'] != null ? json['saleAmount'] as int : null,
+    saleAmount: json['saleAmount'] != null ? json['saleAmount'] as num : null,
     tokenAmount:
-        json['tokenAmount'] != null ? json['tokenAmount'] as double : null,
+        json['tokenAmount'] != null ? json['tokenAmount'] as num : null,
     createdAt: json['createdAt'] != null ? json['createdAt'] as String : null,
     updatedAt: json['updatedAt'] != null ? json['updatedAt'] as String : null,
   );

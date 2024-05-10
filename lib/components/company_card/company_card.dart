@@ -204,7 +204,7 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
             child: productList.rows?.length == 0
                 ? Center(
                     child: Text(
-                      'Одоогоор бараа бүртгэгдээгүй байна',
+                      'Бараа бүртгэгдээгүй байна',
                       style: TextStyle(
                         color: white,
                         fontSize: 14,

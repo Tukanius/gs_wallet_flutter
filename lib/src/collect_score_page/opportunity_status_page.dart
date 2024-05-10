@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:green_score/components/back_button/back_button.dart';
-import 'package:green_score/components/history_card/history_card.dart';
+// import 'package:green_score/components/history_card/fiat_history_card.dart';
 import 'package:green_score/components/score_status_card/score_status_card.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -287,7 +287,7 @@ class _OpportunityStatusPageState extends State<OpportunityStatusPage> {
                             .map(
                               (e) => Column(
                                 children: [
-                                  HistoryCard(),
+                                  // HistoryCard(),
                                   Container(
                                     margin: EdgeInsets.symmetric(vertical: 10),
                                     child: Divider(

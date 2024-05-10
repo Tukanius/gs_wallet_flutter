@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:green_score/models/history.dart';
 import 'package:green_score/widget/ui/color.dart';
+import 'package:green_score/utils/utils.dart';
 
-class HistoryCard extends StatefulWidget {
-  const HistoryCard({super.key});
+class FiatHistoryCard extends StatefulWidget {
+  final History data;
+  const FiatHistoryCard({super.key, required this.data});
 
   @override
-  State<HistoryCard> createState() => _HistoryCardState();
+  State<FiatHistoryCard> createState() => _FiatHistoryCardState();
 }
 
-class _HistoryCardState extends State<HistoryCard> {
+class _FiatHistoryCardState extends State<FiatHistoryCard> {
   @override
   Widget build(BuildContext context) {
+    String createdDate = Utils.formatUTC8(widget.data.createdAt!);
+
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Row(
@@ -19,8 +25,7 @@ class _HistoryCardState extends State<HistoryCard> {
         children: [
           Row(
             children: [
-              SvgPicture.asset('assets/svg/gsc.svg'),
-              // SvgPicture.asset('assets/svg/mnt.svg'),
+              SvgPicture.asset('assets/svg/mnt.svg'),
               SizedBox(
                 width: 15,
               ),
@@ -28,24 +33,23 @@ class _HistoryCardState extends State<HistoryCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '2024.04.03',
+                    createdDate,
                     style: TextStyle(
                       color: white,
                       fontSize: 13,
                     ),
                   ),
                   Text(
-                    '13км',
-                    // 'GSC - Орлого',
+                    '${widget.data.description}',
                     style: TextStyle(
+                      overflow: TextOverflow.ellipsis,
                       color: white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    'Үлдэгдэл: 365 GS',
-                    // 'Үлдэгдэл: ₮135,000.00',
+                    '${widget.data.totalAmount}',
                     style: TextStyle(
                       color: white,
                       fontSize: 13,
@@ -56,11 +60,10 @@ class _HistoryCardState extends State<HistoryCard> {
             ],
           ),
           Text(
-            '1.3 GS Бонус',
-            // '₮50,000.00',
+            "${Utils().formatCurrency(widget.data.amount.toString())}₮",
             style: TextStyle(
-              color: greentext,
-              // color: expenditure,
+              color: widget.data.type == "DEPOSIT" ? greentext : expenditure,
+              overflow: TextOverflow.ellipsis,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),

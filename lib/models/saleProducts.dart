@@ -6,8 +6,8 @@ class SaleProduct {
   String? sale;
   String? name;
   String? product;
-  int? saleAmount;
-  double? tokenAmount;
+  num? saleAmount;
+  num? tokenAmount;
   String? createdAt;
   String? updatedAt;
 

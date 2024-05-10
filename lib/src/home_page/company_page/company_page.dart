@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/models/merchant.dart';
@@ -322,7 +324,7 @@ class _CompanyPageState extends State<CompanyPage>
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.symmetric(vertical: 10),
+                              padding: EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: buttonbg,
@@ -332,43 +334,55 @@ class _CompanyPageState extends State<CompanyPage>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  Container(
-                                    height: 45,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        changePage(0);
-                                      },
-                                      child: Center(
-                                        child: Text(
-                                          'Бүх бараа',
-                                          style: TextStyle(
-                                            color: tabController.index == 0
-                                                ? white
-                                                : white.withOpacity(0.5),
-                                            fontSize: tabController.index == 0
-                                                ? 18
-                                                : 17,
+                                  Expanded(
+                                    child: Container(
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: tabController.index == 0
+                                            ? white.withOpacity(0.3)
+                                            : transparent,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          changePage(0);
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            'Бүх бараа',
+                                            style: TextStyle(
+                                              color: tabController.index == 0
+                                                  ? white
+                                                  : white.withOpacity(0.5),
+                                              fontSize: 18,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    height: 45,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        changePage(1);
-                                      },
-                                      child: Center(
-                                        child: Text(
-                                          'Хямдралтай',
-                                          style: TextStyle(
-                                            color: tabController.index == 1
-                                                ? white
-                                                : white.withOpacity(0.5),
-                                            fontSize: tabController.index == 1
-                                                ? 18
-                                                : 17,
+                                  Expanded(
+                                    child: Container(
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: tabController.index == 1
+                                            ? white.withOpacity(0.3)
+                                            : transparent,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          changePage(1);
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            'Хямдралтай',
+                                            style: TextStyle(
+                                              color: tabController.index == 1
+                                                  ? white
+                                                  : white.withOpacity(0.5),
+                                              fontSize: 18,
+                                            ),
                                           ),
                                         ),
                                       ),

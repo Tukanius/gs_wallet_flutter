@@ -21,10 +21,9 @@ Sale _$SaleFromJson(Map<String, dynamic> json) {
     isExpirity: json['isExpirity'] != null ? json['isExpirity'] as bool : null,
     expiryDate:
         json['expiryDate'] != null ? json['expiryDate'] as String : null,
-    saleAmount: json['saleAmount'] != null ? json['saleAmount'] as int : null,
-    saleTokenAmount: json['saleTokenAmount'] != null
-        ? json['saleTokenAmount'] as double
-        : null,
+    saleAmount: json['saleAmount'] != null ? json['saleAmount'] as num : null,
+    saleTokenAmount:
+        json['saleTokenAmount'] != null ? json['saleTokenAmount'] as num : null,
     createdAt: json['createdAt'] != null ? json['createdAt'] as String : null,
     updatedAt: json['updatedAt'] != null ? json['updatedAt'] as String : null,
   );

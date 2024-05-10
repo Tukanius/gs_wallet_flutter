@@ -38,6 +38,9 @@ Map<String, dynamic> _$ResultArgumentToJson(ResultArguments? instance) {
     if (instance.filter!.query != null) {
       params['filter']['query'] = instance.filter!.query;
     }
+    if (instance.filter!.account != null) {
+      params['filter']['account'] = instance.filter!.account;
+    }
     if (instance.filter!.merchant != null) {
       params['filter']['merchant'] = instance.filter!.merchant;
     }
