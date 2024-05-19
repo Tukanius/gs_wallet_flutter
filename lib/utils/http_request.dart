@@ -12,19 +12,28 @@ import '../main.dart';
 class HttpRequest {
   // static const host = "http://dev-cb-admin.zto.mn";
 
-  static const gsAuth = 'http://192.168.1.15:30820';
+  static const gsAuth = 'https://dev-gs.zto.mn/aut';
+  // static const gsAuth = 'http://192.168.1.15:30820';
 
-  static const gsMedia = 'http://192.168.1.15:30821';
+  static const gsMedia = 'https://dev-gs.zto.mn/med';
+  // static const gsMedia = 'http://192.168.1.15:30821';
 
-  static const gsMerchant = 'http://192.168.1.15:30823';
+  static const gsMerchant = 'https://dev-gs.zto.mn/mer';
+  // static const gsMerchant = 'http://192.168.1.15:30823';
 
-  static const gsUser = 'http://192.168.1.15:30824';
+  static const gsUser = 'https://dev-gs.zto.mn/urs';
+  // static const gsUser = 'http://192.168.1.15:30824';
 
-  static const gsWallet = 'http://192.168.1.15:30825';
+  static const gsWallet = 'https://dev-gs.zto.mn/wal';
+  // static const gsWallet = 'http://192.168.1.15:30825';
 
-  static const gsInvoice = 'http://192.168.1.15:30822';
+  static const gsInvoice = 'https://dev-gs.zto.mn/inv';
+  // static const gsInvoice = 'http://192.168.1.15:30822';
 
-  static const gsTransaction = 'http://192.168.1.15:30827';
+  static const gsTransaction = 'https://dev-gs.zto.mn/tra';
+  // static const gsTransaction = 'http://192.168.1.15:30827';
+
+  static const gsScore = 'https://dev-gs.zto.mn/sco';
 
   static const version = '/api';
 
@@ -49,6 +58,8 @@ class HttpRequest {
       uri = '$gsInvoice$version$api';
     } else if (type == "TRANSACTION") {
       uri = '$gsTransaction$version$api';
+    } else if (type == "SCORE") {
+      uri = '$gsScore$version$api';
     } else {
       uri = '$gsAuth$version$api';
     }

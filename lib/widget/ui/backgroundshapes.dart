@@ -8,6 +8,7 @@ class BackgroundShapes extends StatefulWidget {
   final Widget body;
   final Widget? bottomNavigationBar;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final bool resizeToAvoidBottomInset;
   const BackgroundShapes({
     super.key,
     this.floatingActionButtonLocation,
@@ -15,6 +16,7 @@ class BackgroundShapes extends StatefulWidget {
     this.appBar,
     this.extendBody,
     this.floatingActionButton,
+    this.resizeToAvoidBottomInset = false,
     required this.body,
   });
 
@@ -55,6 +57,7 @@ class _BackgroundShapesState extends State<BackgroundShapes>
       appBar: widget.appBar,
       floatingActionButton: widget.floatingActionButton,
       bottomNavigationBar: widget.bottomNavigationBar,
+      resizeToAvoidBottomInset: true,
       floatingActionButtonLocation: widget.floatingActionButtonLocation ??
           FloatingActionButtonLocation.endFloat,
       backgroundColor: bg,

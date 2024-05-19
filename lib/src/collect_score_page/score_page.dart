@@ -22,8 +22,6 @@ class ScorePage extends StatefulWidget {
 class _ScorePageState extends State<ScorePage> {
   User user = User();
 
-  onSubmit() async {}
-
   @override
   Widget build(BuildContext context) {
     user = Provider.of<UserProvider>(context, listen: true).user;
@@ -45,7 +43,7 @@ class _ScorePageState extends State<ScorePage> {
               height: 10,
             ),
             Text(
-              'Мөнхтуул Алтантулга',
+              '${user.lastName} ${user.firstName}',
               style: TextStyle(
                 color: white,
                 fontSize: 24,
@@ -55,33 +53,10 @@ class _ScorePageState extends State<ScorePage> {
             SizedBox(
               height: 20,
             ),
-            GestureDetector(
-              onTap: onSubmit,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: greentext,
-                ),
-                child: Center(
-                    child: Text(
-                  'Оноо явуулах 100',
-                  style: TextStyle(
-                    color: white,
-                    fontSize: 16,
-                  ),
-                )),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
             ScoreStatusCard(
               assetPath: "assets/svg/man.svg",
               isActive: true,
             ),
-            // ScoreTest(),
             SizedBox(
               height: 25,
             ),
@@ -125,22 +100,6 @@ class _ScorePageState extends State<ScorePage> {
               height: 10,
             ),
             OpportunityCard(
-              id: "1",
-              assetPath: 'assets/svg/bus.svg',
-              title: 'Автобус',
-              subtitle: '10км = 1GS',
-              onClick: () {
-                Navigator.of(context).pushNamed(
-                  OpportunityStatusPage.routeName,
-                  arguments: OpportunityStatusPageArguments(
-                    id: "1",
-                    title: "Автобус",
-                    assetPath: "assets/svg/bus.svg",
-                  ),
-                );
-              },
-            ),
-            OpportunityCard(
               id: "2",
               assetPath: 'assets/svg/man.svg',
               title: 'Алхалт',
@@ -157,19 +116,35 @@ class _ScorePageState extends State<ScorePage> {
               },
             ),
             OpportunityCard(
+              id: "1",
+              assetPath: 'assets/svg/bus.svg',
+              title: 'Автобус',
+              subtitle: '10км = 1GS',
+              onClick: () {
+                // Navigator.of(context).pushNamed(
+                //   OpportunityStatusPage.routeName,
+                //   arguments: OpportunityStatusPageArguments(
+                //     id: "1",
+                //     title: "Автобус",
+                //     assetPath: "assets/svg/bus.svg",
+                //   ),
+                // );
+              },
+            ),
+            OpportunityCard(
               id: "3",
               assetPath: 'assets/svg/bicycle.svg',
               title: 'Унадаг дугуй',
               subtitle: '3км = 1GS',
               onClick: () {
-                Navigator.of(context).pushNamed(
-                  OpportunityStatusPage.routeName,
-                  arguments: OpportunityStatusPageArguments(
-                    id: "3",
-                    title: "Унадаг дугуй",
-                    assetPath: 'assets/svg/bicycle.svg',
-                  ),
-                );
+                // Navigator.of(context).pushNamed(
+                //   OpportunityStatusPage.routeName,
+                //   arguments: OpportunityStatusPageArguments(
+                //     id: "3",
+                //     title: "Унадаг дугуй",
+                //     assetPath: 'assets/svg/bicycle.svg',
+                //   ),
+                // );
               },
             ),
             OpportunityCard(
@@ -178,14 +153,14 @@ class _ScorePageState extends State<ScorePage> {
               title: 'Худалдан авалт',
               subtitle: '5000төг = 1GS',
               onClick: () {
-                Navigator.of(context).pushNamed(
-                  OpportunityStatusPage.routeName,
-                  arguments: OpportunityStatusPageArguments(
-                    id: "4",
-                    title: "Худалдан авалт",
-                    assetPath: 'assets/svg/bag.svg',
-                  ),
-                );
+                // Navigator.of(context).pushNamed(
+                //   OpportunityStatusPage.routeName,
+                //   arguments: OpportunityStatusPageArguments(
+                //     id: "4",
+                //     title: "Худалдан авалт",
+                //     assetPath: 'assets/svg/bag.svg',
+                //   ),
+                // );
               },
             ),
             SizedBox(

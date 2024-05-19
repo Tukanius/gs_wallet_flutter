@@ -42,7 +42,6 @@ class _OpportunityStatusPageState extends State<OpportunityStatusPage> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.45,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
@@ -282,23 +281,23 @@ class _OpportunityStatusPageState extends State<OpportunityStatusPage> {
                       //     ],
                       //   ),
                       // ),
-                      Column(
-                        children: ["1", "2", "3", "4"]
-                            .map(
-                              (e) => Column(
-                                children: [
-                                  // HistoryCard(),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(vertical: 10),
-                                    child: Divider(
-                                      color: white.withOpacity(0.1),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                            .toList(),
-                      ),
+                      // Column(
+                      //   children: ["1", "2", "3", "4"]
+                      //       .map(
+                      //         (e) => Column(
+                      //           children: [
+                      //             // HistoryCard(),
+                      //             Container(
+                      //               margin: EdgeInsets.symmetric(vertical: 10),
+                      //               child: Divider(
+                      //                 color: white.withOpacity(0.1),
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       )
+                      //       .toList(),
+                      // ),
                     ],
                   ),
                 ),

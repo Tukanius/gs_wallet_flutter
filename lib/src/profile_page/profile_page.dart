@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/user_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
@@ -6,6 +7,7 @@ import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/components/custom_button/profile_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
+import 'package:green_score/src/main_page.dart';
 import 'package:green_score/src/profile_page/profile_edit_page.dart';
 import 'package:green_score/src/splash_screen/splash_screen.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
@@ -25,7 +27,19 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true;
   logOut() async {
     await Provider.of<UserProvider>(context, listen: false).logout();
+    await stopService();
     await Navigator.of(context).pushNamed(SplashScreen.routeName);
+  }
+
+  stopService() async {
+    final service = FlutterBackgroundService();
+    var isRunning = await service.isRunning();
+    if (isRunning) {
+      service.invoke("stopService");
+    } else {
+      service.startService();
+    }
+    setState(() {});
   }
 
   comingSoon(BuildContext context) {
@@ -59,12 +73,45 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  successDan(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: white,
+          content: Text(
+            'Амжилттай!',
+            style: TextStyle(
+              color: black,
+              fontSize: 18,
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'OK',
+                  style: TextStyle(color: black),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   danVerify() async {
     var res = await UserApi().danVerify();
     print(res);
+    successDan(context);
     setState(() {
       isLoading = false;
     });
+    Navigator.of(context).pushNamed(MainPage.routeName);
   }
 
   @override
@@ -174,7 +221,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 ProfileButton(
                   text: 'ДАН баталгаажуулалт',
                   svgPath: 'assets/svg/settings.svg',
-                  onClick: danVerify,
+                  onClick: () {
+                    danVerify();
+                  },
                 ),
                 SizedBox(
                   height: 15,

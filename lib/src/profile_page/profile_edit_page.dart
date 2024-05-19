@@ -57,7 +57,7 @@ class _ProfileEditState extends State<ProfileEdit> {
     if (file != null) {
       setState(() {
         image = File(file.path);
-        isLoading = true;
+        loading = true;
       });
       result = await UserApi().upload(file.path);
       print('=====RES=====');
@@ -69,7 +69,7 @@ class _ProfileEditState extends State<ProfileEdit> {
       );
       await Provider.of<UserProvider>(context, listen: false).me(true);
       setState(() {
-        isLoading = false;
+        loading = false;
       });
     }
   }
@@ -316,6 +316,9 @@ class _ProfileEditState extends State<ProfileEdit> {
                     onsubmit();
                   },
                   textColor: white,
+                ),
+                SizedBox(
+                  height: 50,
                 ),
               ],
             ),

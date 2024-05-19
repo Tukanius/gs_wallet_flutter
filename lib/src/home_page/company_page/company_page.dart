@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/models/merchant.dart';
@@ -97,321 +95,324 @@ class _CompanyPageState extends State<CompanyPage>
   Widget build(BuildContext context) {
     return BackgroundShapes(
       body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                toolbarHeight: 60,
-                automaticallyImplyLeading: false,
-                pinned: false,
-                snap: true,
-                floating: true,
-                elevation: 0,
-                backgroundColor: transparent,
-                leading: Row(
-                  children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-                    CustomBackButton(
-                      onClick: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-                centerTitle: true,
-                title: Text(
-                  '${widget.data.name}',
-                  style: TextStyle(
-                    color: white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
+        headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              toolbarHeight: 60,
+              automaticallyImplyLeading: false,
+              pinned: false,
+              snap: true,
+              floating: true,
+              elevation: 0,
+              backgroundColor: transparent,
+              leading: Row(
+                children: [
+                  SizedBox(
+                    width: 20,
                   ),
+                  CustomBackButton(
+                    onClick: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+              centerTitle: true,
+              title: Text(
+                '${widget.data.name}',
+                style: TextStyle(
+                  color: white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: widget.data.image != null
-                                      ? CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: NetworkImage(
-                                              '${widget.data.image}'),
-                                          backgroundColor: greytext,
-                                        )
-                                      : SvgPicture.asset(
-                                          'assets/svg/avatar.svg',
-                                          height: 40,
-                                          width: 40,
-                                          fit: BoxFit.cover,
-                                        ),
-                                ),
-                                SizedBox(
-                                  width: 12,
-                                ),
-                                Text(
-                                  '${widget.data.name}',
-                                  style: TextStyle(
-                                    color: white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 20,
+                  bottom: 15,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: widget.data.image != null
+                                ? CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage:
+                                        NetworkImage('${widget.data.image}'),
+                                    backgroundColor: greytext,
+                                  )
+                                : SvgPicture.asset(
+                                    'assets/svg/avatar.svg',
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.cover,
                                   ),
-                                ),
-                              ],
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text(
+                            '${widget.data.name}',
+                            style: TextStyle(
+                              color: white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
                             ),
-                            SizedBox(
-                              height: 15,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'И-мэйл:',
+                            style: TextStyle(
+                              color: colortext,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'И-мэйл:',
-                                  style: TextStyle(
-                                    color: colortext,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Text(
-                                  '${widget.data.email}',
-                                  style: TextStyle(
-                                    color: colortext,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
+                          ),
+                          Text(
+                            '${widget.data.email}',
+                            style: TextStyle(
+                              color: colortext,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Утас:',
-                                  style: TextStyle(
-                                    color: colortext,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Text(
-                                  '${widget.data.phone}',
-                                  style: TextStyle(
-                                    color: colortext,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Утас:',
+                            style: TextStyle(
+                              color: colortext,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Утас:',
-                                  style: TextStyle(
-                                    color: colortext,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Text(
-                                  widget.data.phoneSecond != null
-                                      ? '${widget.data.phoneSecond}'
-                                      : '-',
-                                  style: TextStyle(
-                                    color: colortext,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
+                          ),
+                          Text(
+                            '${widget.data.phone}',
+                            style: TextStyle(
+                              color: colortext,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Social хаяг',
-                                  style: TextStyle(
-                                    color: colortext,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Column(
-                                  children: widget.data.links!
-                                      .map(
-                                        (data) => Text(
-                                          "${data.uri}",
-                                          style: TextStyle(
-                                            color: colortext,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                              ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Утас:',
+                            style: TextStyle(
+                              color: colortext,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
                             ),
-                            SizedBox(
-                              height: 15,
+                          ),
+                          Text(
+                            widget.data.phoneSecond != null
+                                ? '${widget.data.phoneSecond}'
+                                : '-',
+                            style: TextStyle(
+                              color: colortext,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
                             ),
-                            Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 140,
-                                    child: GoogleMap(
-                                      zoomControlsEnabled: false,
-                                      mapType: MapType.hybrid,
-                                      compassEnabled: false,
-                                      myLocationButtonEnabled: false,
-                                      markers: Set<Marker>.of(markers),
-                                      initialCameraPosition: _kGooglePlex,
-                                      gestureRecognizers: <Factory<
-                                          OneSequenceGestureRecognizer>>[
-                                        Factory<OneSequenceGestureRecognizer>(
-                                          () => EagerGestureRecognizer(),
-                                        ),
-                                      ].toSet(),
-                                      onMapCreated: (mapcontroller) {
-                                        _controller.complete(mapcontroller);
-                                      },
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Social хаяг',
+                            style: TextStyle(
+                              color: colortext,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Column(
+                            children: widget.data.links!
+                                .map(
+                                  (data) => Text(
+                                    "${data.uri}",
+                                    style: TextStyle(
+                                      color: colortext,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
                                     ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .pushNamed(MapPage.routeName,
-                                            arguments: MapPageArguments(
-                                              lang: widget.data.latitude!,
-                                              long: widget.data.longitude!,
-                                            ));
-                                  },
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 140,
-                                    color: transparent,
                                   ),
                                 )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              widget.data.address != null
-                                  ? 'Хаяг: ${widget.data.address}'
-                                  : 'Хаяг: -',
-                              style: TextStyle(
-                                color: colortext,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
+                                .toList(),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 140,
+                              child: GoogleMap(
+                                zoomControlsEnabled: false,
+                                mapType: MapType.hybrid,
+                                compassEnabled: false,
+                                myLocationButtonEnabled: false,
+                                markers: Set<Marker>.of(markers),
+                                initialCameraPosition: _kGooglePlex,
+                                gestureRecognizers:
+                                    <Factory<OneSequenceGestureRecognizer>>[
+                                  Factory<OneSequenceGestureRecognizer>(
+                                    () => EagerGestureRecognizer(),
+                                  ),
+                                ].toSet(),
+                                onMapCreated: (mapcontroller) {
+                                  _controller.complete(mapcontroller);
+                                },
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: buttonbg,
-                              ),
-                              height: 45,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: 45,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushNamed(MapPage.routeName,
+                                  arguments: MapPageArguments(
+                                    lang: widget.data.latitude!,
+                                    long: widget.data.longitude!,
+                                  ));
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 140,
+                              color: transparent,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        widget.data.address != null
+                            ? 'Хаяг: ${widget.data.address}'
+                            : 'Хаяг: -',
+                        style: TextStyle(
+                          color: colortext,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: buttonbg,
+                        ),
+                        height: 45,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: tabController.index == 0
+                                      ? white.withOpacity(0.3)
+                                      : transparent,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    changePage(0);
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      'Бүх бараа',
+                                      style: TextStyle(
                                         color: tabController.index == 0
-                                            ? white.withOpacity(0.3)
-                                            : transparent,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          changePage(0);
-                                        },
-                                        child: Center(
-                                          child: Text(
-                                            'Бүх бараа',
-                                            style: TextStyle(
-                                              color: tabController.index == 0
-                                                  ? white
-                                                  : white.withOpacity(0.5),
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ),
+                                            ? white
+                                            : white.withOpacity(0.5),
+                                        fontSize: 18,
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Container(
-                                      height: 45,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: tabController.index == 1
+                                      ? white.withOpacity(0.3)
+                                      : transparent,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    changePage(1);
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      'Хямдралтай',
+                                      style: TextStyle(
                                         color: tabController.index == 1
-                                            ? white.withOpacity(0.3)
-                                            : transparent,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          changePage(1);
-                                        },
-                                        child: Center(
-                                          child: Text(
-                                            'Хямдралтай',
-                                            style: TextStyle(
-                                              color: tabController.index == 1
-                                                  ? white
-                                                  : white.withOpacity(0.5),
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ),
+                                            ? white
+                                            : white.withOpacity(0.5),
+                                        fontSize: 18,
                                       ),
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              )
-            ];
-          },
-          body: TabBarView(
-            controller: tabController,
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-              MerchantProduct(
-                id: widget.data.id!,
               ),
-              SaleProductPage(
-                id: widget.data.id!,
-              ),
-            ],
-          )),
+            )
+          ];
+        },
+        body: TabBarView(
+          controller: tabController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            MerchantProduct(
+              id: widget.data.id!,
+            ),
+            SaleProductPage(
+              id: widget.data.id!,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

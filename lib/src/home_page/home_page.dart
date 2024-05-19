@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
   bool isLoadingPage = true;
   int page = 1;
   int limit = 10;
+  TextEditingController controller = TextEditingController();
   Result merchantList = Result(rows: [], count: 0);
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
@@ -40,7 +41,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
 
   list(page, limit, String value) async {
     Offset offset = Offset(page: page, limit: limit);
-    Filter filter = Filter(query: '', search: value);
+    Filter filter = Filter(query: value, search: value);
     merchantList = await ProductApi()
         .getMerchant(ResultArguments(filter: filter, offset: offset));
     setState(() {
@@ -53,6 +54,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
     setState(() {
       isLoading = true;
       limit = 10;
+      controller.clear();
     });
     await list(page, limit, '');
     refreshController.refreshCompleted();
@@ -80,6 +82,11 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return isLoadingPage == true
         ? Center(
@@ -89,7 +96,9 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
           )
         : Refresher(
             refreshController: refreshController,
-            onLoading: onLoading,
+            onLoading: merchantList.rows!.length == merchantList.count
+                ? null
+                : onLoading,
             onRefresh: onRefresh,
             color: greentext,
             child: SingleChildScrollView(
@@ -110,6 +119,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
                       height: 20,
                     ),
                     FormTextField(
+                      controller: controller,
                       onChanged: (query) {
                         onChange(query);
                       },
@@ -123,12 +133,12 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
                       hintText: "Хайх",
                       colortext: white,
                       color: buttonbg,
-                      name: "search",
+                      name: "query",
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    merchantList.rows?.length != null
+                    merchantList.rows!.isNotEmpty
                         ? Column(
                             children: merchantList.rows!
                                 .map(
@@ -161,29 +171,18 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
                                   height: 15,
                                 ),
                                 Text(
-                                  'Xямдрал олдсонгүй',
+                                  'Бүртгэлтэй байгууллага олдсонгүй',
                                   style: TextStyle(
                                     color: white,
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  'Түүх алга байна.',
-                                  style: TextStyle(
-                                    color: greytext,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                     SizedBox(
-                      height: 90,
+                      height: MediaQuery.of(context).size.height * 0.1,
                     ),
                   ],
                 ),

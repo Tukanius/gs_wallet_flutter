@@ -30,6 +30,7 @@ class WalletApi extends HttpRequest {
   readQr(String id, QrRead iv) async {
     var res = await post('/qr/$id/scan', "MERCHANT",
         data: iv.toJson(), handler: true);
+
     return QrRead.fromJson(res);
   }
 

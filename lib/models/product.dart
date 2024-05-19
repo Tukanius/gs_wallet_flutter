@@ -1,3 +1,4 @@
+import 'package:green_score/models/merchant.dart';
 import 'package:green_score/models/product_image.dart';
 import 'package:green_score/models/sale.dart';
 import 'package:green_score/models/saleProducts.dart';
@@ -5,7 +6,7 @@ part '../parts/product.dart';
 
 class Product {
   String? id;
-  String? merchant;
+  Merchant? merchant;
   String? name;
   String? code;
   String? barcode;

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,19 +28,21 @@ class _MerchantProductState extends State<MerchantProduct>
   Result productList = Result(rows: [], count: 0);
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
+  TextEditingController controller = TextEditingController();
+  Timer? timer;
+  bool isSubmit = false;
 
   @override
   afterFirstLayout(BuildContext context) async {
-    print('====HELLOFROMMERCHANTPRO======');
-    await list(page, limit);
+    await list(page, limit, '');
     setState(() {
       isLoading = false;
     });
   }
 
-  list(page, limit) async {
+  list(page, limit, String value) async {
     Offset offset = Offset(page: page, limit: limit);
-    Filter filter = Filter(merchant: widget.id);
+    Filter filter = Filter(query: value, merchant: widget.id);
     productList = await ProductApi()
         .getProduct(ResultArguments(filter: filter, offset: offset));
     setState(() {
@@ -51,8 +55,9 @@ class _MerchantProductState extends State<MerchantProduct>
     setState(() {
       isLoading = true;
       limit = 10;
+      controller.clear();
     });
-    await list(page, limit);
+    await list(page, limit, '');
     refreshController.refreshCompleted();
   }
 
@@ -60,8 +65,26 @@ class _MerchantProductState extends State<MerchantProduct>
     setState(() {
       limit += 10;
     });
-    await list(page, limit);
+    await list(page, limit, '');
     refreshController.loadComplete();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  onChange(String query) {
+    if (timer != null) timer!.cancel();
+    timer = Timer(const Duration(milliseconds: 500), () async {
+      setState(() {
+        isSubmit = true;
+      });
+      list(page, limit, query);
+      setState(() {
+        isSubmit = false;
+      });
+    });
   }
 
   @override
@@ -75,7 +98,9 @@ class _MerchantProductState extends State<MerchantProduct>
         : Refresher(
             color: greentext,
             refreshController: refreshController,
-            onLoading: onLoading,
+            onLoading: productList.rows!.length == productList.count
+                ? null
+                : onLoading,
             onRefresh: onRefresh,
             child: SingleChildScrollView(
               child: Container(
@@ -83,23 +108,22 @@ class _MerchantProductState extends State<MerchantProduct>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        print('Helloooo');
-                      },
-                      child: Text(
-                        "Бүх бараа",
-                        style: TextStyle(
-                          color: white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    Text(
+                      "Бүх бараа",
+                      style: TextStyle(
+                        color: white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     SizedBox(
                       height: 15,
                     ),
                     FormTextField(
+                      controller: controller,
+                      onChanged: (query) {
+                        onChange(query);
+                      },
                       prefixIcon: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -110,12 +134,12 @@ class _MerchantProductState extends State<MerchantProduct>
                       hintText: "Хайх",
                       colortext: white,
                       color: buttonbg,
-                      name: "search",
+                      name: "query",
                     ),
                     SizedBox(
                       height: 15,
                     ),
-                    productList.rows?.length != 0
+                    productList.rows!.isNotEmpty
                         ? GridView.count(
                             crossAxisCount: 2,
                             shrinkWrap: true,
@@ -144,6 +168,12 @@ class _MerchantProductState extends State<MerchantProduct>
                             children: [
                               SizedBox(
                                 height: 50,
+                              ),
+                              SvgPicture.asset(
+                                'assets/svg/notfound.svg',
+                              ),
+                              SizedBox(
+                                height: 15,
                               ),
                               Center(
                                 child: Text(

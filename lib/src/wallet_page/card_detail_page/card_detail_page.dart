@@ -13,7 +13,6 @@ import 'package:green_score/components/refresher/refresher.dart';
 import 'package:green_score/models/account.dart';
 import 'package:green_score/models/result.dart';
 import 'package:green_score/src/wallet_page/card_detail_page/bottom_sheets/income_sheet.dart';
-import 'package:green_score/src/wallet_page/card_detail_page/bottom_sheets/transfer_sheet.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -96,6 +95,11 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BackgroundShapes(
       body: NestedScrollView(
@@ -157,112 +161,90 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomCard(data: widget.data, isAll: false),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              child: Column(
+                        accountget.type == "FIAT"
+                            ? Column(
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      income(context, accountget.id!);
-                                    },
-                                    child: Container(
-                                      height: 52,
-                                      width: 52,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: buttonbg,
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          'assets/svg/income.svg',
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                income(context, accountget.id!);
+                                              },
+                                              child: Container(
+                                                height: 52,
+                                                width: 52,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  color: buttonbg,
+                                                ),
+                                                child: Center(
+                                                  child: SvgPicture.asset(
+                                                    'assets/svg/income.svg',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'Орлого',
+                                              style: TextStyle(
+                                                color: white,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Орлого',
-                                    style: TextStyle(
-                                      color: white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 52,
-                                    width: 52,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
-                                      color: buttonbg,
-                                    ),
-                                    child: Center(
-                                      child: SvgPicture.asset(
-                                          'assets/svg/income1.svg'),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Татах',
-                                    style: TextStyle(
-                                      color: white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      transfer(context);
-                                    },
-                                    child: Container(
-                                      height: 52,
-                                      width: 52,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: buttonbg,
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          width: 24,
-                                          height: 24,
-                                          'assets/svg/transfer.svg',
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                // income(context, accountget.id!);
+                                              },
+                                              child: Container(
+                                                height: 52,
+                                                width: 52,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  color: buttonbg,
+                                                ),
+                                                child: Center(
+                                                  child: SvgPicture.asset(
+                                                      'assets/svg/income1.svg'),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'Татах',
+                                              style: TextStyle(
+                                                color: white,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Шилжүүлэг',
-                                    style: TextStyle(
-                                      color: white,
-                                      fontSize: 14,
-                                    ),
+                                    ],
                                   ),
                                 ],
-                              ),
-                            ),
-                          ],
-                        ),
+                              )
+                            : SizedBox(),
                         SizedBox(
                           height: 20,
                         ),

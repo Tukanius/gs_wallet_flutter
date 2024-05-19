@@ -17,7 +17,7 @@ import 'package:green_score/src/notification_page/notification_page.dart';
 import 'package:green_score/src/profile_page/camera_page.dart';
 import 'package:green_score/src/profile_page/profile_edit_page.dart';
 import 'package:green_score/src/profile_page/profile_page.dart';
-import 'package:green_score/src/qr_code_page/qr_code_page.dart';
+import 'package:green_score/src/qr_code_page/confirm_qr_page.dart';
 import 'package:green_score/src/qr_code_page/qr_read_page.dart';
 import 'package:green_score/src/qr_code_page/qr_transfer.dart';
 import 'package:green_score/src/splash_screen/splash_screen.dart';
@@ -89,9 +89,13 @@ class MyApp extends StatelessWidget {
                   return MaterialPageRoute(builder: (context) {
                     return const TradePage();
                   });
-                case QrCodePage.routeName:
+                case ConfirmQrCodePage.routeName:
+                  ConfirmQrCodePageArguments arguments =
+                      settings.arguments as ConfirmQrCodePageArguments;
                   return MaterialPageRoute(builder: (context) {
-                    return const QrCodePage();
+                    return ConfirmQrCodePage(
+                      data: arguments.data,
+                    );
                   });
                 case NotificationPage.routeName:
                   return MaterialPageRoute(builder: (context) {
@@ -267,3 +271,71 @@ Widget loading(BuildContext context, widget) {
     ),
   );
 }
+
+// Future<void> _requestLocationPermission() async {
+//   LocationPermission permission = await Geolocator.checkPermission();
+//   if (permission == LocationPermission.denied) {
+//     permission = await Geolocator.requestPermission();
+//   }
+//   if (permission == LocationPermission.deniedForever) {
+//     _requestLocationPermission();
+//   }
+//   if (permission != LocationPermission.denied) {
+//     await _startLocationUpdates();
+//   }
+// }
+
+// Future<void> _startLocationUpdates() async {
+//   LocationSettings locationSettings = LocationSettings(
+//     accuracy: LocationAccuracy.high,
+//     distanceFilter: 100,
+//   );
+
+//   if (TargetPlatform.android == true) {
+//     locationSettings = AndroidSettings(
+//       accuracy: LocationAccuracy.high,
+//       distanceFilter: 100,
+//       intervalDuration: const Duration(minutes: 1),
+//       forceLocationManager: true,
+//       foregroundNotificationConfig: const ForegroundNotificationConfig(
+//         notificationText:
+//             "Example app will continue to receive your location even when you aren't using it",
+//         notificationTitle: "Running in Background",
+//         enableWakeLock: true,
+//       ),
+//     );
+//   } else if (TargetPlatform.iOS == true) {
+//     locationSettings = AppleSettings(
+//       accuracy: LocationAccuracy.high,
+//       distanceFilter: 100,
+//       allowBackgroundLocationUpdates: true,
+//       activityType: ActivityType.fitness,
+//       pauseLocationUpdatesAutomatically: true,
+//       showBackgroundLocationIndicator: true,
+//     );
+//   }
+
+//   Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+//     (Position position) async {
+//       LocationInfo info = LocationInfo(
+//         latitude: position.latitude,
+//         longitude: position.longitude,
+//         timestamp: position.timestamp.toString(),
+//         accuracy: position.accuracy,
+//         altitude: position.altitude,
+//         altitudeAccuracy: position.altitudeAccuracy,
+//         heading: position.heading,
+//         headingAccuracy: position.headingAccuracy,
+//         speed: position.speed,
+//         speedAccuracy: position.speedAccuracy,
+//       );
+
+//       try {
+//         var res = await ScoreApi().trackLocation(info);
+//         print(res);
+//       } catch (e) {
+//         print("Error sending location: $e");
+//       }
+//     },
+//   );
+// }

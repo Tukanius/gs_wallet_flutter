@@ -1,14 +1,16 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/components/score_status_card/bar_graph.dart';
+import 'package:green_score/models/accumlation.dart';
+import 'package:green_score/models/location_info.dart';
 import 'package:green_score/widget/ui/color.dart';
-import 'package:health/health.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:green_score/api/score_api.dart';
 
 class ScoreStatusCard extends StatefulWidget {
   final bool? isActive;
@@ -24,21 +26,131 @@ class ScoreStatusCard extends StatefulWidget {
   State<ScoreStatusCard> createState() => _ScoreStatusCardState();
 }
 
-class _ScoreStatusCardState extends State<ScoreStatusCard> {
+class _ScoreStatusCardState extends State<ScoreStatusCard>
+    with AfterLayoutMixin {
   List<double> stepsForLast7Days = [1, 1, 1, 1, 1, 1, 10];
   String? step;
   int stepIos = 0;
   int todaysSteps = 0;
+  bool isLoading = true;
+  bool isButtonLoad = false;
+  Accumlation data = Accumlation();
+  Accumlation walk = Accumlation();
+  num stepped = 0;
   late StreamSubscription<StepCount> subscription;
-
+  late LocationSettings locationSettings;
+  LocationInfo info = LocationInfo();
   @override
   void initState() {
     super.initState();
-    // _startListeningStep();
-    _requestPermission();
+    _requestLocation();
   }
 
-  void _requestPermission() async {
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
+  _requestLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    final PermissionStatus status = await Permission.locationAlways.request();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.denied) {
+        await _getLocation();
+      }
+    }
+    if (status == PermissionStatus.granted) {
+      await _getLocation();
+    } else if (status == PermissionStatus.denied) {
+      print('Permission denied');
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      await _getLocation();
+      print('Permission permanently denied');
+    }
+  }
+
+  Future<void> _getLocation() async {
+    if (TargetPlatform.android == true) {
+      locationSettings = AndroidSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 100,
+          forceLocationManager: true,
+          intervalDuration: const Duration(seconds: 10),
+          foregroundNotificationConfig: const ForegroundNotificationConfig(
+            notificationText:
+                "Example app will continue to receive your location even when you aren't using it",
+            notificationTitle: "Running in Background",
+            enableWakeLock: true,
+          ));
+    } else if (true == TargetPlatform.iOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.high,
+        allowBackgroundLocationUpdates: true,
+        timeLimit: Duration(milliseconds: 100),
+        activityType: ActivityType.fitness,
+        distanceFilter: 100,
+        pauseLocationUpdatesAutomatically: true,
+        showBackgroundLocationIndicator: true,
+      );
+    } else {
+      locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      );
+    }
+
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      setState(() {
+        data.latitude = position.latitude;
+        data.longitude = position.longitude;
+        print('=====Loc=====');
+        print(position.latitude);
+        print(position.longitude);
+        print('=====Loc=====');
+      });
+    } catch (e) {
+      print("Error getting location: $e");
+    }
+  }
+
+  @override
+  afterFirstLayout(BuildContext context) async {
+    await _requestLocation();
+    await _requestPermission();
+    await _getWalk();
+  }
+
+  _getWalk() async {
+    try {
+      var res = await ScoreApi().getStep("WALK", "WALK_01");
+      // var res = await ScoreApi().getStep("WALK");
+
+      res != null ? walk = res : walk.balanceAmount = 0;
+      print(walk.balanceAmount);
+      if (walk.balanceAmount == 0 && walk.balanceAmount == null) {
+        setState(() {
+          stepped = 0;
+        });
+      } else {
+        setState(() {
+          stepped = walk.balanceAmount!;
+        });
+      }
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  _requestPermission() async {
     final PermissionStatus status =
         await Permission.activityRecognition.request();
     print(status);
@@ -46,168 +158,63 @@ class _ScoreStatusCardState extends State<ScoreStatusCard> {
       initSteps();
     } else {
       initSteps();
-      print('Permission denied');
     }
   }
 
-  // void initStep() {
-  //   subscription = Pedometer.stepCountStream.listen(
-  //     (event) {
-  //       print('===EVENT=====');
-  //       print(event);
-  //       print('===EVENT=====');
-  //       setState(() {
-  //         step = event.steps.toString();
-  //       });
-  //     },
-  //   );
-  // }
-
   void initSteps() {
-    int previousStepCount = 0;
+    int? previousStepCount;
     subscription = Pedometer.stepCountStream.listen(
       (event) {
-        print('===EVENT=====');
-        print(event);
-        print('===EVENT=====');
         int currentStepCount = event.steps;
-        int stepsSinceLastEvent = currentStepCount - previousStepCount;
+        int stepsSinceLastEvent = previousStepCount != null
+            ? currentStepCount - previousStepCount!
+            : 0;
         previousStepCount = currentStepCount;
-        setState(() {
-          step = stepsSinceLastEvent.toString();
-        });
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    // _startListeningStep();
-    // subscription?.cancel();
-    super.dispose();
-  }
-
-  void _startListening() async {
-    subscription = Pedometer.stepCountStream.listen(
-      (event) {
-        if (isToday(event.timeStamp)) {
-          setState(() {
-            todaysSteps = event.steps;
-          });
-        }
-        print('===EVENT=====');
-        print(isToday(event.timeStamp));
-        print('===EVENT=====');
-        setState(() {
-          todaysSteps = event.steps.toInt();
-        });
-      },
-    );
-  }
-
-  bool isToday(DateTime dateTime) {
-    DateTime now = DateTime.now();
-    return now.year == dateTime.year &&
-        now.month == dateTime.month &&
-        now.day == dateTime.day;
-  }
-
-  initIosHealth() async {
-    Timer.periodic(Duration(seconds: 1), (timer) async {
-      HealthFactory health = HealthFactory();
-      var types = [HealthDataType.STEPS];
-      var permissions = [HealthDataAccess.READ];
-
-      bool requested =
-          await health.requestAuthorization(types, permissions: permissions);
-      if (requested) {
-        final now = DateTime.now();
-        final todayStart = DateTime(now.year, now.month, now.day);
-        final todayEnd =
-            todayStart.add(Duration(days: 1)).subtract(Duration(seconds: 1));
-        try {
-          var qwerty =
-              await health.getHealthDataFromTypes(todayEnd, todayEnd, types);
-          print(qwerty);
-          int? stepsTd =
-              await health.getTotalStepsInInterval(todayStart, todayEnd);
-          setState(() {
-            stepIos = stepsTd!;
-          });
-          print("Today's steps: $stepsTd");
-        } catch (error) {
-          print(error);
-        }
-      } else {
-        print('=======Auth not granted======');
-      }
-    });
-  }
-
-  // initIos() async {
-  //   DateTime startDate = DateTime.now().toUtc();
-  //   DateTime endDate = DateTime.now().toUtc();
-
-  //   try {
-  //     List<HealthDataPoint> healthData =
-  //         await HealthDataPoint.getHealthDataFromType(
-  //       startDate: startDate,
-  //       endDate: endDate,
-  //       dataType: HealthDataType.STEPS,
-  //     );
-
-  //     int totalSteps = 0;
-  //     for (var dataPoint in healthData) {
-  //       totalSteps += dataPoint.value.round();
-  //     }
-
-  //     setState(() {
-  //       _steps = totalSteps;
-  //     });
-  //   } catch (e) {
-  //     print("Failed to fetch steps: $e");
-  //   }
-  // }
-
-  // This Code for swift ?
-  // int _stepCount = 0;
-
-  // static const platform = const MethodChannel('samples.health.io/stepcount');
-
-  // Future<void> initIos() async {
-  //   int stepCount;
-  //   try {
-  //     final int result = await platform.invokeMethod('getStepCount');
-  //     stepCount = result;
-  //   } on PlatformException catch (e) {
-  //     print("Failed to get step count: '${e.message}'.");
-  //     stepCount = 0;
-  //   }
-
-  //   setState(() {
-  //     _stepCount = stepCount;
-  //   });
-  // }
-  int stepforIOS = 0;
-
-  static const platform = const MethodChannel('step_counter_channel');
-
-  void _startListeningStep() async {
-    Timer.periodic(Duration(seconds: 1), (timer) async {
-      try {
-        final int result = await platform.invokeMethod('startListening');
-        print('======STEPFORIOS=====');
-        print(result);
         if (mounted) {
           setState(() {
-            stepforIOS += result;
+            data.amount = stepsSinceLastEvent.toString();
+            stepped += stepsSinceLastEvent;
+            if (previousStepCount != null && stepsSinceLastEvent != 0) {
+              ScoreApi().sendStep(data);
+            }
+            step = stepsSinceLastEvent.toString();
           });
         }
-        print('======STEPFORIOS=====');
-      } on PlatformException catch (e) {
-        print("Failed to start listening: '${e.message}'.");
-      }
-    });
+
+        // setState(() {
+        //   data.amount = stepsSinceLastEvent.toString();
+        //   if (previousStepCount != null && stepsSinceLastEvent != 0) {
+        //     ScoreApi().sendStep(data).then((_) {
+        //       ScoreApi().getStep("WALK").then((updatedWalk) {
+        //         setState(() {
+        //           walk = updatedWalk;
+        //         });
+        //       });
+        //     });
+        //   }
+        //   step = stepsSinceLastEvent.toString();
+        // });
+      },
+    );
+  }
+
+  onRedeem() async {
+    try {
+      setState(() {
+        isButtonLoad = true;
+      });
+      var res = await ScoreApi().onRedeem(walk.id!);
+      _getWalk();
+      print(res);
+      setState(() {
+        isButtonLoad = false;
+      });
+    } catch (e) {
+      setState(() {
+        isButtonLoad = false;
+      });
+      print(e.toString());
+    }
   }
 
   @override
@@ -215,7 +222,6 @@ class _ScoreStatusCardState extends State<ScoreStatusCard> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(20),
-      height: 250,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(26),
         color: buttonbg,
@@ -253,8 +259,11 @@ class _ScoreStatusCardState extends State<ScoreStatusCard> {
                     ),
                   ),
                   Text(
-                    // Platform.isIOS ? '${stepIos}' : '${step}',
-                    '${step}',
+                    isLoading == false
+                        ? walk.balanceAmount != null && walk.balanceAmount != 0
+                            ? '${stepped}'
+                            : '0'
+                        : "-",
                     style: TextStyle(
                       color: white,
                       fontSize: 24,
@@ -262,17 +271,6 @@ class _ScoreStatusCardState extends State<ScoreStatusCard> {
                     ),
                   ),
                 ],
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Text(
-                Platform.isIOS ? '$stepforIOS' : '0',
-                style: TextStyle(
-                  color: white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
               ),
             ],
           ),
@@ -345,6 +343,19 @@ class _ScoreStatusCardState extends State<ScoreStatusCard> {
                 ),
               ),
             ],
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          CustomButton(
+            labelText: 'Урамшуулал авах',
+            height: 40,
+            buttonColor: greentext,
+            isLoading: isButtonLoad,
+            onClick: () {
+              onRedeem();
+            },
+            textColor: white,
           ),
         ],
       ),

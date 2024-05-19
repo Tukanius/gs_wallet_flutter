@@ -36,6 +36,23 @@
 	<string>Allow access to photo library</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+    	<string>dev.flutter.background.refresh</string>
+	</array>
+	
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location is used to track your activity in the background.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is used to track your activity.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location is used to track your activity in the background.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+    	<string>location</string>
+	</array>
+
 	<key>NSMotionUsageDescription</key>
 	<string>This application tracks your steps</string>
 	<key>UIBackgroundModes</key>

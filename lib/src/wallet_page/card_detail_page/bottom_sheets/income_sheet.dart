@@ -28,6 +28,7 @@ income(BuildContext context, String id) {
             deposit = await WalletApi().depositAccount(id, deposit);
             bank(context, deposit);
             setState(() {
+              textEditingController.clear();
               isLoading = true;
             });
           } catch (e) {
@@ -53,14 +54,15 @@ income(BuildContext context, String id) {
             print(deposit);
             print('=======QPAY======');
             setState(() {
+              textEditingController.clear();
               isLoading = false;
             });
           } catch (e) {
             print(e.toString());
+            setState(() {
+              isLoading = false;
+            });
           }
-          setState(() {
-            isLoading = false;
-          });
         }
 
         socialpay() async {
@@ -82,10 +84,12 @@ income(BuildContext context, String id) {
             });
           } catch (e) {
             print(e.toString());
+            setState(() {
+              textEditingController.clear();
+
+              isLoading = false;
+            });
           }
-          setState(() {
-            isLoading = false;
-          });
         }
 
         return Container(

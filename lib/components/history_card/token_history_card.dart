@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/models/history.dart';
+import 'package:green_score/utils/utils.dart';
 import 'package:green_score/widget/ui/color.dart';
 
 class TokenHistoryCard extends StatefulWidget {
@@ -14,6 +15,8 @@ class TokenHistoryCard extends StatefulWidget {
 class _TokenHistoryCardState extends State<TokenHistoryCard> {
   @override
   Widget build(BuildContext context) {
+    String createdDate = Utils.formatUTC8(widget.data.createdAt!);
+
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Row(
@@ -29,14 +32,14 @@ class _TokenHistoryCardState extends State<TokenHistoryCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '2024.04.03',
+                    createdDate,
                     style: TextStyle(
                       color: white,
                       fontSize: 13,
                     ),
                   ),
                   Text(
-                    '13км',
+                    '${widget.data.description}',
                     style: TextStyle(
                       color: white,
                       fontSize: 16,
@@ -44,7 +47,7 @@ class _TokenHistoryCardState extends State<TokenHistoryCard> {
                     ),
                   ),
                   Text(
-                    'Үлдэгдэл: 365 GS',
+                    '${widget.data.totalAmount} GS',
                     style: TextStyle(
                       color: white,
                       fontSize: 13,
@@ -55,10 +58,9 @@ class _TokenHistoryCardState extends State<TokenHistoryCard> {
             ],
           ),
           Text(
-            '1.3 GS Бонус',
+            '${widget.data.totalAmount} GS',
             style: TextStyle(
-              color: greentext,
-              // color: expenditure,
+              color: widget.data.type == "DEPOSIT" ? greentext : expenditure,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),

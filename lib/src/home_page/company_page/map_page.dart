@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/widget/ui/color.dart';
 
 class MapPageArguments {
@@ -24,16 +24,16 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> with AfterLayoutMixin {
+class _MapPageState extends State<MapPage> {
   Completer<GoogleMapController> _controller = Completer();
   late final CameraPosition _kGooglePlex;
   double langt = 0;
   double longt = 0;
   bool isLoading = true;
   Set<Marker> markers = {};
-
   @override
-  afterFirstLayout(BuildContext context) {
+  void initState() {
+    super.initState();
     _kGooglePlex = CameraPosition(
       target: LatLng(widget.lang, widget.long),
       zoom: 13,
@@ -56,14 +56,27 @@ class _MapPageState extends State<MapPage> with AfterLayoutMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: bg,
         centerTitle: true,
         title: Text(
           'Дэлгүүрийн байршил',
           style: TextStyle(
-            color: black,
+            color: white,
             fontSize: 20,
             fontWeight: FontWeight.w500,
           ),
+        ),
+        leading: Row(
+          children: [
+            SizedBox(
+              width: 20,
+            ),
+            CustomBackButton(
+              onClick: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         ),
       ),
       body: isLoading == true

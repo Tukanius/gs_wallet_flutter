@@ -31,9 +31,11 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
 
   afterFirstLayout(BuildContext context) async {
     await list(page, limit);
-    setState(() {
-      isLoading = false;
-    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   list(page, limit) async {
@@ -202,17 +204,19 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
             width: MediaQuery.of(context).size.width,
             height: 100,
             child: productList.rows?.length == 0
-                ? Center(
-                    child: Text(
-                      'Бараа бүртгэгдээгүй байна',
-                      style: TextStyle(
-                        color: white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
+                ? isLoading == true
+                    ? SizedBox()
+                    : Center(
+                        child: Text(
+                          'Бараа бүртгэгдээгүй байна.',
+                          style: TextStyle(
+                            color: white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
                 : ListView(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,

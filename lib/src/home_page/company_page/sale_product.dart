@@ -1,15 +1,14 @@
+import 'dart:async';
+
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/product_api.dart';
 import 'package:green_score/components/product_card/product_card.dart';
-// import 'package:green_score/components/product_card/product_card.dart';
 import 'package:green_score/components/refresher/refresher.dart';
 import 'package:green_score/models/result.dart';
 import 'package:green_score/src/home_page/product_detail_page/product_detail_page.dart';
-// import 'package:green_score/src/home_page/product_detail_page/product_detail_page.dart';
 import 'package:green_score/widget/ui/color.dart';
-import 'package:green_score/widget/ui/form_textfield.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class SaleProductPage extends StatefulWidget {
@@ -29,10 +28,8 @@ class _SaleProductPageState extends State<SaleProductPage>
   Result salesList = Result(rows: [], count: 0);
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
-
   @override
   afterFirstLayout(BuildContext context) async {
-    print('====Hello from sales======');
     await list(page, limit);
     setState(() {
       isLoading = false;
@@ -68,6 +65,11 @@ class _SaleProductPageState extends State<SaleProductPage>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return isLoading == true
         ? Center(
@@ -86,39 +88,18 @@ class _SaleProductPageState extends State<SaleProductPage>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        print('Helloooo');
-                      },
-                      child: Text(
-                        "Хямдралтай бараа",
-                        style: TextStyle(
-                          color: white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    Text(
+                      "Хямдралтай бараа",
+                      style: TextStyle(
+                        color: white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     SizedBox(
                       height: 15,
                     ),
-                    FormTextField(
-                      prefixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset('assets/svg/search.svg'),
-                        ],
-                      ),
-                      hintText: "Хайх",
-                      colortext: white,
-                      color: buttonbg,
-                      name: "search",
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    salesList.rows?.length != 0
+                    salesList.rows!.isNotEmpty
                         ? GridView.count(
                             crossAxisCount: 2,
                             shrinkWrap: true,
@@ -148,6 +129,12 @@ class _SaleProductPageState extends State<SaleProductPage>
                               SizedBox(
                                 height: 50,
                               ),
+                              SvgPicture.asset(
+                                'assets/svg/notfound.svg',
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
                               Center(
                                 child: Text(
                                   'Бүртгэлтэй бараа олдсонгүй',
@@ -159,9 +146,6 @@ class _SaleProductPageState extends State<SaleProductPage>
                               ),
                             ],
                           ),
-                    SizedBox(
-                      height: 50,
-                    ),
                   ],
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:green_score/widget/ui/color.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Refresher extends StatefulWidget {
@@ -29,6 +30,7 @@ class _RefresherState extends State<Refresher> {
       enablePullUp: widget.onLoading != null,
       controller: widget.refreshController,
       header: WaterDropHeader(
+        complete: Text(''),
         waterDropColor: widget.color,
         refresh: SizedBox(
           height: 20,
@@ -47,13 +49,13 @@ class _RefresherState extends State<Refresher> {
           if (mode == LoadStatus.idle) {
             body = const Text("");
           } else if (mode == LoadStatus.loading) {
-            body = CupertinoActivityIndicator(
-              color: widget.color,
+            body = const CupertinoActivityIndicator(
+              color: greentext,
             );
           } else if (mode == LoadStatus.failed) {
             body = const Text("Алдаа гарлаа. Дахин үзнэ үү!");
           } else {
-            body = const Text("Мэдээлэл алга байна");
+            body = const Text("");
           }
           return SizedBox(
             height: 55.0,

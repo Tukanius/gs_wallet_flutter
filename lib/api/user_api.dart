@@ -24,7 +24,7 @@ class UserApi extends HttpRequest {
   }
 
   danVerify() async {
-    var res = await post('/user/verify', "USER");
+    var res = await post('/user/verify', "USER", handler: true);
     return res;
   }
 }

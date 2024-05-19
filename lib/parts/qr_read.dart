@@ -5,8 +5,6 @@ QrRead _$QrReadFromJson(Map<String, dynamic> json) {
     id: json['_id'] != null ? json['_id'] as String : null,
     iv: json['iv'] != null ? json['iv'] as String : null,
     merchant: json['merchant'] != null ? json['merchant'] as String : null,
-    orderProducts:
-        json['orderProducts'] != null ? json['orderProducts'] as String : null,
     code: json['code'] != null ? json['code'] as String : null,
     type: json['type'] != null ? json['type'] as String : null,
     paymentMethod:
@@ -35,8 +33,7 @@ Map<String, dynamic> _$QrReadToJson(QrRead instance) {
   if (instance.id != null) json['_id'] = instance.id;
   if (instance.iv != null) json['iv'] = instance.iv;
   if (instance.merchant != null) json['merchant'] = instance.merchant;
-  if (instance.orderProducts != null)
-    json['orderProducts'] = instance.orderProducts;
+
   if (instance.code != null) json['code'] = instance.code;
   if (instance.type != null) json['type'] = instance.type;
   if (instance.paymentMethod != null)

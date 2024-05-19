@@ -14,7 +14,12 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
     images: json['images'] != null
         ? (json['images'] as List).map((e) => ProductImage.fromJson(e)).toList()
         : null,
-    merchant: json['merchant'] != null ? json['merchant'] as String : null,
+    // merchant: json['merchant'] != null
+    //     ? (json['merchant'] as List).map((e) => Merchant.fromJson(e)).toList()
+    //     : null,
+    merchant: json['merchant'] != null
+        ? new Merchant.fromJson(json['merchant'])
+        : null,
     sale: json['sale'] != null ? new Sale.fromJson(json['sale']) : null,
     saleProduct: json['saleProduct'] != null
         ? new SaleProduct.fromJson(json['saleProduct'])

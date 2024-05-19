@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/controller/listen.dart';
 import 'package:green_score/widget/ui/color.dart';
 
@@ -26,7 +25,7 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   late List<CameraDescription> cameras;
-  late CameraController cameraController;
+  late final CameraController cameraController;
   int direction = 0;
   String status = 'TAP';
   File? image;
@@ -39,7 +38,6 @@ class _CameraPageState extends State<CameraPage> {
 
   startCamera(int direction) async {
     cameras = await availableCameras();
-
     cameraController = CameraController(
       cameras[direction],
       ResolutionPreset.high,
@@ -76,10 +74,9 @@ class _CameraPageState extends State<CameraPage> {
                         foregroundColor: const Color(0xff2e3192),
                         padding: EdgeInsets.zero,
                       ),
-                      child: SvgPicture.asset(
-                        'assets/svg/remove.svg',
-                        colorFilter:
-                            const ColorFilter.mode(black, BlendMode.srcIn),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: black,
                       ),
                     ),
                     Container(
@@ -111,10 +108,8 @@ class _CameraPageState extends State<CameraPage> {
                         child: Container(
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: AssetImage('images/logo.png'),
-                            ),
                           ),
+                          child: SizedBox(),
                         ),
                       ),
                     ),
@@ -157,31 +152,20 @@ class _CameraPageState extends State<CameraPage> {
                         foregroundColor: const Color(0xff2e3192),
                         padding: EdgeInsets.zero,
                       ),
-                      child: SvgPicture.asset(
-                        'assets/svg/remove.svg',
-                        colorFilter:
-                            const ColorFilter.mode(black, BlendMode.srcIn),
-                      ),
+                      child: Icon(Icons.close),
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        widget.listenController.changeVariable(image!.path);
-                        Navigator.of(context).pop();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: white,
-                        shape: const CircleBorder(),
-                        foregroundColor: const Color(0xff2e3192),
-                        padding: EdgeInsets.zero,
-                      ),
-                      child: SvgPicture.asset(
-                        'assets/svg/check.svg',
-                        height: 13,
-                        width: 13,
-                        colorFilter:
-                            const ColorFilter.mode(black, BlendMode.srcIn),
-                      ),
-                    ),
+                        onPressed: () {
+                          widget.listenController.changeVariable(image!.path);
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: white,
+                          shape: const CircleBorder(),
+                          foregroundColor: const Color(0xff2e3192),
+                          padding: EdgeInsets.zero,
+                        ),
+                        child: Icon(Icons.check)),
                   ],
                 ),
               ),
@@ -203,7 +187,11 @@ class _CameraPageState extends State<CameraPage> {
               ),
       );
     } else {
-      return const SizedBox();
+      return const Center(
+        child: CircularProgressIndicator(
+          color: greentext,
+        ),
+      );
     }
   }
 }

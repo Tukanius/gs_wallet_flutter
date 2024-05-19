@@ -4,7 +4,6 @@ class QrRead {
   String? id;
   String? iv;
   String? merchant;
-  String? orderProducts;
   String? code;
   String? type;
   String? paymentMethod;
@@ -29,7 +28,6 @@ class QrRead {
     this.createdAt,
     this.isSale,
     this.merchant,
-    this.orderProducts,
     this.orderStatus,
     this.orderStatusDate,
     this.payAmount,
