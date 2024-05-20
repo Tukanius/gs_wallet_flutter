@@ -1,7 +1,5 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:green_score/api/wallet_api.dart';
 import 'package:green_score/components/controller/listen.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';

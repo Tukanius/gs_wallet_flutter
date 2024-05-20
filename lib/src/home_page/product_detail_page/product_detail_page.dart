@@ -97,7 +97,8 @@ class _ProductDetailState extends State<ProductDetail> {
                           carouselController: carouselController,
                           options: CarouselOptions(
                             height: 220.0,
-                            autoPlay: true,
+                            autoPlay: widget.data.images != null &&
+                                widget.data.images!.length > 1,
                             onPageChanged: (index, reason) {
                               setState(() {
                                 _current = index;
@@ -156,7 +157,7 @@ class _ProductDetailState extends State<ProductDetail> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${widget.data.description}',
+                      '${widget.data.name}',
                       style: TextStyle(
                         color: white,
                         fontSize: 20,
@@ -166,59 +167,131 @@ class _ProductDetailState extends State<ProductDetail> {
                     SizedBox(
                       height: 12,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          'Ашиглагдах GS:',
-                          style: TextStyle(
-                            color: white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                    widget.data.sale != null
+                        ? Container(
+                            margin: EdgeInsets.only(bottom: 12),
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: buttonbg,
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Хямдрах үнэ:',
+                                        style: TextStyle(
+                                          color: white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      Text(
+                                        '${widget.data.sale?.saleAmount}₮',
+                                        style: TextStyle(
+                                          color: white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Ашиглагдах GS:',
+                                        style: TextStyle(
+                                          color: white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 12),
+                                        child: SvgPicture.asset(
+                                            'assets/svg/gsc.svg'),
+                                      ),
+                                      Text(
+                                        '${widget.data.sale?.saleTokenAmount} GS',
+                                        style: TextStyle(
+                                          color: greentext,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : SizedBox(),
+                    widget.data.sale != null
+                        ? Row(
+                            children: [
+                              Text(
+                                'Үнэ: ',
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                '₮${widget.data.price}',
+                                style: TextStyle(
+                                  color: greytext,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationColor: greytext,
+                                  decorationThickness: 2,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                '₮${widget.data.price! - (widget.data.sale?.saleAmount ?? 0)}',
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Text(
+                                'Үнэ: ',
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                '₮${widget.data.price}',
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 12),
-                          child: SvgPicture.asset('assets/svg/gsc.svg'),
-                        ),
-                        Text(
-                          '20,000 GS',
-                          style: TextStyle(
-                            color: greentext,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          '₮${widget.data.price! + 100}',
-                          style: TextStyle(
-                            color: greytext,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                            decoration: TextDecoration.lineThrough,
-                            decorationColor: greytext,
-                            decorationThickness: 2,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          '₮${widget.data.price}',
-                          style: TextStyle(
-                            color: white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
                     SizedBox(
                       height: 12,
                     ),

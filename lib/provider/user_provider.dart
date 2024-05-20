@@ -58,6 +58,7 @@ class UserProvider extends ChangeNotifier {
   setPassword(User data) async {
     user = await AuthApi().setPassword(data);
     setAccessToken(user.accessToken);
+    notifyListeners();
     return user;
   }
 

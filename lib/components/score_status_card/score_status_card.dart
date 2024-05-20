@@ -30,8 +30,6 @@ class _ScoreStatusCardState extends State<ScoreStatusCard>
     with AfterLayoutMixin {
   List<double> stepsForLast7Days = [1, 2, 3, 4, 5, 6, 7];
   String? step;
-  int stepIos = 0;
-  int todaysSteps = 0;
   bool isLoading = true;
   bool isButtonLoad = false;
   Accumlation data = Accumlation();
@@ -129,11 +127,9 @@ class _ScoreStatusCardState extends State<ScoreStatusCard>
   _getWalk() async {
     try {
       var res = await ScoreApi().getStep("WALK", "WALK_01");
-      // var res = await ScoreApi().getStep("WALK");
-
       res != null ? walk = res : walk.balanceAmount = 0;
       print(walk.balanceAmount);
-      if (walk.balanceAmount == 0 && walk.balanceAmount == null) {
+      if (walk.balanceAmount == 0 || walk.balanceAmount == null) {
         setState(() {
           stepped = 0;
         });
@@ -146,6 +142,9 @@ class _ScoreStatusCardState extends State<ScoreStatusCard>
         isLoading = false;
       });
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       print(e.toString());
     }
   }
@@ -180,20 +179,6 @@ class _ScoreStatusCardState extends State<ScoreStatusCard>
             step = stepsSinceLastEvent.toString();
           });
         }
-
-        // setState(() {
-        //   data.amount = stepsSinceLastEvent.toString();
-        //   if (previousStepCount != null && stepsSinceLastEvent != 0) {
-        //     ScoreApi().sendStep(data).then((_) {
-        //       ScoreApi().getStep("WALK").then((updatedWalk) {
-        //         setState(() {
-        //           walk = updatedWalk;
-        //         });
-        //       });
-        //     });
-        //   }
-        //   step = stepsSinceLastEvent.toString();
-        // });
       },
     );
   }
