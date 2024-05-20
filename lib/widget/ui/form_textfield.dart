@@ -157,7 +157,10 @@ class FormTextFieldState extends State<FormTextField> {
                 hintText: widget.hintText,
                 prefixIcon: widget.prefixIcon,
                 suffixIcon: widget.suffixIcon,
-                errorBorder: const OutlineInputBorder(),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,

@@ -29,6 +29,7 @@ class _OpportunityCardState extends State<OpportunityCard> {
       children: [
         InkWell(
           onTap: widget.onClick,
+          hoverColor: null,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

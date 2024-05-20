@@ -11,6 +11,7 @@ import 'package:green_score/widget/ui/color.dart';
 import 'package:green_score/widget/ui/form_textfield.dart';
 import 'package:provider/provider.dart';
 import 'package:green_score/models/user.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = "LoginPage";
@@ -86,6 +87,11 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: 'Утасны дугаар',
                         colortext: white,
                         hintTextColor: white.withOpacity(0.5),
+                        inputType: TextInputType.number,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Утасны дугаар оруулна уу.'),
+                        ]),
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
@@ -107,6 +113,10 @@ class _LoginPageState extends State<LoginPage> {
                         colortext: white,
                         obscureText: isVisible,
                         hintTextColor: white.withOpacity(0.5),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Нууц үгээ оруулна уу.'),
+                        ]),
                       ),
                     ],
                   ),

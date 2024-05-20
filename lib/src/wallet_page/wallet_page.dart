@@ -1,4 +1,5 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:green_score/api/wallet_api.dart';
@@ -95,7 +96,7 @@ class _WalletPageState extends State<WalletPage> with AfterLayoutMixin {
             refreshController: refreshController,
             onRefresh: onRefresh,
             child: SingleChildScrollView(
-                child: cardList.rows?.length != 0
+                child: cardList.rows!.isNotEmpty
                     ? Container(
                         padding: EdgeInsets.symmetric(vertical: 20),
                         child: Column(
@@ -150,52 +151,61 @@ class _WalletPageState extends State<WalletPage> with AfterLayoutMixin {
                             SizedBox(
                               height: 20,
                             ),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: Text(
-                                'Данс холбох',
-                                style: TextStyle(
-                                  color: white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              height: 200,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: cardList.rows!.length,
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                itemBuilder: (context, index) {
-                                  final data = cardList.rows![index];
-                                  return Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).pushNamed(
-                                            CardDetailPage.routeName,
-                                            arguments: CardDetailPageArguments(
-                                                data: data),
-                                          );
-                                        },
-                                        child: CustomCard(
-                                          data: data,
-                                          isAll: true,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 16,
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
+                            // Container(
+                            //   padding: EdgeInsets.symmetric(horizontal: 20),
+                            //   child: Text(
+                            //     'Данс холбох',
+                            //     style: TextStyle(
+                            //       color: white,
+                            //       fontSize: 18,
+                            //       fontWeight: FontWeight.w500,
+                            //     ),
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   height: 10,
+                            // ),
+                            // Container(
+                            //   margin: EdgeInsets.symmetric(horizontal: 36),
+                            //   width: MediaQuery.of(context).size.width,
+                            //   height: 200,
+                            //   decoration: BoxDecoration(
+                            //     borderRadius: BorderRadius.circular(20),
+                            //     color: buttonbg,
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   height: 200,
+                            //   child: ListView.builder(
+                            //     shrinkWrap: true,
+                            //     itemCount: cardList.rows!.length,
+                            //     scrollDirection: Axis.horizontal,
+                            //     padding: EdgeInsets.symmetric(horizontal: 20),
+                            //     itemBuilder: (context, index) {
+                            //       final data = cardList.rows![index];
+                            //       return Row(
+                            //         children: [
+                            //           GestureDetector(
+                            //             onTap: () {
+                            //               Navigator.of(context).pushNamed(
+                            //                 CardDetailPage.routeName,
+                            //                 arguments: CardDetailPageArguments(
+                            //                     data: data),
+                            //               );
+                            //             },
+                            //             child: CustomCard(
+                            //               data: data,
+                            //               isAll: true,
+                            //             ),
+                            //           ),
+                            //           SizedBox(
+                            //             width: 16,
+                            //           ),
+                            //         ],
+                            //       );
+                            //     },
+                            //   ),
+                            // ),
                             // SingleChildScrollView(
                             //   scrollDirection: Axis.horizontal,
                             //   child: Row(
@@ -232,35 +242,37 @@ class _WalletPageState extends State<WalletPage> with AfterLayoutMixin {
                           ],
                         ),
                       )
-                    : Column(
-                        children: [
-                          SizedBox(
-                            height: 60,
-                          ),
-                          Center(
-                            child: Text(
+                    : Container(
+                        padding: EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 80,
+                            ),
+                            Text(
                               'Дан баталгаажуулалт хийгдээгүй байна.',
                               style: TextStyle(
                                 color: white,
                                 fontWeight: FontWeight.w500,
+                                fontSize: 16,
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          CustomButton(
-                            buttonColor: greentext,
-                            height: 40,
-                            isLoading: false,
-                            labelText: "Баталгаажуулах",
-                            onClick: () {
-                              Navigator.of(context)
-                                  .pushNamed(ProfilePage.routeName);
-                            },
-                            textColor: white,
-                          ),
-                        ],
+                            SizedBox(
+                              height: 30,
+                            ),
+                            CustomButton(
+                              buttonColor: greentext,
+                              height: 40,
+                              isLoading: false,
+                              labelText: "Баталгаажуулах",
+                              onClick: () {
+                                Navigator.of(context)
+                                    .pushNamed(ProfilePage.routeName);
+                              },
+                              textColor: white,
+                            ),
+                          ],
+                        ),
                       )),
           );
   }

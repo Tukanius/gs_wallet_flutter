@@ -447,7 +447,7 @@ void onStart(ServiceInstance service) async {
 
   bool isForeground = false;
 
-  Timer.periodic(const Duration(seconds: 10), (timer) async {
+  Timer.periodic(const Duration(seconds: 60), (timer) async {
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,

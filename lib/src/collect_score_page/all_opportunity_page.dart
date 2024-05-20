@@ -14,6 +14,37 @@ class AllOpportunityPage extends StatefulWidget {
 }
 
 class _AllOpportunityPageState extends State<AllOpportunityPage> {
+  comingSoon(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bg,
+          content: Text(
+            'Тун удахгүй!',
+            style: TextStyle(
+              color: white,
+              fontSize: 18,
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'OK',
+                  style: TextStyle(color: white),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BackgroundShapes(
@@ -58,22 +89,6 @@ class _AllOpportunityPageState extends State<AllOpportunityPage> {
             child: Column(
               children: [
                 OpportunityCard(
-                  id: "1",
-                  assetPath: 'assets/svg/bus.svg',
-                  title: 'Автобус',
-                  subtitle: '10км = 1GS',
-                  onClick: () {
-                    Navigator.of(context).pushNamed(
-                      OpportunityStatusPage.routeName,
-                      arguments: OpportunityStatusPageArguments(
-                        id: "1",
-                        title: "Автобус",
-                        assetPath: 'assets/svg/bus.svg',
-                      ),
-                    );
-                  },
-                ),
-                OpportunityCard(
                   id: "2",
                   assetPath: 'assets/svg/man.svg',
                   title: 'Алхалт',
@@ -90,35 +105,20 @@ class _AllOpportunityPageState extends State<AllOpportunityPage> {
                   },
                 ),
                 OpportunityCard(
-                  id: "3",
-                  assetPath: 'assets/svg/bicycle.svg',
-                  title: 'Унадаг дугуй',
-                  subtitle: '3км = 1GS',
-                  onClick: () {
-                    Navigator.of(context).pushNamed(
-                      OpportunityStatusPage.routeName,
-                      arguments: OpportunityStatusPageArguments(
-                        id: "3",
-                        title: "Унадаг дугуй",
-                        assetPath: 'assets/svg/bicycle.svg',
-                      ),
-                    );
-                  },
-                ),
-                OpportunityCard(
                   id: "4",
                   assetPath: 'assets/svg/bag.svg',
                   title: 'Худалдан авалт',
                   subtitle: '5000төг = 1GS',
                   onClick: () {
-                    Navigator.of(context).pushNamed(
-                      OpportunityStatusPage.routeName,
-                      arguments: OpportunityStatusPageArguments(
-                        id: "4",
-                        title: "Худалдан авалт",
-                        assetPath: 'assets/svg/bag.svg',
-                      ),
-                    );
+                    comingSoon(context);
+                    // Navigator.of(context).pushNamed(
+                    //   OpportunityStatusPage.routeName,
+                    //   arguments: OpportunityStatusPageArguments(
+                    //     id: "4",
+                    //     title: "Худалдан авалт",
+                    //     assetPath: 'assets/svg/bag.svg',
+                    //   ),
+                    // );
                   },
                 ),
                 OpportunityCard(
@@ -127,14 +127,52 @@ class _AllOpportunityPageState extends State<AllOpportunityPage> {
                   title: 'Скүүтэр',
                   subtitle: '5000төг = 1GS',
                   onClick: () {
-                    Navigator.of(context).pushNamed(
-                      OpportunityStatusPage.routeName,
-                      arguments: OpportunityStatusPageArguments(
-                        id: "5",
-                        title: "Скүүтэр",
-                        assetPath: 'assets/svg/scooter.svg',
-                      ),
-                    );
+                    comingSoon(context);
+
+                    // Navigator.of(context).pushNamed(
+                    //   OpportunityStatusPage.routeName,
+                    //   arguments: OpportunityStatusPageArguments(
+                    //     id: "5",
+                    //     title: "Скүүтэр",
+                    //     assetPath: 'assets/svg/scooter.svg',
+                    //   ),
+                    // );
+                  },
+                ),
+                OpportunityCard(
+                  id: "1",
+                  assetPath: 'assets/svg/bus.svg',
+                  title: 'Автобус',
+                  subtitle: '10км = 1GS',
+                  onClick: () {
+                    comingSoon(context);
+
+                    // Navigator.of(context).pushNamed(
+                    //   OpportunityStatusPage.routeName,
+                    //   arguments: OpportunityStatusPageArguments(
+                    //     id: "1",
+                    //     title: "Автобус",
+                    //     assetPath: 'assets/svg/bus.svg',
+                    //   ),
+                    // );
+                  },
+                ),
+                OpportunityCard(
+                  id: "3",
+                  assetPath: 'assets/svg/bicycle.svg',
+                  title: 'Унадаг дугуй',
+                  subtitle: '3км = 1GS',
+                  onClick: () {
+                    comingSoon(context);
+
+                    // Navigator.of(context).pushNamed(
+                    //   OpportunityStatusPage.routeName,
+                    //   arguments: OpportunityStatusPageArguments(
+                    //     id: "3",
+                    //     title: "Унадаг дугуй",
+                    //     assetPath: 'assets/svg/bicycle.svg',
+                    //   ),
+                    // );
                   },
                 ),
               ],

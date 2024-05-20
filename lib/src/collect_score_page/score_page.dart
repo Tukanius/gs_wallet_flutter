@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:green_score/components/score_opportunities_card/opportunity_card.dart';
 import 'package:green_score/components/score_status_card/score_status_card.dart';
 import 'package:green_score/models/user.dart';
@@ -21,6 +19,36 @@ class ScorePage extends StatefulWidget {
 
 class _ScorePageState extends State<ScorePage> {
   User user = User();
+  comingSoon(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bg,
+          content: Text(
+            'Хөгжүүлэлт хийгдэж байна!',
+            style: TextStyle(
+              color: white,
+              fontSize: 18,
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'OK',
+                  style: TextStyle(color: white),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +71,7 @@ class _ScorePageState extends State<ScorePage> {
               height: 10,
             ),
             Text(
-              '${user.lastName} ${user.firstName}',
+              '${user.firstName} ${user.lastName}',
               style: TextStyle(
                 color: white,
                 fontSize: 24,
@@ -116,43 +144,12 @@ class _ScorePageState extends State<ScorePage> {
               },
             ),
             OpportunityCard(
-              id: "1",
-              assetPath: 'assets/svg/bus.svg',
-              title: 'Автобус',
-              subtitle: '10км = 1GS',
-              onClick: () {
-                // Navigator.of(context).pushNamed(
-                //   OpportunityStatusPage.routeName,
-                //   arguments: OpportunityStatusPageArguments(
-                //     id: "1",
-                //     title: "Автобус",
-                //     assetPath: "assets/svg/bus.svg",
-                //   ),
-                // );
-              },
-            ),
-            OpportunityCard(
-              id: "3",
-              assetPath: 'assets/svg/bicycle.svg',
-              title: 'Унадаг дугуй',
-              subtitle: '3км = 1GS',
-              onClick: () {
-                // Navigator.of(context).pushNamed(
-                //   OpportunityStatusPage.routeName,
-                //   arguments: OpportunityStatusPageArguments(
-                //     id: "3",
-                //     title: "Унадаг дугуй",
-                //     assetPath: 'assets/svg/bicycle.svg',
-                //   ),
-                // );
-              },
-            ),
-            OpportunityCard(
               id: "4",
               assetPath: 'assets/svg/bag.svg',
               title: 'Худалдан авалт',
               subtitle: '5000төг = 1GS',
               onClick: () {
+                comingSoon(context);
                 // Navigator.of(context).pushNamed(
                 //   OpportunityStatusPage.routeName,
                 //   arguments: OpportunityStatusPageArguments(
@@ -163,6 +160,55 @@ class _ScorePageState extends State<ScorePage> {
                 // );
               },
             ),
+            OpportunityCard(
+              id: "5",
+              assetPath: 'assets/svg/scooter.svg',
+              title: 'Скүүтэр',
+              subtitle: '5000төг = 1GS',
+              onClick: () {
+                comingSoon(context);
+                // Navigator.of(context).pushNamed(
+                //   OpportunityStatusPage.routeName,
+                //   arguments: OpportunityStatusPageArguments(
+                //     id: "5",
+                //     title: "Скүүтэр",
+                //     assetPath: 'assets/svg/scooter.svg',
+                //   ),
+                // );
+              },
+            ),
+            // OpportunityCard(
+            //   id: "1",
+            //   assetPath: 'assets/svg/bus.svg',
+            //   title: 'Автобус',
+            //   subtitle: '10км = 1GS',
+            //   onClick: () {
+            //     // Navigator.of(context).pushNamed(
+            //     //   OpportunityStatusPage.routeName,
+            //     //   arguments: OpportunityStatusPageArguments(
+            //     //     id: "1",
+            //     //     title: "Автобус",
+            //     //     assetPath: "assets/svg/bus.svg",
+            //     //   ),
+            //     // );
+            //   },
+            // ),
+            // OpportunityCard(
+            //   id: "3",
+            //   assetPath: 'assets/svg/bicycle.svg',
+            //   title: 'Унадаг дугуй',
+            //   subtitle: '3км = 1GS',
+            //   onClick: () {
+            //     // Navigator.of(context).pushNamed(
+            //     //   OpportunityStatusPage.routeName,
+            //     //   arguments: OpportunityStatusPageArguments(
+            //     //     id: "3",
+            //     //     title: "Унадаг дугуй",
+            //     //     assetPath: 'assets/svg/bicycle.svg',
+            //     //   ),
+            //     // );
+            //   },
+            // ),
             SizedBox(
               height: 90,
             ),

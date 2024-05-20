@@ -23,7 +23,7 @@ class _CustomCardState extends State<CustomCard> {
   @override
   Widget build(BuildContext context) {
     isView = Provider.of<UserProvider>(context, listen: true).isView;
-    return widget.data.type == "qwe"
+    return widget.data.type == "FIAT"
         ? SizedBox()
         : Container(
             padding: EdgeInsets.all(20),

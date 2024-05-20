@@ -228,23 +228,23 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(
                   height: 15,
                 ),
-                ProfileButton(
-                  text: 'Тохиргоо',
-                  svgPath: 'assets/svg/settings.svg',
-                  onClick: () {
-                    comingSoon(context);
-                  },
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ProfileButton(
-                  text: 'Тусламж',
-                  svgPath: 'assets/svg/help.svg',
-                  onClick: () {
-                    comingSoon(context);
-                  },
-                ),
+                // ProfileButton(
+                //   text: 'Тохиргоо',
+                //   svgPath: 'assets/svg/settings.svg',
+                //   onClick: () {
+                //     comingSoon(context);
+                //   },
+                // ),
+                // SizedBox(
+                //   height: 15,
+                // ),
+                // ProfileButton(
+                //   text: 'Тусламж',
+                //   svgPath: 'assets/svg/help.svg',
+                //   onClick: () {
+                //     comingSoon(context);
+                //   },
+                // ),
                 SizedBox(
                   height: 50,
                 ),

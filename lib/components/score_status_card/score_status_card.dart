@@ -28,7 +28,7 @@ class ScoreStatusCard extends StatefulWidget {
 
 class _ScoreStatusCardState extends State<ScoreStatusCard>
     with AfterLayoutMixin {
-  List<double> stepsForLast7Days = [1, 1, 1, 1, 1, 1, 10];
+  List<double> stepsForLast7Days = [1, 2, 3, 4, 5, 6, 7];
   String? step;
   int stepIos = 0;
   int todaysSteps = 0;
