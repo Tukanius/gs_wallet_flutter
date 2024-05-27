@@ -3,7 +3,7 @@ part '../parts/qr_read.dart';
 class QrRead {
   String? id;
   String? iv;
-  String? merchant;
+  // String? merchant;
   String? code;
   String? type;
   String? paymentMethod;
@@ -27,7 +27,7 @@ class QrRead {
     this.code,
     this.createdAt,
     this.isSale,
-    this.merchant,
+    // this.merchant,
     this.orderStatus,
     this.orderStatusDate,
     this.payAmount,

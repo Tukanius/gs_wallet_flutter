@@ -260,7 +260,9 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
                   width: MediaQuery.of(context).size.width,
                   height: 100,
                   child: isLoading == true
-                      ? SizedBox()
+                      ? SizedBox(
+                          height: 100,
+                        )
                       : ListView(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,

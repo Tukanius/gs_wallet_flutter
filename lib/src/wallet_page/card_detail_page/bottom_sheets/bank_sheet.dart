@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,6 +8,70 @@ import 'package:green_score/src/main_page.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:green_score/widget/ui/form_textfield.dart';
 import 'package:green_score/api/wallet_api.dart';
+import 'package:lottie/lottie.dart';
+
+showSuccess(context) async {
+  showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) {
+      return Container(
+        alignment: Alignment.center,
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            Container(
+              margin: const EdgeInsets.only(top: 75),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.only(top: 90, left: 20, right: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Text(
+                    'Амжилттай',
+                    style: TextStyle(
+                        color: dark, fontWeight: FontWeight.bold, fontSize: 24),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  const Text(
+                    'Данс амжилттай цэнэглэгдлээ.',
+                    textAlign: TextAlign.center,
+                  ),
+                  ButtonBar(
+                    buttonMinWidth: 100,
+                    alignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      TextButton(
+                        style: ButtonStyle(
+                          overlayColor:
+                              MaterialStateProperty.all(Colors.transparent),
+                        ),
+                        child: const Text(
+                          "Буцах",
+                          style: TextStyle(color: dark),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Lottie.asset('assets/success.json', height: 150, repeat: false),
+          ],
+        ),
+      );
+    },
+  );
+}
 
 bank(BuildContext context, Deposit data) {
   bool isLoading = false;
@@ -22,10 +88,13 @@ bank(BuildContext context, Deposit data) {
           });
           try {
             deposit = await WalletApi().depositConfirm(data.id!);
-            setState(() {
-              isLoading = false;
+            Timer(Duration(seconds: 3), () {
+              setState(() {
+                isLoading = false;
+              });
+              Navigator.of(context).pushNamed(MainPage.routeName);
+              showSuccess(context);
             });
-            Navigator.of(context).pushNamed(MainPage.routeName);
             print(deposit);
           } catch (e) {
             print(e.toString());
@@ -85,7 +154,7 @@ bank(BuildContext context, Deposit data) {
                       ),
                       Center(
                         child: Text(
-                          'Данс ${data.amount}',
+                          'Данс',
                           style: TextStyle(
                             color: black,
                             fontSize: 16,

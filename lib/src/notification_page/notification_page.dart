@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/back_button/back_button.dart';
+import 'package:green_score/components/controller/listen.dart';
 import 'package:green_score/components/notification_card/notification_card.dart';
+import 'package:green_score/src/notification_page/notification_detail.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 
@@ -14,6 +15,7 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
+  ListenController listenController = ListenController();
   @override
   Widget build(BuildContext context) {
     return BackgroundShapes(
@@ -49,12 +51,12 @@ class _NotificationPageState extends State<NotificationPage> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              actions: [
-                SvgPicture.asset('assets/svg/more.svg'),
-                SizedBox(
-                  width: 10,
-                ),
-              ],
+              // actions: [
+              //   SvgPicture.asset('assets/svg/more.svg'),
+              //   SizedBox(
+              //     width: 10,
+              //   ),
+              // ],
             ),
           ];
         },
@@ -67,6 +69,14 @@ class _NotificationPageState extends State<NotificationPage> {
                     children: [
                       NotificationCard(
                         isVisit: e,
+                        onClick: () {
+                          Navigator.of(context).pushNamed(
+                            NotificationDetailPage.routeName,
+                            arguments: NotificationDetailPageArguments(
+                              listenController: listenController,
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(
                         height: 12,

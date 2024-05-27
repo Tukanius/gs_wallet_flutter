@@ -40,8 +40,6 @@ app(BuildContext context, String text, String id) {
           });
         }
 
-        socialpay() {}
-
         return Container(
           height: MediaQuery.of(context).size.height * 0.75,
           decoration: BoxDecoration(

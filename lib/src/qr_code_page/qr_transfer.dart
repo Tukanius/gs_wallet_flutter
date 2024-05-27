@@ -1,6 +1,5 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:green_score/api/wallet_api.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/deposit.dart';
@@ -207,37 +206,29 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
                                       SizedBox(
                                         height: 30,
                                       ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: CustomButton(
-                                              onClick: () {
-                                                Navigator.of(context).pushNamed(
-                                                    MainPage.routeName);
-                                              },
-                                              buttonColor: white,
-                                              height: 40,
-                                              isLoading: isLoading,
-                                              labelText: "Болих",
-                                              textColor: black,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 20,
-                                          ),
-                                          Expanded(
-                                            child: CustomButton(
-                                              onClick: () {
-                                                onConfirm();
-                                              },
-                                              buttonColor: greentext,
-                                              height: 40,
-                                              isLoading: isLoading,
-                                              labelText: "Баталгаажуулах",
-                                              textColor: white,
-                                            ),
-                                          ),
-                                        ],
+                                      CustomButton(
+                                        onClick: () {
+                                          onConfirm();
+                                        },
+                                        buttonColor: greentext,
+                                        height: 40,
+                                        isLoading: isLoading,
+                                        labelText: "Баталгаажуулах",
+                                        textColor: white,
+                                      ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      CustomButton(
+                                        onClick: () {
+                                          Navigator.of(context)
+                                              .pushNamed(MainPage.routeName);
+                                        },
+                                        buttonColor: buttonbg,
+                                        height: 40,
+                                        isLoading: false,
+                                        labelText: "Болих",
+                                        textColor: white,
                                       ),
                                     ],
                                   )
@@ -258,38 +249,29 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
                                           SizedBox(
                                             height: 30,
                                           ),
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: CustomButton(
-                                                  onClick: () {
-                                                    Navigator.of(context)
-                                                        .pushNamed(
-                                                            MainPage.routeName);
-                                                  },
-                                                  buttonColor: white,
-                                                  height: 40,
-                                                  isLoading: isLoading,
-                                                  labelText: "Болих",
-                                                  textColor: black,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 20,
-                                              ),
-                                              Expanded(
-                                                child: CustomButton(
-                                                  onClick: () {
-                                                    onConfirm();
-                                                  },
-                                                  buttonColor: greentext,
-                                                  height: 40,
-                                                  isLoading: isLoading,
-                                                  labelText: "Оноо ашиглах",
-                                                  textColor: white,
-                                                ),
-                                              ),
-                                            ],
+                                          CustomButton(
+                                            onClick: () {
+                                              onConfirm();
+                                            },
+                                            buttonColor: greentext,
+                                            height: 40,
+                                            isLoading: isLoading,
+                                            labelText: "Оноо ашиглах",
+                                            textColor: white,
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          CustomButton(
+                                            onClick: () {
+                                              Navigator.of(context).pushNamed(
+                                                  MainPage.routeName);
+                                            },
+                                            buttonColor: buttonbg,
+                                            height: 40,
+                                            isLoading: false,
+                                            labelText: "Болих",
+                                            textColor: white,
                                           ),
                                         ],
                                       )

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:green_score/api/user_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/components/custom_button/profile_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
-import 'package:green_score/src/main_page.dart';
+import 'package:green_score/src/profile_page/dan_verify/dan_verify_page.dart';
 import 'package:green_score/src/profile_page/profile_edit_page.dart';
 import 'package:green_score/src/splash_screen/splash_screen.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
@@ -71,47 +70,6 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       },
     );
-  }
-
-  successDan(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: white,
-          content: Text(
-            'Амжилттай!',
-            style: TextStyle(
-              color: black,
-              fontSize: 18,
-            ),
-          ),
-          actions: <Widget>[
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'OK',
-                  style: TextStyle(color: black),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  danVerify() async {
-    var res = await UserApi().danVerify();
-    print(res);
-    successDan(context);
-    setState(() {
-      isLoading = false;
-    });
-    Navigator.of(context).pushNamed(MainPage.routeName);
   }
 
   @override
@@ -219,10 +177,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 15,
                 ),
                 ProfileButton(
-                  text: 'ДАН баталгаажуулалт',
-                  svgPath: 'assets/svg/settings.svg',
+                  text: user.danVerified == true
+                      ? "ДАН баталгаажуулсан"
+                      : 'ДАН баталгаажуулалт',
+                  svgPath: 'assets/svg/dan.svg',
+                  isVerify: user.danVerified == true ? true : false,
                   onClick: () {
-                    danVerify();
+                    // danVerify();
+                    user.danVerified == false
+                        ? Navigator.of(context)
+                            .pushNamed(DanVerifyPage.routeName)
+                        : SizedBox();
                   },
                 ),
                 SizedBox(

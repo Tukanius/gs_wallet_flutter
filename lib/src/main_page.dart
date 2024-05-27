@@ -40,15 +40,22 @@ class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   User user = User();
   bool _isKeyboardVisible = false;
-
+  bool isLoading = false;
   int currentIndex = 0;
   late TabController tabController;
   late LocationSettings locationSettings;
 
+  // late StreamSubscription<StepCount> subscription;
+  // Accumlation walk = Accumlation();
+  // int stepped = 0;
+  // String? step;
+  // List<double> stepsForLast7Days = [0, 0, 0, 0, 0, 0, 0];
+
   @override
   void initState() {
     super.initState();
-    requestPermission();
+    requestLocation();
+    // requestStep();
     // initializeService();
     tabController = TabController(length: 3, vsync: this);
     tabController.addListener(_handleTabSelection);
@@ -65,89 +72,104 @@ class _MainPageState extends State<MainPage>
     });
   }
 
-  requestPermission() async {
+  // @override
+  // afterFirstLayout(BuildContext context) async {
+  //   await requestStep();
+  // }
+
+  // getWalk() async {
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     print('=======CHECKPROV====');
+  //     walk = await Provider.of<ToolsProvider>(context, listen: false).getStep();
+  //     print(walk.amount);
+  //     print('=======CHECKPROV====');
+
+  //     if (walk.balanceAmount == 0 || walk.balanceAmount == null) {
+  //       setState(() {
+  //         stepped = 0;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         stepped = walk.balanceAmount!;
+  //       });
+  //     }
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //     print(e.toString());
+  //   }
+  // }
+
+  // requestStep() async {
+  //   final PermissionStatus status =
+  //       await Permission.activityRecognition.request();
+  //   print('===========STEP PERMISSION========');
+  //   print(status);
+  //   print('===========STEP PERMISSION========');
+  //   if (status == PermissionStatus.granted) {
+  //     calculateStep();
+  //   } else if (status == PermissionStatus.permanentlyDenied) {
+  //     // requestStep();
+  //     calculateStep();
+  //   }
+  // }
+
+  // void calculateStep() async {
+  //   await getWalk();
+  //   int? previousStepCount;
+  //   Position position = await Geolocator.getCurrentPosition(
+  //     desiredAccuracy: LocationAccuracy.high,
+  //   );
+  //   subscription = Pedometer.stepCountStream.listen(
+  //     (event) {
+  //       int currentStepCount = event.steps;
+  //       int stepsSinceLastEvent = previousStepCount != null
+  //           ? currentStepCount - previousStepCount!
+  //           : 0;
+  //       previousStepCount = currentStepCount;
+  //       if (mounted) {
+  //         setState(() {
+  //           walk.amount = stepsSinceLastEvent.toString();
+  //           stepped += stepsSinceLastEvent;
+  //           walk.latitude = position.latitude;
+  //           walk.longitude = position.longitude;
+  //           if (previousStepCount != null && stepsSinceLastEvent != 0) {
+  //             ScoreApi().sendStep(walk);
+  //           }
+  //           step = stepsSinceLastEvent.toString();
+  //         });
+  //       }
+  //     },
+  //   );
+  // }
+
+  requestLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
     final PermissionStatus status = await Permission.location.request();
 
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.denied) {
-        // startTrack();
         await initializeService();
       }
     }
 
     if (status == PermissionStatus.granted) {
+      await initializeService();
     } else if (status == PermissionStatus.denied) {
       print('Permission denied');
     } else if (status == PermissionStatus.permanentlyDenied) {
-      // startTrack();
-      await initializeService();
       print('Permission permanently denied');
+      await initializeService();
     }
   }
-
-  // Future<void> startTrack() async {
-  //   if (TargetPlatform.android == true) {
-  //     locationSettings = AndroidSettings(
-  //         accuracy: LocationAccuracy.high,
-  //         distanceFilter: 100,
-  //         forceLocationManager: true,
-  //         intervalDuration: const Duration(seconds: 10),
-  //         foregroundNotificationConfig: const ForegroundNotificationConfig(
-  //           notificationText:
-  //               "Example app will continue to receive your location even when you aren't using it",
-  //           notificationTitle: "Running in Background",
-  //           enableWakeLock: true,
-  //         ));
-  //   } else if (true == TargetPlatform.iOS) {
-  //     locationSettings = AppleSettings(
-  //       accuracy: LocationAccuracy.high,
-  //       allowBackgroundLocationUpdates: true,
-  //       timeLimit: Duration(milliseconds: 100),
-  //       activityType: ActivityType.fitness,
-  //       distanceFilter: 100,
-  //       pauseLocationUpdatesAutomatically: true,
-  //       showBackgroundLocationIndicator: true,
-  //     );
-  //   } else {
-  //     locationSettings = LocationSettings(
-  //       accuracy: LocationAccuracy.high,
-  //       distanceFilter: 100,
-  //     );
-  //   }
-
-  //   Timer.periodic(
-  //     Duration(milliseconds: 10000),
-  //     (timer) async {
-  //       try {
-  //         Position position = await Geolocator.getCurrentPosition(
-  //           desiredAccuracy: LocationAccuracy.high,
-  //         );
-  //         LocationInfo info = LocationInfo(
-  //           latitude: position.latitude,
-  //           longitude: position.longitude,
-  //           timestamp: position.timestamp.toString(),
-  //           accuracy: position.accuracy,
-  //           altitude: position.altitude,
-  //           altitudeAccuracy: position.altitudeAccuracy,
-  //           heading: position.heading,
-  //           headingAccuracy: position.headingAccuracy,
-  //           speed: position.speed,
-  //           speedAccuracy: position.speedAccuracy,
-  //         );
-  //         try {
-  //           var res = await ScoreApi().trackLocation(info);
-  //           print(res);
-  //         } catch (e) {
-  //           print("Error sending location: $e");
-  //         }
-  //       } catch (e) {
-  //         print("Error getting location: $e");
-  //       }
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -249,7 +271,6 @@ class _MainPageState extends State<MainPage>
             extendBody: true,
             bottomNavigationBar: !_isKeyboardVisible
                 ? Container(
-                    // height: Platform.isAndroid ? 60 : 90,
                     height: MediaQuery.of(context).size.height * 0.1,
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     decoration: BoxDecoration(
@@ -412,7 +433,7 @@ initializeService() async {
       isForegroundMode: true,
       notificationChannelId: 'my_foreground',
       initialNotificationTitle: 'Green Score',
-      initialNotificationContent: 'Total Step 123',
+      initialNotificationContent: 'Track Step',
       foregroundServiceNotificationId: 888,
       autoStartOnBoot: true,
     ),

@@ -102,95 +102,91 @@ class _MerchantProductState extends State<MerchantProduct>
                 ? null
                 : onLoading,
             onRefresh: onRefresh,
-            child: SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Бүх бараа",
-                      style: TextStyle(
-                        color: white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Бүх бараа",
+                    style: TextStyle(
+                      color: white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(
-                      height: 15,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  FormTextField(
+                    controller: controller,
+                    onChanged: (query) {
+                      onChange(query);
+                    },
+                    prefixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/svg/search.svg'),
+                      ],
                     ),
-                    FormTextField(
-                      controller: controller,
-                      onChanged: (query) {
-                        onChange(query);
-                      },
-                      prefixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset('assets/svg/search.svg'),
-                        ],
-                      ),
-                      hintText: "Хайх",
-                      colortext: white,
-                      color: buttonbg,
-                      name: "query",
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    productList.rows!.isNotEmpty
-                        ? GridView.count(
-                            crossAxisCount: 2,
-                            shrinkWrap: true,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 15,
-                            childAspectRatio: 3 / 4,
-                            padding: EdgeInsets.all(0),
-                            physics: NeverScrollableScrollPhysics(),
-                            children: productList.rows!
-                                .map(
-                                  (data) => ProductCard(
-                                    data: data,
-                                    onClick: () {
-                                      Navigator.of(context).pushNamed(
-                                        ProductDetail.routeName,
-                                        arguments: ProductDetailArguments(
-                                          data: data,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
-                                .toList(),
-                          )
-                        : Column(
-                            children: [
-                              SizedBox(
-                                height: 50,
-                              ),
-                              SvgPicture.asset(
-                                'assets/svg/notfound.svg',
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Center(
-                                child: Text(
-                                  'Бүртгэлтэй бараа олдсонгүй',
-                                  style: TextStyle(
-                                    color: white,
-                                    fontSize: 14,
-                                  ),
+                    hintText: "Хайх",
+                    colortext: white,
+                    color: buttonbg,
+                    name: "query",
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  productList.rows!.isNotEmpty
+                      ? GridView.count(
+                          crossAxisCount: 2,
+                          shrinkWrap: true,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 15,
+                          childAspectRatio: 3 / 4,
+                          padding: EdgeInsets.all(0),
+                          physics: NeverScrollableScrollPhysics(),
+                          children: productList.rows!
+                              .map(
+                                (data) => ProductCard(
+                                  data: data,
+                                  onClick: () {
+                                    Navigator.of(context).pushNamed(
+                                      ProductDetail.routeName,
+                                      arguments: ProductDetailArguments(
+                                        data: data,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                              .toList(),
+                        )
+                      : Column(
+                          children: [
+                            SizedBox(
+                              height: 50,
+                            ),
+                            SvgPicture.asset(
+                              'assets/svg/notfound.svg',
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Center(
+                              child: Text(
+                                'Бүртгэлтэй бараа олдсонгүй',
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 14,
                                 ),
                               ),
-                            ],
-                          ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                  ],
-                ),
+                            ),
+                          ],
+                        ),
+                ],
               ),
             ),
           );

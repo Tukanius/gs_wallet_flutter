@@ -87,7 +87,7 @@ class _MapPageState extends State<MapPage> {
             )
           : GoogleMap(
               zoomControlsEnabled: false,
-              mapType: MapType.hybrid,
+              mapType: MapType.normal,
               compassEnabled: false,
               myLocationButtonEnabled: false,
               markers: Set<Marker>.of(markers),

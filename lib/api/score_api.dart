@@ -1,5 +1,8 @@
 import 'package:green_score/models/accumlation.dart';
+import 'package:green_score/models/deposit.dart';
+import 'package:green_score/models/history.dart';
 import 'package:green_score/models/location_info.dart';
+import 'package:green_score/models/result.dart';
 import 'package:green_score/utils/http_request.dart';
 
 class ScoreApi extends HttpRequest {
@@ -8,14 +11,21 @@ class ScoreApi extends HttpRequest {
     return Accumlation.fromJson(res);
   }
 
-  getStep(String type, String code) async {
-    var res = await get('/accumlation/$type/$code', "SCORE");
-    return res != null ? Accumlation.fromJson(res) : res;
+  getStep(Accumlation data) async {
+    var res = await get('/accumlation', "SCORE", data: data.toJson());
+    return Accumlation.fromJson(res);
   }
-  // getStep(String type) async {
-  //   var res = await get('/accumlation/$type', "SCORE");
-  //   return res != null ? Accumlation.fromJson(res) : res;
-  // }
+
+  getStepHistory(ResultArguments resultArguments) async {
+    var res = await get('/accumlation/history', "SCORE",
+        data: resultArguments.toJson());
+    return Result.fromJson(res, History.fromJson);
+  }
+
+  redeemCalculate(String id) async {
+    var res = await post('/redeem/calculate/$id', "SCORE");
+    return Deposit.fromJson(res);
+  }
 
   onRedeem(String id) async {
     var res = await post('/redeem/$id', "SCORE", handler: true);

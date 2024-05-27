@@ -9,6 +9,9 @@ class Filter {
   String? type;
   String? orderConfirmTerm;
   bool? isParent;
+  String? startDate;
+  String? endDate;
+  String? accumlationId;
 
   Filter({
     this.isParent,
@@ -19,6 +22,9 @@ class Filter {
     this.isReceived,
     this.orderConfirmTerm,
     this.account,
+    this.startDate,
+    this.endDate,
+    this.accumlationId,
   });
 }
 

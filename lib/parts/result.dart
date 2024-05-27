@@ -44,6 +44,15 @@ Map<String, dynamic> _$ResultArgumentToJson(ResultArguments? instance) {
     if (instance.filter!.merchant != null) {
       params['filter']['merchant'] = instance.filter!.merchant;
     }
+    if (instance.filter!.accumlationId != null) {
+      params['filter']['accumlationId'] = instance.filter!.accumlationId;
+    }
+    if (instance.filter!.startDate != null) {
+      params['filter']['startDate'] = instance.filter!.startDate;
+    }
+    if (instance.filter!.endDate != null) {
+      params['filter']['endDate'] = instance.filter!.endDate;
+    }
     if (instance.filter!.isReceived != null) {
       params['filter']['isReceived'] = instance.filter!.isReceived;
     }

@@ -1,4 +1,4 @@
-import 'package:green_score/components/score_status_card/bar_config.dart';
+import 'package:green_score/components/score_status_card/bar_data/bar_config.dart';
 
 class BarData {
   final double sun1;

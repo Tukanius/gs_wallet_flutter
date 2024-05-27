@@ -7,6 +7,7 @@ class History {
   String? objectType;
   num? amount;
   num? totalAmount;
+  num? tokenAmount;
   String? currency;
   String? description;
   String? creditAccount;
@@ -39,6 +40,7 @@ class History {
     this.transactionStatus,
     this.transactionStatusDate,
     this.type,
+    this.tokenAmount,
   });
 
   static $fromJson(Map<String, dynamic> json) => _$HistoryFromJson(json);

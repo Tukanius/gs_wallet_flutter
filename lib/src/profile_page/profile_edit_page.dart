@@ -7,6 +7,7 @@ import 'package:green_score/components/controller/listen.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
+import 'package:green_score/src/main_page.dart';
 import 'package:green_score/src/profile_page/camera_page.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -43,7 +44,25 @@ class _ProfileEditState extends State<ProfileEdit> {
         User save = User.fromJson(fbkey.currentState!.value);
         await Provider.of<UserProvider>(context, listen: false)
             .editProfile(save, user.id!);
-        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(MainPage.routeName);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: white,
+            content: Row(
+              children: [
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  'Мэдээлэл амжилттай засагдлаа.',
+                  style: TextStyle(
+                    color: black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
       } catch (e) {
         print(e.toString());
       }
@@ -225,6 +244,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                                     'assets/svg/camera.svg',
                                     height: 30,
                                     width: 30,
+                                    // ignore: deprecated_member_use
                                     color: black,
                                   ),
                                 ),

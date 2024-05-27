@@ -6,11 +6,13 @@ class ProfileButton extends StatefulWidget {
   final Function()? onClick;
   final String text;
   final String svgPath;
+  final bool? isVerify;
   ProfileButton({
     this.onClick,
     Key? key,
     required this.text,
     required this.svgPath,
+    this.isVerify,
   }) : super(key: key);
 
   @override
@@ -35,7 +37,10 @@ class _ProfileButtonState extends State<ProfileButton> {
           children: [
             Row(
               children: [
-                SvgPicture.asset(widget.svgPath),
+                SvgPicture.asset(
+                  widget.svgPath,
+                  color: widget.isVerify == true ? greentext : white,
+                ),
                 SizedBox(
                   width: 10,
                 ),

@@ -46,7 +46,6 @@ class _PassWordPageState extends State<PassWordPage> {
         setState(() {
           isLoading = false;
         });
-        showSuccess(context);
         await Navigator.of(context).pushNamed(SplashScreen.routeName);
       } catch (e) {
         print(e.toString());

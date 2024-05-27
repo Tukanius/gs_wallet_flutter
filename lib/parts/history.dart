@@ -10,6 +10,8 @@ History _$HistoryFromJson(Map<String, dynamic> json) {
         json['objectType'] != null ? json['objectType'] as String : null,
     totalAmount:
         json['totalAmount'] != null ? json['totalAmount'] as num : null,
+    tokenAmount:
+        json['tokenAmount'] != null ? json['tokenAmount'] as num : null,
     currency: json['currency'] != null ? json['currency'] as String : null,
     description:
         json['description'] != null ? json['description'] as String : null,
@@ -69,6 +71,7 @@ Map<String, dynamic> _$HistoryToJson(History instance) {
     json['transactionStatusDate'] = instance.transactionStatusDate;
   if (instance.createdAt != null) json['createdAt'] = instance.createdAt;
   if (instance.updatedAt != null) json['updatedAt'] = instance.updatedAt;
+  if (instance.tokenAmount != null) json['tokenAmount'] = instance.tokenAmount;
 
   return json;
 }

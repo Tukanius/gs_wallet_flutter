@@ -19,6 +19,12 @@ class _ProductCardState extends State<ProductCard> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(26),
         color: buttonbg,
+        border: widget.data.sale != null
+            ? Border.all(
+                color: greentext,
+                width: 1,
+              )
+            : Border(),
       ),
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       child: Column(
@@ -60,8 +66,20 @@ class _ProductCardState extends State<ProductCard> {
             height: 8,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              SizedBox(
+                width: 1,
+              ),
+              widget.data.sale != null
+                  ? Text(
+                      // '${widget.data.sale?.saleTokenAmount}%',
+                      '1%',
+                      style: TextStyle(
+                        color: greentext,
+                      ),
+                    )
+                  : SizedBox(),
               GestureDetector(
                 onTap: widget.onClick,
                 child: Container(

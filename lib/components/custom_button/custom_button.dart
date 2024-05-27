@@ -8,6 +8,7 @@ class CustomButton extends StatefulWidget {
   final Color? buttonColor;
   final Color? textColor;
   final double? height;
+  final double? circular;
   CustomButton({
     this.textColor,
     this.isLoading,
@@ -16,6 +17,7 @@ class CustomButton extends StatefulWidget {
     this.buttonColor,
     this.height,
     Key? key,
+    this.circular,
   }) : super(key: key);
 
   @override
@@ -30,7 +32,7 @@ class _CustomButtonState extends State<CustomButton> {
         width: MediaQuery.of(context).size.width,
         height: widget.height ?? 50,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(widget.circular ?? 16),
           color: widget.buttonColor,
         ),
         child: ElevatedButton(
@@ -62,7 +64,7 @@ class _CustomButtonState extends State<CustomButton> {
           ),
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: BorderRadius.circular(widget.circular ?? 16),
             ),
             shadowColor: Colors.transparent,
             backgroundColor: widget.buttonColor,

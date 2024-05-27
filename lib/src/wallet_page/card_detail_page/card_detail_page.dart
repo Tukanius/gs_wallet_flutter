@@ -6,13 +6,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/wallet_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/controller/listen.dart';
-import 'package:green_score/components/custom_card/custom_card.dart';
+import 'package:green_score/components/custom_cards/walking_card.dart';
 import 'package:green_score/components/history_card/fiat_history_card.dart';
 import 'package:green_score/components/history_card/token_history_card.dart';
 import 'package:green_score/components/refresher/refresher.dart';
 import 'package:green_score/models/account.dart';
 import 'package:green_score/models/result.dart';
 import 'package:green_score/src/wallet_page/card_detail_page/bottom_sheets/income_sheet.dart';
+import 'package:green_score/utils/utils.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -99,6 +100,265 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
     super.dispose();
   }
 
+  comingSoon(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bg,
+          content: Text(
+            'Тун удахгүй!',
+            style: TextStyle(
+              color: white,
+              fontSize: 18,
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'OK',
+                  style: TextStyle(color: white),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  showDetail(context, data) {
+    String createdDate = Utils.formatUTC8(data.createdAt!);
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          height: MediaQuery.of(context).size.height * 0.40,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26),
+              topRight: Radius.circular(26),
+            ),
+            color: white,
+          ),
+          child: Column(
+            children: [
+              Container(
+                height: 5,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: nfc,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(),
+                  Text(
+                    'Гүйлгээний дэлгэрэнгүй',
+                    style: TextStyle(
+                      color: black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: SvgPicture.asset('assets/svg/close.svg'),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Divider(
+                color: greytext.withOpacity(0.2),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${data.description}:',
+                    style: TextStyle(
+                      color: greytext,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    data.type == "TOKEN"
+                        ? '${data.totalAmount} GS'
+                        : '${data.totalAmount}₮',
+                    style: TextStyle(
+                      color: greentext,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Огноо:',
+                    style: TextStyle(
+                      color: greytext,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    '${createdDate}',
+                    style: TextStyle(
+                      color: black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // show(context, data) async {
+  //   String createdDate = Utils.formatUTC8(data.createdAt!);
+  //   showDialog(
+  //     barrierDismissible: true,
+  //     context: context,
+  //     builder: (context) {
+  //       return Container(
+  //         alignment: Alignment.center,
+  //         margin: const EdgeInsets.symmetric(horizontal: 20),
+  //         child: Stack(
+  //           alignment: Alignment.topCenter,
+  //           children: <Widget>[
+  //             Container(
+  //               padding: const EdgeInsets.symmetric(horizontal: 15),
+  //               decoration: BoxDecoration(
+  //                 color: bg,
+  //                 borderRadius: BorderRadius.circular(16),
+  //               ),
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: <Widget>[
+  //                   Container(
+  //                     margin: const EdgeInsets.only(top: 30, bottom: 20),
+  //                     child: Text(
+  //                       'Гүйлгээний түүхийн дэлгэрэнгүй',
+  //                       style: TextStyle(
+  //                         fontWeight: FontWeight.w600,
+  //                         color: white,
+  //                         fontSize: 16,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Divider(color: white),
+  //                   SizedBox(
+  //                     height: 15,
+  //                   ),
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                     children: [
+  //                       Text(
+  //                         '${data.description}',
+  //                         style: TextStyle(
+  //                           fontWeight: FontWeight.w500,
+  //                           color: white,
+  //                           fontSize: 14,
+  //                         ),
+  //                       ),
+  //                       Text(
+  //                         // 'Урамшуулийн дүн',
+  //                         data.type == "TOKEN"
+  //                             ? '${data.totalAmount} GS'
+  //                             : '${data.totalAmount}₮',
+  //                         style: TextStyle(
+  //                           fontWeight: FontWeight.w500,
+  //                           color: white,
+  //                           fontSize: 14,
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   SizedBox(
+  //                     height: 15,
+  //                   ),
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                     children: [
+  //                       Text(
+  //                         'Огноо',
+  //                         style: TextStyle(
+  //                           fontWeight: FontWeight.w500,
+  //                           color: white,
+  //                           fontSize: 14,
+  //                         ),
+  //                       ),
+  //                       Text(
+  //                         '${createdDate}',
+  //                         style: TextStyle(
+  //                           fontWeight: FontWeight.w500,
+  //                           color: white,
+  //                           fontSize: 14,
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   SizedBox(
+  //                     height: 15,
+  //                   ),
+  //                   Divider(color: white),
+  //                   ButtonBar(
+  //                     buttonMinWidth: 100,
+  //                     alignment: MainAxisAlignment.spaceEvenly,
+  //                     children: <Widget>[
+  //                       TextButton(
+  //                         style: ButtonStyle(
+  //                           overlayColor:
+  //                               MaterialStateProperty.all(Colors.transparent),
+  //                         ),
+  //                         child: Text(
+  //                           "Болсон",
+  //                           style: TextStyle(
+  //                             color: white,
+  //                           ),
+  //                         ),
+  //                         onPressed: () {
+  //                           Navigator.of(context).pop();
+  //                         },
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return BackgroundShapes(
@@ -134,12 +394,6 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              actions: [
-                SvgPicture.asset('assets/svg/more.svg'),
-                SizedBox(
-                  width: 10,
-                ),
-              ],
             ),
           ];
         },
@@ -160,7 +414,10 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomCard(data: widget.data, isAll: false),
+                        WalkingCard(
+                          data: widget.data,
+                          isAll: false,
+                        ),
                         accountget.type == "FIAT"
                             ? Column(
                                 children: [
@@ -206,40 +463,41 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                                           ],
                                         ),
                                       ),
-                                      Expanded(
-                                        child: Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                // income(context, accountget.id!);
-                                              },
-                                              child: Container(
-                                                height: 52,
-                                                width: 52,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(16),
-                                                  color: buttonbg,
-                                                ),
-                                                child: Center(
-                                                  child: SvgPicture.asset(
-                                                      'assets/svg/income1.svg'),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              'Татах',
-                                              style: TextStyle(
-                                                color: white,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                      // Expanded(
+                                      //   child: Column(
+                                      //     children: [
+                                      //       GestureDetector(
+                                      //         onTap: () {
+                                      //           comingSoon(context);
+                                      //           // income(context, accountget.id!);
+                                      //         },
+                                      //         child: Container(
+                                      //           height: 52,
+                                      //           width: 52,
+                                      //           decoration: BoxDecoration(
+                                      //             borderRadius:
+                                      //                 BorderRadius.circular(16),
+                                      //             color: buttonbg,
+                                      //           ),
+                                      //           child: Center(
+                                      //             child: SvgPicture.asset(
+                                      //                 'assets/svg/income1.svg'),
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //       SizedBox(
+                                      //         height: 10,
+                                      //       ),
+                                      //       Text(
+                                      //         'Татах',
+                                      //         style: TextStyle(
+                                      //           color: white,
+                                      //           fontSize: 14,
+                                      //         ),
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ],
@@ -287,20 +545,42 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                                     )
                                     .toList(),
                               )
-                            : Container(
-                                margin: EdgeInsets.only(top: 50),
-                                child: Center(
-                                  child: Text(
-                                    'Түүх алга байна.',
-                                    style: TextStyle(
-                                      color: white,
-                                      fontWeight: FontWeight.w500,
+                            : Center(
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 60,
                                     ),
-                                  ),
+                                    SvgPicture.asset(
+                                      'assets/svg/notfound.svg',
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Text(
+                                      'Түүх',
+                                      style: TextStyle(
+                                        color: white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      'Түүх алга байна.',
+                                      style: TextStyle(
+                                        color: greytext,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                         SizedBox(
-                          height: 80,
+                          height: 20,
                         ),
                       ],
                     ),

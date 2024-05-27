@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/widget/ui/color.dart';
+import 'package:lottie/lottie.dart';
 
 class OpportunityCard extends StatefulWidget {
   final String id;
@@ -35,16 +36,32 @@ class _OpportunityCardState extends State<OpportunityCard> {
             children: [
               Row(
                 children: [
-                  Container(
-                    height: 52,
-                    width: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: buttonbg,
-                    ),
-                    child: Center(
-                      child: SvgPicture.asset(widget.assetPath),
-                    ),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 52,
+                        width: 52,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: buttonbg,
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset(widget.assetPath),
+                        ),
+                      ),
+                      widget.id == "2"
+                          ? Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Lottie.asset(
+                                'assets/lottie/live.json',
+                                fit: BoxFit.cover,
+                                height: 25,
+                                width: 25,
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
                   ),
                   SizedBox(
                     width: 12,

@@ -44,4 +44,10 @@ class WalletApi extends HttpRequest {
         data: resultArguments.toJson());
     return Result.fromJson(res, History.fromJson);
   }
+
+  getSaleHistory(ResultArguments resultArguments) async {
+    var res =
+        await get('/order/history', "MERCHANT", data: resultArguments.toJson());
+    return Result.fromJson(res, QrRead.fromJson);
+  }
 }

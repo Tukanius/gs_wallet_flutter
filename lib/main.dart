@@ -1,4 +1,7 @@
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+// import 'package:green_score/provider/tools_provider.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/services/dialog.dart';
 import 'package:green_score/services/navigation.dart';
@@ -8,13 +11,20 @@ import 'package:green_score/src/auth/opt_page.dart';
 import 'package:green_score/src/auth/password_page.dart';
 import 'package:green_score/src/auth/register_page.dart';
 import 'package:green_score/src/collect_score_page/all_opportunity_page.dart';
-import 'package:green_score/src/collect_score_page/opportunity_status_page.dart';
+import 'package:green_score/src/collect_score_page/collect_score_page/collect_scooter_page.dart';
+import 'package:green_score/src/collect_score_page/collect_score_page/collect_score_page.dart';
+import 'package:green_score/src/collect_score_page/opportunities_pages/autobus_detail_page.dart';
+import 'package:green_score/src/collect_score_page/opportunities_pages/sale_detail_page.dart';
+import 'package:green_score/src/collect_score_page/opportunities_pages/scooter_detail_page.dart';
+import 'package:green_score/src/collect_score_page/opportunities_pages/step_detail_page.dart';
 import 'package:green_score/src/home_page/company_page/company_page.dart';
 import 'package:green_score/src/home_page/company_page/map_page.dart';
 import 'package:green_score/src/home_page/product_detail_page/product_detail_page.dart';
 import 'package:green_score/src/main_page.dart';
+import 'package:green_score/src/notification_page/notification_detail.dart';
 import 'package:green_score/src/notification_page/notification_page.dart';
 import 'package:green_score/src/profile_page/camera_page.dart';
+import 'package:green_score/src/profile_page/dan_verify/dan_verify_page.dart';
 import 'package:green_score/src/profile_page/profile_edit_page.dart';
 import 'package:green_score/src/profile_page/profile_page.dart';
 import 'package:green_score/src/qr_code_page/confirm_qr_page.dart';
@@ -30,6 +40,24 @@ import 'package:get_it/get_it.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+
+  // FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+  //   if (message != null) {
+  //     print("Received message: ${message.messageId}");
+  //   }
+  // });
+
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //   print("Received message: ${message.messageId}");
+  //   // Handle foreground messages
+  // });
+
+  // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //   print("Tapped notification: ${message.messageId}");
+  //   // Handle tapping on the notification
+  // });
+
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => DialogService());
   runApp(const MyApp());
@@ -45,6 +73,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        // ChangeNotifierProvider(create: (_) => ToolsProvider()),
       ],
       child: Consumer<UserProvider>(
         builder: (context, userProvider, _) {
@@ -108,6 +137,18 @@ class MyApp extends StatelessWidget {
                 case ForgetPassword.routeName:
                   return MaterialPageRoute(builder: (context) {
                     return const ForgetPassword();
+                  });
+                case DanVerifyPage.routeName:
+                  return MaterialPageRoute(builder: (context) {
+                    return const DanVerifyPage();
+                  });
+                case CollectScorePage.routeName:
+                  CollectScorePageArguments arguments =
+                      settings.arguments as CollectScorePageArguments;
+                  return MaterialPageRoute(builder: (context) {
+                    return CollectScorePage(
+                      id: arguments.id,
+                    );
                   });
                 case MapPage.routeName:
                   MapPageArguments arguments =
@@ -196,16 +237,6 @@ class MyApp extends StatelessWidget {
                       data: arguments.data,
                     );
                   });
-                case OpportunityStatusPage.routeName:
-                  OpportunityStatusPageArguments arguments =
-                      settings.arguments as OpportunityStatusPageArguments;
-                  return MaterialPageRoute(builder: (context) {
-                    return OpportunityStatusPage(
-                      id: arguments.id,
-                      title: arguments.title,
-                      assetPath: arguments.assetPath,
-                    );
-                  });
                 case OtpPage.routeName:
                   OtpPageArguments arguments =
                       settings.arguments as OtpPageArguments;
@@ -223,7 +254,61 @@ class MyApp extends StatelessWidget {
                       data: arguments.data,
                     );
                   });
-
+                case StepDetailPage.routeName:
+                  StepDetailPageArguments arguments =
+                      settings.arguments as StepDetailPageArguments;
+                  return MaterialPageRoute(builder: (context) {
+                    return StepDetailPage(
+                      title: arguments.title,
+                      assetPath: arguments.assetPath,
+                    );
+                  });
+                case ScooterDetailPage.routeName:
+                  ScooterDetailPageArguments arguments =
+                      settings.arguments as ScooterDetailPageArguments;
+                  return MaterialPageRoute(builder: (context) {
+                    return ScooterDetailPage(
+                      id: arguments.id,
+                      title: arguments.title,
+                      assetPath: arguments.assetPath,
+                    );
+                  });
+                case SaleDetailPage.routeName:
+                  SaleDetailPageArguments arguments =
+                      settings.arguments as SaleDetailPageArguments;
+                  return MaterialPageRoute(builder: (context) {
+                    return SaleDetailPage(
+                      id: arguments.id,
+                      title: arguments.title,
+                      assetPath: arguments.assetPath,
+                    );
+                  });
+                case AutobusDetailPage.routeName:
+                  AutobusDetailPageArguments arguments =
+                      settings.arguments as AutobusDetailPageArguments;
+                  return MaterialPageRoute(builder: (context) {
+                    return AutobusDetailPage(
+                      id: arguments.id,
+                      title: arguments.title,
+                      assetPath: arguments.assetPath,
+                    );
+                  });
+                case NotificationDetailPage.routeName:
+                  NotificationDetailPageArguments arguments =
+                      settings.arguments as NotificationDetailPageArguments;
+                  return MaterialPageRoute(builder: (context) {
+                    return NotificationDetailPage(
+                      listenController: arguments.listenController,
+                    );
+                  });
+                case CollectScooterScore.routeName:
+                  CollectScooterScoreArguments arguments =
+                      settings.arguments as CollectScooterScoreArguments;
+                  return MaterialPageRoute(builder: (context) {
+                    return CollectScooterScore(
+                      id: arguments.id,
+                    );
+                  });
                 default:
                   return MaterialPageRoute(
                     builder: (_) => const SplashScreen(),

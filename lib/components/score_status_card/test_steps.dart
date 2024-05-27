@@ -175,3 +175,72 @@
   //     }
   //   });
   // }
+
+
+  //TEST FROM FIX CARD
+  // _requestLocation() async {
+  //   LocationPermission permission = await Geolocator.checkPermission();
+  //   final PermissionStatus status = await Permission.locationAlways.request();
+
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission != LocationPermission.denied) {
+  //       await _getLocation();
+  //     }
+  //   }
+  //   if (status == PermissionStatus.granted) {
+  //     await _getLocation();
+  //   } else if (status == PermissionStatus.denied) {
+  //     print('Permission denied');
+  //   } else if (status == PermissionStatus.permanentlyDenied) {
+  //     await _getLocation();
+  //     print('Permission permanently denied');
+  //   }
+  // }
+
+  // Future<void> _getLocation() async {
+  //   if (TargetPlatform.android == true) {
+  //     locationSettings = AndroidSettings(
+  //         accuracy: LocationAccuracy.high,
+  //         distanceFilter: 100,
+  //         forceLocationManager: true,
+  //         intervalDuration: const Duration(seconds: 10),
+  //         foregroundNotificationConfig: const ForegroundNotificationConfig(
+  //           notificationText:
+  //               "Example app will continue to receive your location even when you aren't using it",
+  //           notificationTitle: "Running in Background",
+  //           enableWakeLock: true,
+  //         ));
+  //   } else if (true == TargetPlatform.iOS) {
+  //     locationSettings = AppleSettings(
+  //       accuracy: LocationAccuracy.high,
+  //       allowBackgroundLocationUpdates: true,
+  //       timeLimit: Duration(milliseconds: 100),
+  //       activityType: ActivityType.fitness,
+  //       distanceFilter: 100,
+  //       pauseLocationUpdatesAutomatically: true,
+  //       showBackgroundLocationIndicator: true,
+  //     );
+  //   } else {
+  //     locationSettings = LocationSettings(
+  //       accuracy: LocationAccuracy.high,
+  //       distanceFilter: 100,
+  //     );
+  //   }
+
+  //   try {
+  //     Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high,
+  //     );
+  //     setState(() {
+  //       data.latitude = position.latitude;
+  //       data.longitude = position.longitude;
+  //       print('=====Loc=====');
+  //       print(position.latitude);
+  //       print(position.longitude);
+  //       print('=====Loc=====');
+  //     });
+  //   } catch (e) {
+  //     print("Error getting location: $e");
+  //   }
+  // }

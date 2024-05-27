@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:green_score/components/score_opportunities_card/opportunity_card.dart';
-import 'package:green_score/components/score_status_card/score_status_card.dart';
+import 'package:green_score/components/score_status_card/step_status_card.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
 // import 'package:green_score/components/score_status_card/score_test.dart';
 import 'package:green_score/src/collect_score_page/all_opportunity_page.dart';
-import 'package:green_score/src/collect_score_page/opportunity_status_page.dart';
+import 'package:green_score/src/collect_score_page/opportunities_pages/autobus_detail_page.dart';
+import 'package:green_score/src/collect_score_page/opportunities_pages/sale_detail_page.dart';
+import 'package:green_score/src/collect_score_page/opportunities_pages/scooter_detail_page.dart';
+import 'package:green_score/src/collect_score_page/opportunities_pages/step_detail_page.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:provider/provider.dart';
 
@@ -19,36 +22,6 @@ class ScorePage extends StatefulWidget {
 
 class _ScorePageState extends State<ScorePage> {
   User user = User();
-  comingSoon(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: bg,
-          content: Text(
-            'Хөгжүүлэлт хийгдэж байна!',
-            style: TextStyle(
-              color: white,
-              fontSize: 18,
-            ),
-          ),
-          actions: <Widget>[
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'OK',
-                  style: TextStyle(color: white),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +54,7 @@ class _ScorePageState extends State<ScorePage> {
             SizedBox(
               height: 20,
             ),
-            ScoreStatusCard(
+            StepStatusCard(
               assetPath: "assets/svg/man.svg",
               isActive: true,
             ),
@@ -134,11 +107,42 @@ class _ScorePageState extends State<ScorePage> {
               subtitle: '1км = 1GS',
               onClick: () {
                 Navigator.of(context).pushNamed(
-                  OpportunityStatusPage.routeName,
-                  arguments: OpportunityStatusPageArguments(
-                    id: "2",
+                  StepDetailPage.routeName,
+                  arguments: StepDetailPageArguments(
                     title: "Алхалт",
                     assetPath: 'assets/svg/man.svg',
+                  ),
+                );
+              },
+            ),
+            OpportunityCard(
+              id: "5",
+              assetPath: 'assets/svg/scooter.svg',
+              title: 'Скүүтер',
+              subtitle: '5000төг = 1GS',
+              onClick: () {
+                Navigator.of(context).pushNamed(
+                  ScooterDetailPage.routeName,
+                  arguments: ScooterDetailPageArguments(
+                    id: "5",
+                    title: "Скүүтер",
+                    assetPath: 'assets/svg/scooter.svg',
+                  ),
+                );
+              },
+            ),
+            OpportunityCard(
+              id: "1",
+              assetPath: 'assets/svg/bus.svg',
+              title: 'Автобус',
+              subtitle: '10км = 1GS',
+              onClick: () {
+                Navigator.of(context).pushNamed(
+                  AutobusDetailPage.routeName,
+                  arguments: AutobusDetailPageArguments(
+                    id: "1",
+                    title: "Автобус",
+                    assetPath: "assets/svg/bus.svg",
                   ),
                 );
               },
@@ -149,64 +153,30 @@ class _ScorePageState extends State<ScorePage> {
               title: 'Худалдан авалт',
               subtitle: '5000төг = 1GS',
               onClick: () {
-                comingSoon(context);
-                // Navigator.of(context).pushNamed(
-                //   OpportunityStatusPage.routeName,
-                //   arguments: OpportunityStatusPageArguments(
-                //     id: "4",
-                //     title: "Худалдан авалт",
-                //     assetPath: 'assets/svg/bag.svg',
-                //   ),
-                // );
+                Navigator.of(context).pushNamed(
+                  SaleDetailPage.routeName,
+                  arguments: SaleDetailPageArguments(
+                    id: "4",
+                    title: "Худалдан авалт",
+                    assetPath: 'assets/svg/bag.svg',
+                  ),
+                );
               },
             ),
-            OpportunityCard(
-              id: "5",
-              assetPath: 'assets/svg/scooter.svg',
-              title: 'Скүүтэр',
-              subtitle: '5000төг = 1GS',
-              onClick: () {
-                comingSoon(context);
-                // Navigator.of(context).pushNamed(
-                //   OpportunityStatusPage.routeName,
-                //   arguments: OpportunityStatusPageArguments(
-                //     id: "5",
-                //     title: "Скүүтэр",
-                //     assetPath: 'assets/svg/scooter.svg',
-                //   ),
-                // );
-              },
-            ),
-            // OpportunityCard(
-            //   id: "1",
-            //   assetPath: 'assets/svg/bus.svg',
-            //   title: 'Автобус',
-            //   subtitle: '10км = 1GS',
-            //   onClick: () {
-            //     // Navigator.of(context).pushNamed(
-            //     //   OpportunityStatusPage.routeName,
-            //     //   arguments: OpportunityStatusPageArguments(
-            //     //     id: "1",
-            //     //     title: "Автобус",
-            //     //     assetPath: "assets/svg/bus.svg",
-            //     //   ),
-            //     // );
-            //   },
-            // ),
             // OpportunityCard(
             //   id: "3",
             //   assetPath: 'assets/svg/bicycle.svg',
             //   title: 'Унадаг дугуй',
             //   subtitle: '3км = 1GS',
             //   onClick: () {
-            //     // Navigator.of(context).pushNamed(
-            //     //   OpportunityStatusPage.routeName,
-            //     //   arguments: OpportunityStatusPageArguments(
-            //     //     id: "3",
-            //     //     title: "Унадаг дугуй",
-            //     //     assetPath: 'assets/svg/bicycle.svg',
-            //     //   ),
-            //     // );
+            //     Navigator.of(context).pushNamed(
+            //       OpportunityStatusPage.routeName,
+            //       arguments: OpportunityStatusPageArguments(
+            //         id: "3",
+            //         title: "Унадаг дугуй",
+            //         assetPath: 'assets/svg/bicycle.svg',
+            //       ),
+            //     );
             //   },
             // ),
             SizedBox(
