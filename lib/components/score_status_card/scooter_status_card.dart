@@ -129,7 +129,11 @@ class _ScooterStatusCardState extends State<ScooterStatusCard>
                     ],
                   ),
                   Text(
-                    isLoading == true ? '-GS' : '${getData.amount}GS',
+                    isLoading == true
+                        ? '-GS'
+                        : getData.amount == null
+                            ? '0GS'
+                            : '${getData.amount}GS',
                     style: TextStyle(
                       color: greentext,
                       fontWeight: FontWeight.bold,

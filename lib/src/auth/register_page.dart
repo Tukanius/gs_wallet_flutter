@@ -258,6 +258,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 Expanded(
                                   child: FormTextField(
+                                    maxLenght: 8,
+                                    inputType: TextInputType.number,
                                     colortext: white,
                                     color: transparent,
                                     onChanged: (value) {

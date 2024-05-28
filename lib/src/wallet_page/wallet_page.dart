@@ -8,9 +8,12 @@ import 'package:green_score/components/custom_cards/walking_card.dart';
 import 'package:green_score/components/history_card/token_history_card.dart';
 import 'package:green_score/components/refresher/refresher.dart';
 import 'package:green_score/models/result.dart';
+import 'package:green_score/models/user.dart';
+import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/src/profile_page/profile_page.dart';
 import 'package:green_score/src/wallet_page/card_detail_page/card_detail_page.dart';
 import 'package:green_score/widget/ui/color.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class WalletPage extends StatefulWidget {
@@ -31,7 +34,7 @@ class _WalletPageState extends State<WalletPage> with AfterLayoutMixin {
   ListenController listenController = ListenController();
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
-
+  User user = User();
   @override
   void initState() {
     listenController.addListener(() async {
@@ -42,8 +45,15 @@ class _WalletPageState extends State<WalletPage> with AfterLayoutMixin {
 
   @override
   afterFirstLayout(BuildContext context) async {
-    await list(page, limit);
-    await listHistory(page, limit);
+    user = Provider.of<UserProvider>(context, listen: false).user;
+    if (user.danVerified == false) {
+      setState(() {
+        isLoadingPage = false;
+      });
+    } else {
+      await list(page, limit);
+      await listHistory(page, limit);
+    }
     setState(() {
       isLoading = false;
       isLoadingPage = false;
@@ -261,12 +271,13 @@ class _WalletPageState extends State<WalletPage> with AfterLayoutMixin {
                             height: 80,
                           ),
                           Text(
-                            'Дан баталгаажуулалт хийгдээгүй байна.',
+                            'Дан баталгаажуулалт хийгдээгүй байна. Та дан баталгаажуулалт хийснээр урамшууллаа цуглуулах боломжтой болно.',
                             style: TextStyle(
                               color: white,
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                           SizedBox(
                             height: 30,

@@ -316,7 +316,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                       const SizedBox(height: 20),
                       FormTextField(
                         initialValue: user.address,
-                        labelText: 'address',
+                        labelText: 'Хаяг',
                         color: buttonbg,
                         hintText: 'Хаяг',
                         name: "address",
