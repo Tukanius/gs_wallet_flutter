@@ -1,3 +1,4 @@
+import 'package:green_score/models/green.dart';
 import 'package:green_score/models/lastweek.dart';
 part '../parts/accumlation.dart';
 
@@ -15,7 +16,7 @@ class Accumlation {
   num? longitude;
   String? code;
   List<LastWeek>? lastWeekTotal;
-  bool? isRedeem;
+  Green? green;
 
   Accumlation({
     this.id,
@@ -31,7 +32,7 @@ class Accumlation {
     this.longitude,
     this.code,
     this.lastWeekTotal,
-    this.isRedeem,
+    this.green,
   });
   static $fromJson(Map<String, dynamic> json) => _$AccumlationFromJson(json);
 

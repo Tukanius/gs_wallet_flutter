@@ -41,10 +41,10 @@ class _MainPageState extends State<MainPage>
   User user = User();
   bool _isKeyboardVisible = false;
   bool isLoading = false;
-  int currentIndex = 0;
+  int currentIndex = 1;
   late TabController tabController;
   late LocationSettings locationSettings;
-
+  late ScrollController _scrollController;
   // late StreamSubscription<StepCount> subscription;
   // Accumlation walk = Accumlation();
   // int stepped = 0;
@@ -57,18 +57,27 @@ class _MainPageState extends State<MainPage>
     requestLocation();
     // requestStep();
     // initializeService();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 3, vsync: this, initialIndex: 1);
     tabController.addListener(_handleTabSelection);
     KeyboardVisibilityController().onChange.listen((bool visible) {
       setState(() {
         _isKeyboardVisible = visible;
       });
     });
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    tabController.dispose();
+    super.dispose();
   }
 
   _handleTabSelection() {
     setState(() {
       currentIndex = tabController.index;
+      _scrollController.jumpTo(0);
     });
   }
 
@@ -183,6 +192,7 @@ class _MainPageState extends State<MainPage>
         child: KeyboardVisibilityProvider(
           child: BackgroundShapes(
             body: NestedScrollView(
+              controller: _scrollController,
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxisScrolled) {
                 return <Widget>[
@@ -217,7 +227,7 @@ class _MainPageState extends State<MainPage>
                         width: 10,
                       ),
                       ActionButton(
-                        svgAssetPath: "assets/svg/qr.svg",
+                        svgAssetPath: "assets/svg/qrScan.svg",
                         onClick: () {
                           Navigator.of(context).pushNamed(QrReadPage.routeName);
                         },

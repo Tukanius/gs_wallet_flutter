@@ -139,43 +139,22 @@ class _CollectScorePageState extends State<CollectScorePage>
   }
 
   onRedeem() async {
-    if (walk.isRedeem == true) {
-      try {
-        setState(() {
-          isLoadingButton = true;
-        });
-        var res = await ScoreApi().onRedeem(widget.id);
-        print(res);
-        showSuccess(context);
-        setState(() {
-          isLoadingButton = false;
-        });
-        Navigator.of(context).pushNamed(MainPage.routeName);
-      } catch (e) {
-        setState(() {
-          isLoadingButton = false;
-        });
-        print(e.toString());
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: white,
-          content: Row(
-            children: [
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                'Урамшуулал авах хамгийн бага утга 10',
-                style: TextStyle(
-                  color: black,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+    try {
+      setState(() {
+        isLoadingButton = true;
+      });
+      var res = await ScoreApi().onRedeem(widget.id);
+      print(res);
+      showSuccess(context);
+      setState(() {
+        isLoadingButton = false;
+      });
+      Navigator.of(context).pushNamed(MainPage.routeName);
+    } catch (e) {
+      setState(() {
+        isLoadingButton = false;
+      });
+      print(e.toString());
     }
   }
 
@@ -410,7 +389,7 @@ class _CollectScorePageState extends State<CollectScorePage>
                               height: 8,
                             ),
                             Text(
-                              'Та алхам 10 тутамдаа 200GS оноо цуглуулах боломжтой.',
+                              'Та алхам ${walk.green?.threshold} тутамдаа ${walk.green?.scoreAmount}GS оноо цуглуулах боломжтой.',
                               style: TextStyle(
                                 color: white,
                                 fontSize: 14,

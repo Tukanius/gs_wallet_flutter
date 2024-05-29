@@ -49,73 +49,78 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return BackgroundShapes(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: transparent,
-        elevation: 0,
-        centerTitle: true,
-        leading: Row(
-          children: [
-            SizedBox(
-              width: 20,
-            ),
-            CustomBackButton(
-              onClick: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-        title: Container(
-          margin: EdgeInsets.only(left: 5),
-          child: Text(
-            'Нууц үг сэргээх',
-            style: TextStyle(
-              color: white,
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: BackgroundShapes(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: transparent,
+          elevation: 0,
+          centerTitle: true,
+          leading: Row(
+            children: [
+              SizedBox(
+                width: 20,
+              ),
+              CustomBackButton(
+                onClick: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+          title: Container(
+            margin: EdgeInsets.only(left: 5),
+            child: Text(
+              'Нууц үг сэргээх',
+              style: TextStyle(
+                color: white,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            FormBuilder(
-              key: fbkey,
-              child: Column(
-                children: [
-                  FormTextField(
-                    labelText: 'Утасны дугаар',
-                    color: buttonbg,
-                    name: "username",
-                    hintText: 'Утасны дугаар',
-                    colortext: white,
-                    hintTextColor: white.withOpacity(0.5),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(
-                          errorText: 'Утасны дугаар оруулна уу.'),
-                    ]),
-                  ),
-                ],
+        body: Container(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              FormBuilder(
+                key: fbkey,
+                child: Column(
+                  children: [
+                    FormTextField(
+                      labelText: 'Утасны дугаар',
+                      color: buttonbg,
+                      name: "username",
+                      hintText: 'Утасны дугаар',
+                      colortext: white,
+                      hintTextColor: white.withOpacity(0.5),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(
+                            errorText: 'Утасны дугаар оруулна уу.'),
+                      ]),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            CustomButton(
-              onClick: () {
-                onSubmit();
-              },
-              buttonColor: greentext,
-              height: 40,
-              isLoading: isLoading,
-              labelText: 'Үргэлжлүүлэх',
-              textColor: white,
-            ),
-          ],
+              SizedBox(
+                height: 30,
+              ),
+              CustomButton(
+                onClick: () {
+                  onSubmit();
+                },
+                buttonColor: greentext,
+                height: 40,
+                isLoading: isLoading,
+                labelText: 'Үргэлжлүүлэх',
+                textColor: white,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -15,7 +15,7 @@ Accumlation _$AccumlationFromJson(Map<String, dynamic> json) {
     createdAt: json['createdAt'] != null ? json['createdAt'] as String : null,
     updatedAt: json['updatedAt'] != null ? json['updatedAt'] as String : null,
     code: json['code'] != null ? json['code'] as String : null,
-    isRedeem: json['isRedeem'] != null ? json['isRedeem'] as bool : null,
+    green: json['green'] != null ? new Green.fromJson(json['green']) : null,
     lastWeekTotal: json['lastWeekTotal'] != null
         ? (json['lastWeekTotal'] as List)
             .map((e) => LastWeek.fromJson(e))
@@ -39,7 +39,7 @@ Map<String, dynamic> _$AccumlationToJson(Accumlation instance) {
   if (instance.createdAt != null) json['createdAt'] = instance.createdAt;
   if (instance.updatedAt != null) json['updatedAt'] = instance.updatedAt;
   if (instance.code != null) json['code'] = instance.code;
-  if (instance.isRedeem != null) json['isRedeem'] = instance.isRedeem;
+  if (instance.green != null) json['green'] = instance.green;
   if (instance.lastWeekTotal != null)
     json['lastWeekTotal'] = instance.lastWeekTotal;
 

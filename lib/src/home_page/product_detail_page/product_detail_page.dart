@@ -246,7 +246,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 ),
                               ),
                               Text(
-                                '₮${widget.data.price}',
+                                '${widget.data.price}₮',
                                 style: TextStyle(
                                   color: greytext,
                                   fontWeight: FontWeight.w500,
@@ -260,7 +260,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 width: 10,
                               ),
                               Text(
-                                '₮${widget.data.price! - (widget.data.sale?.saleAmount ?? 0)}',
+                                '${widget.data.price! - (widget.data.sale?.saleAmount ?? 0)}₮',
                                 style: TextStyle(
                                   color: white,
                                   fontSize: 20,
@@ -283,7 +283,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 width: 10,
                               ),
                               Text(
-                                '₮${widget.data.price}',
+                                '${widget.data.price}₮',
                                 style: TextStyle(
                                   color: white,
                                   fontSize: 20,

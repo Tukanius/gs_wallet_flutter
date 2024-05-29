@@ -39,6 +39,7 @@ class _ProfileButtonState extends State<ProfileButton> {
               children: [
                 SvgPicture.asset(
                   widget.svgPath,
+                  // ignore: deprecated_member_use
                   color: widget.isVerify == true ? greentext : white,
                 ),
                 SizedBox(

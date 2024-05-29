@@ -66,12 +66,16 @@ class _TokenHistoryCardState extends State<TokenHistoryCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '${data.description}:',
-                    style: TextStyle(
-                      color: greytext,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: Text(
+                      '${data.description}:',
+                      style: TextStyle(
+                        color: greytext,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                   ),
                   Text(
@@ -140,12 +144,17 @@ class _TokenHistoryCardState extends State<TokenHistoryCard> {
                         fontSize: 13,
                       ),
                     ),
-                    Text(
-                      '${widget.data.description}',
-                      style: TextStyle(
-                        color: white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      child: Text(
+                        '${widget.data.description}',
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ),
                     Text(

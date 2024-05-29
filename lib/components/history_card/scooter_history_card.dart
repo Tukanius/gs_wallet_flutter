@@ -75,11 +75,11 @@ class _TokenHistoryCardState extends State<ScooterHistoryCard> {
                     ),
                   ),
                   Text(
-                    '${data.amount} GS',
+                    '${data.amount}₮',
                     style: TextStyle(
-                      color: greentext,
+                      color: black,
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -162,7 +162,7 @@ class _TokenHistoryCardState extends State<ScooterHistoryCard> {
                       ),
                     ),
                     Text(
-                      'Зарцуулсан төгрөг: ${widget.data.amount}',
+                      'Зарцуулсан төгрөг: ${widget.data.amount}₮',
                       style: TextStyle(
                         color: white,
                         fontSize: 16,

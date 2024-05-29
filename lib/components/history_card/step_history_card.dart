@@ -75,11 +75,11 @@ class _TokenHistoryCardState extends State<StepHistoryCard> {
                     ),
                   ),
                   Text(
-                    '${data.amount} GS',
+                    '${data.amount}',
                     style: TextStyle(
-                      color: greentext,
+                      color: black,
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],

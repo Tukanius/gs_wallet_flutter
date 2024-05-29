@@ -113,7 +113,7 @@ class FormTextFieldState extends State<FormTextField> {
               ? null
               : (context,
                       {int? currentLength, bool? isFocused, int? maxLength}) =>
-                  const SizedBox(),
+                  null,
           controller: widget.controller,
           autofocus: widget.autoFocus,
           focusNode: widget.focusNode,

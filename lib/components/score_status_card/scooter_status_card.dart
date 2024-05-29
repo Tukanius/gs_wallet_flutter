@@ -27,7 +27,6 @@ class _ScooterStatusCardState extends State<ScooterStatusCard>
   bool isLoading = true;
   bool isButtonLoad = false;
   Deposit getData = Deposit();
-  bool show = false;
 
   @override
   afterFirstLayout(BuildContext context) async {
@@ -153,46 +152,35 @@ class _ScooterStatusCardState extends State<ScooterStatusCard>
               ),
             ],
           ),
-          show == true
-              ? Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      100,
-                    ),
-                    border: Border.all(color: red),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Урамшуулал авах боломжгүй байна.',
-                      style: TextStyle(
-                        color: white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              : SizedBox(),
           CustomButton(
             circular: 100,
-            labelText: 'Урамшуулал авах',
+            labelText: 'Урамшуулал татах',
             height: 40,
-            buttonColor: greentext,
-            isLoading: false,
-            onClick: () {
-              scooter.isRedeem == true
-                  ? Navigator.of(context).pushNamed(
-                      CollectScooterScore.routeName,
-                      arguments: CollectScooterScoreArguments(id: scooter.id!),
-                    )
-                  : setState(() {
-                      show = true;
-                    });
-            },
             textColor: white,
+            buttonColor: isLoading == true
+                ? greytext
+                : scooter.green!.threshold! < scooter.balanceAmount!
+                    ? greentext
+                    : greytext,
+            isLoading: isLoading == true
+                ? false
+                : scooter.green!.threshold! < scooter.balanceAmount!
+                    ? isLoading
+                    : false,
+            onClick: isLoading == true
+                ? () {}
+                : scooter.green!.threshold! < scooter.balanceAmount!
+                    ? () {
+                        if (scooter.green!.threshold! <
+                            scooter.balanceAmount!) {
+                          Navigator.of(context).pushNamed(
+                            CollectScooterScore.routeName,
+                            arguments:
+                                CollectScooterScoreArguments(id: scooter.id!),
+                          );
+                        }
+                      }
+                    : () {},
           ),
         ],
       ),

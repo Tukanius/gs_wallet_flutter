@@ -1,13 +1,18 @@
+import 'dart:async';
+
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:green_score/api/wallet_api.dart';
+import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/deposit.dart';
 import 'package:green_score/models/qr_read.dart';
 import 'package:green_score/src/main_page.dart';
 import 'package:green_score/src/qr_code_page/confirm_qr_page.dart';
+import 'package:green_score/utils/utils.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
+import 'package:lottie/lottie.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QrTransferPageArguments {
@@ -51,6 +56,9 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
         success = true;
         isLoading = false;
       });
+      if (qr.isSale == false && qr.paymentMethod == "CASH") {
+        await cashConfirm();
+      }
       if (qr.isSale == false && qr.paymentMethod != "CASH") {
         await onAutoConfirm();
       }
@@ -63,6 +71,26 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
     }
   }
 
+  cashConfirm() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      Timer(Duration(seconds: 3), () {
+        setState(() {
+          isLoading = true;
+        });
+        Navigator.of(context).pushNamed(MainPage.routeName);
+        showSuccess(context);
+      });
+    } catch (e) {
+      print(e.toString());
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   onConfirm() async {
     try {
       setState(() {
@@ -72,13 +100,15 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
       setState(() {
         isLoading = false;
       });
-      qr.paymentMethod == "CASH"
-          ? Navigator.of(context).pushNamed(MainPage.routeName)
-          : Navigator.of(context).pushNamed(
-              ConfirmQrCodePage.routeName,
-              arguments: ConfirmQrCodePageArguments(data: deposit),
-            );
-      ;
+      if (qr.paymentMethod == "CASH") {
+        Navigator.of(context).pushNamed(MainPage.routeName);
+        showSuccess(context);
+      } else {
+        Navigator.of(context).pushNamed(
+          ConfirmQrCodePage.routeName,
+          arguments: ConfirmQrCodePageArguments(data: deposit),
+        );
+      }
     } catch (e) {
       setState(() {
         isLoading = false;
@@ -93,9 +123,6 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
         isLoading = true;
       });
       deposit = await WalletApi().confirmQr(qr.id!);
-      print('=======DEPO ON=====');
-      print(deposit.id);
-      print('=======DEPO ON=====');
 
       setState(() {
         isLoading = false;
@@ -115,8 +142,69 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
     }
   }
 
-  pushMain() {
-    Navigator.of(context).pushNamed(MainPage.routeName);
+  showSuccess(context) async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 75),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.only(top: 90, left: 20, right: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const Text(
+                      'Амжилттай',
+                      style: TextStyle(
+                          color: dark,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    const Text(
+                      'Худалдан авалт амжилттай.',
+                      textAlign: TextAlign.center,
+                    ),
+                    ButtonBar(
+                      buttonMinWidth: 100,
+                      alignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        TextButton(
+                          style: ButtonStyle(
+                            overlayColor:
+                                MaterialStateProperty.all(Colors.transparent),
+                          ),
+                          child: const Text(
+                            "Буцах",
+                            style: TextStyle(color: dark),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Lottie.asset('assets/success.json', height: 150, repeat: false),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -124,162 +212,220 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
     return PopScope(
       canPop: false,
       child: BackgroundShapes(
-        body: isLoading == true
-            ? Center(
-                child: CircularProgressIndicator(
-                  color: greentext,
-                ),
-              )
-            : success == false
-                ? Container(
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Таны оруулсан QR буруу байна.',
-                          style: TextStyle(color: white),
-                        ),
-                        SizedBox(
-                          height: 40,
-                        ),
-                        CustomButton(
-                          onClick: () {
-                            Navigator.of(context).pushNamed(MainPage.routeName);
-                          },
-                          buttonColor: greentext,
-                          height: 40,
-                          isLoading: false,
-                          labelText: "Ок",
-                          textColor: white,
-                        ),
-                      ],
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                toolbarHeight: 60,
+                automaticallyImplyLeading: false,
+                pinned: false,
+                snap: true,
+                floating: true,
+                elevation: 0,
+                backgroundColor: transparent,
+                leading: Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
                     ),
-                  )
-                : qr.id != null
-                    ? Container(
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    CustomBackButton(
+                      onClick: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                centerTitle: true,
+                title: Text(
+                  'Баталгаажуулах',
+                  style: TextStyle(
+                    color: white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ];
+          },
+          body: isLoading == true
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: greentext,
+                  ),
+                )
+              : success == false
+                  ? Container(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Таны оруулсан QR буруу байна.',
+                            style: TextStyle(
+                              color: white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 40,
+                          ),
+                          CustomButton(
+                            onClick: () {
+                              Navigator.of(context)
+                                  .pushNamed(MainPage.routeName);
+                            },
+                            buttonColor: buttonbg,
+                            height: 40,
+                            circular: 100,
+                            isLoading: false,
+                            labelText: "Буцах",
+                            textColor: white,
+                          ),
+                        ],
+                      ),
+                    )
+                  : qr.id != null
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            qr.paymentMethod == "CASH"
-                                ? Column(
+                            Container(
+                              margin: EdgeInsets.all(20),
+                              padding: EdgeInsets.all(20),
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: buttonbg,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Center(
-                                        child: Text(
-                                          'Баталгаажуулах',
-                                          style: TextStyle(
-                                            color: white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Нийт төлөх дүн:',
+                                            style: TextStyle(
+                                              color: white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'Нийт төлөх дүн: ${qr.totalAmount}',
-                                        style: TextStyle(color: white),
+                                          Text(
+                                            '${Utils().formatCurrency(qr.totalAmount.toString())}₮',
+                                            style: TextStyle(
+                                              color: white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       SizedBox(
                                         height: 5,
                                       ),
-                                      Text(
-                                        'Төлбөрийн хэрэгсэл: ${qr.paymentMethod}',
-                                        style: TextStyle(color: white),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Төлбөрийн хэрэгсэл:',
+                                            style: TextStyle(
+                                              color: white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${qr.paymentMethod}',
+                                            style: TextStyle(
+                                              color: white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       SizedBox(
                                         height: 5,
                                       ),
                                       qr.isSale == true
-                                          ? Text(
-                                              'Ашиглагдах GS бонус: ${qr.saleTokenAmount}',
-                                              style: TextStyle(color: white),
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'Ашиглагдах GS бонус:',
+                                                  style: TextStyle(
+                                                    color: white,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '${qr.saleTokenAmount}GS',
+                                                  style: TextStyle(
+                                                    color: greentext,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
                                             )
                                           : SizedBox(),
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      CustomButton(
-                                        onClick: () {
-                                          onConfirm();
-                                        },
-                                        buttonColor: greentext,
-                                        height: 40,
-                                        isLoading: isLoading,
-                                        labelText: "Баталгаажуулах",
-                                        textColor: white,
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      CustomButton(
-                                        onClick: () {
-                                          Navigator.of(context)
-                                              .pushNamed(MainPage.routeName);
-                                        },
-                                        buttonColor: buttonbg,
-                                        height: 40,
-                                        isLoading: false,
-                                        labelText: "Болих",
-                                        textColor: white,
-                                      ),
                                     ],
-                                  )
-                                : qr.isSale == true
-                                    ? Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Ашиглагдах GS бонус: ${qr.saleTokenAmount}',
-                                            style: TextStyle(
-                                              color: white,
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 30,
-                                          ),
-                                          CustomButton(
-                                            onClick: () {
-                                              onConfirm();
-                                            },
-                                            buttonColor: greentext,
-                                            height: 40,
-                                            isLoading: isLoading,
-                                            labelText: "Оноо ашиглах",
-                                            textColor: white,
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          CustomButton(
-                                            onClick: () {
-                                              Navigator.of(context).pushNamed(
-                                                  MainPage.routeName);
-                                            },
-                                            buttonColor: buttonbg,
-                                            height: 40,
-                                            isLoading: false,
-                                            labelText: "Болих",
-                                            textColor: white,
-                                          ),
-                                        ],
-                                      )
-                                    : SizedBox(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  CustomButton(
+                                    circular: 100,
+                                    buttonColor: greentext,
+                                    height: 40,
+                                    isLoading: isLoading,
+                                    labelText: 'Баталгаажуулах',
+                                    onClick: () {
+                                      onConfirm();
+                                    },
+                                    textColor: white,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  CustomButton(
+                                    circular: 100,
+                                    buttonColor: buttonbg,
+                                    height: 40,
+                                    isLoading: false,
+                                    labelText: 'Болих',
+                                    onClick: () {
+                                      Navigator.of(context)
+                                          .pushNamed(MainPage.routeName);
+                                    },
+                                    textColor: white,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
-                        ),
-                      )
-                    : SizedBox(),
+                        )
+                      : SizedBox(),
+        ),
       ),
     );
   }

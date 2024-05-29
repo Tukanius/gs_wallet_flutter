@@ -17,7 +17,7 @@ class MyBarGraph extends StatefulWidget {
 }
 
 class _MyBarGraphState extends State<MyBarGraph> {
-  int selectedIndex = -1;
+  int selectedIndex = 0;
   late List<String> weekDays;
 
   @override
@@ -28,7 +28,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
   }
 
   List<String> generateWeekDays() {
-    List<String> days = ['да', 'мя', 'лх', 'пү', 'ба', 'бя', 'ня'];
+    List<String> days = ['Да', 'Мя', 'Лх', 'Пү', 'Ба', 'Бя', 'Ня'];
     DateTime now = DateTime.now();
     List<String> result = [];
 
@@ -87,12 +87,12 @@ class _MyBarGraphState extends State<MyBarGraph> {
           enabled: true,
           touchTooltipData: BarTouchTooltipData(
             tooltipRoundedRadius: 8,
-            tooltipBgColor: Colors.green,
+            tooltipBgColor: greentext,
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               return BarTooltipItem(
                 '${rod.toY.toInt()}',
                 TextStyle(
-                  color: Colors.white,
+                  color: white,
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
@@ -120,9 +120,8 @@ class _MyBarGraphState extends State<MyBarGraph> {
                 barRods: [
                   BarChartRodData(
                     toY: entry.value.y,
-                    color:
-                        entry.key == selectedIndex ? Colors.green : Colors.grey,
-                    width: 37,
+                    color: entry.key == selectedIndex ? greentext : greytext,
+                    width: 35,
                     borderRadius: BorderRadius.circular(26),
                   )
                 ],

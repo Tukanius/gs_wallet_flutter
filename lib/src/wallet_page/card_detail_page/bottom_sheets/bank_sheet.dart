@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/deposit.dart';
 import 'package:green_score/src/main_page.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -83,10 +84,10 @@ bank(BuildContext context, Deposit data) {
     builder: (BuildContext context) => StatefulBuilder(
       builder: (context, setState) {
         onSubmit() async {
-          setState(() {
-            isLoading = true;
-          });
           try {
+            setState(() {
+              isLoading = true;
+            });
             deposit = await WalletApi().depositConfirm(data.id!);
             Timer(Duration(seconds: 3), () {
               setState(() {
@@ -95,13 +96,14 @@ bank(BuildContext context, Deposit data) {
               Navigator.of(context).pushNamed(MainPage.routeName);
               showSuccess(context);
             });
+
             print(deposit);
           } catch (e) {
             print(e.toString());
+            setState(() {
+              isLoading = false;
+            });
           }
-          setState(() {
-            isLoading = false;
-          });
         }
 
         ;
@@ -279,95 +281,31 @@ bank(BuildContext context, Deposit data) {
                     name: "search",
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 30,
                   ),
                   data.paymentStatus == "NEW"
-                      ? Container(
-                          width: MediaQuery.of(context).size.width,
+                      ? CustomButton(
                           height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: greentext,
-                          ),
-                          child: ElevatedButton(
-                            onPressed: onSubmit,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (isLoading == true)
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                      right: 15,
-                                    ),
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      color: white,
-                                      strokeWidth: 2.5,
-                                    ),
-                                  ),
-                                Text(
-                                  'Төлбөр төлөх',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                              shadowColor: Colors.transparent,
-                              backgroundColor: greentext,
-                            ),
-                          ),
+                          buttonColor: greentext,
+                          circular: 100,
+                          isLoading: isLoading,
+                          labelText: 'Төлбөр төлөх',
+                          onClick: () {
+                            onSubmit();
+                          },
+                          textColor: white,
                         )
-                      : Container(
-                          width: MediaQuery.of(context).size.width,
+                      : CustomButton(
                           height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: greentext,
-                          ),
-                          child: ElevatedButton(
-                            onPressed: onCheck,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (isLoading == true)
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                      right: 15,
-                                    ),
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      color: white,
-                                      strokeWidth: 2.5,
-                                    ),
-                                  ),
-                                Text(
-                                  'Төлбөр шалгах',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                              shadowColor: Colors.transparent,
-                              backgroundColor: greentext,
-                            ),
-                          ),
-                        ),
+                          buttonColor: greentext,
+                          circular: 100,
+                          isLoading: isLoading,
+                          labelText: 'Төлбөр шалгах',
+                          onClick: () {
+                            onCheck();
+                          },
+                          textColor: white,
+                        )
                 ],
               ),
             ),

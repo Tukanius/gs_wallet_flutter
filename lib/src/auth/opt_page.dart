@@ -139,179 +139,184 @@ class _OtpPageState extends State<OtpPage> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
-    return BackgroundShapes(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: transparent,
-        elevation: 0,
-        centerTitle: true,
-        leading: Row(
-          children: [
-            SizedBox(
-              width: 20,
-            ),
-            CustomBackButton(
-              onClick: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-        title: Container(
-          margin: EdgeInsets.only(left: 5),
-          child: Text(
-            'Баталгаажуулалт',
-            style: TextStyle(
-              color: white,
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: BackgroundShapes(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: transparent,
+          elevation: 0,
+          centerTitle: true,
+          leading: Row(
+            children: [
+              SizedBox(
+                width: 20,
+              ),
+              CustomBackButton(
+                onClick: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+          title: Container(
+            margin: EdgeInsets.only(left: 5),
+            child: Text(
+              'Баталгаажуулалт',
+              style: TextStyle(
+                color: white,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),
-      ),
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            isLoading == true
-                ? Center(
-                    child: CircularProgressIndicator(
-                      color: greentext,
-                    ),
-                  )
-                : Column(
-                    children: [
-                      SizedBox(
-                        height: 40,
+        body: Container(
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              isLoading == true
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: greentext,
                       ),
-                      Text(
-                        '${user.message}',
-                        style: TextStyle(
-                          color: white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
+                    )
+                  : Column(
+                      children: [
+                        SizedBox(
+                          height: 40,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      if (isGetCode == false)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Дахин код авах ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
-                                color: white,
+                        Text(
+                          '${user.message}',
+                          style: TextStyle(
+                            color: white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        if (isGetCode == false)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Дахин код авах ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.0,
+                                  color: white,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '${intToTimeLeft(_counter)} ',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
-                                color: white,
+                              Text(
+                                '${intToTimeLeft(_counter)} ',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.0,
+                                  color: white,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'секунд',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
-                                color: white,
+                              Text(
+                                'секунд',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.0,
+                                  color: white,
+                                ),
                               ),
-                            ),
-                          ],
-                        )
-                      else
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                setState(() {
-                                  isSubmit = true;
-                                });
-                                _startTimer();
-                                await Provider.of<UserProvider>(context,
-                                        listen: false)
-                                    .getOtp("REGISTER",
-                                        widget.username.toLowerCase().trim());
-                              },
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.refresh,
-                                    color: white,
-                                  ),
-                                  Text(
-                                    "Код дахин авах",
-                                    style: TextStyle(
+                            ],
+                          )
+                        else
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  setState(() {
+                                    isSubmit = true;
+                                  });
+                                  _startTimer();
+                                  await Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .getOtp("REGISTER",
+                                          widget.username.toLowerCase().trim());
+                                },
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.refresh,
                                       color: white,
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      "Код дахин авах",
+                                      style: TextStyle(
+                                        color: white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              'Баталгаажуулалт',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: white,
                               ),
                             ),
                           ],
                         ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            'Баталгаажуулалт',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Pinput(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        autofocus: true,
-                        keyboardType: TextInputType.number,
-                        onCompleted: (value) => checkOpt(value),
-                        // validator: (value) {
-                        //   return value == "${user.otpCode}"
-                        //       ? null
-                        //       : "Буруу байна";
-                        // },
-                        length: 6,
-                        hapticFeedbackType: HapticFeedbackType.lightImpact,
-                        defaultPinTheme: defaultPinTheme,
-                        errorPinTheme: defaultPinTheme.copyBorderWith(
-                          border: Border.all(color: Colors.redAccent),
+                        SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      // CustomButton(
-                      //   onClick: () {},
-                      //   buttonColor: buttongreen,
-                      //   labelText: 'Баталгаажуулалт',
-                      //   textColor: white,
-                      //   isLoading: false,
-                      // ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-          ],
+                        Pinput(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          autofocus: true,
+                          keyboardType: TextInputType.number,
+                          onCompleted: (value) => checkOpt(value),
+                          // validator: (value) {
+                          //   return value == "${user.otpCode}"
+                          //       ? null
+                          //       : "Буруу байна";
+                          // },
+                          length: 6,
+                          hapticFeedbackType: HapticFeedbackType.lightImpact,
+                          defaultPinTheme: defaultPinTheme,
+                          errorPinTheme: defaultPinTheme.copyBorderWith(
+                            border: Border.all(color: Colors.redAccent),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        // CustomButton(
+                        //   onClick: () {},
+                        //   buttonColor: buttongreen,
+                        //   labelText: 'Баталгаажуулалт',
+                        //   textColor: white,
+                        //   isLoading: false,
+                        // ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
+            ],
+          ),
         ),
       ),
     );

@@ -39,7 +39,7 @@ class _StepStatusCardState extends State<StepStatusCard> with AfterLayoutMixin {
   List<double> stepsForLast7Days = List<double>.filled(7, 0.0);
   String? step;
   bool isLoading = true;
-  bool isButtonLoad = false;
+  bool isGraphLoad = false;
   Accumlation walk = Accumlation();
 
   num stepped = 0;
@@ -53,42 +53,15 @@ class _StepStatusCardState extends State<StepStatusCard> with AfterLayoutMixin {
 
   getWalk() async {
     try {
-      setState(() {
-        isButtonLoad = true;
-      });
       walk.type = "WALK";
       walk.code = "WALK_01";
       walk = await ScoreApi().getStep(walk);
-      print('====TEST=====');
-      print(walk.toJson());
-      print('====TEST=====');
       walk.lastWeekTotal != null
           ? stepsForLast7Days = walk.lastWeekTotal!
               .map((data) => data.totalAmount!.toDouble())
               .toList()
           : List<double>.filled(7, 0.0);
-      // List<double> step7day = [];
 
-      // if (walk.lastWeekTotal != null) {
-      //   step7day = walk.lastWeekTotal!
-      //       .map((data) => data.totalAmount as double)
-      //       .toList();
-      //   print('======testgemini====');
-      //   print(step7day);
-      //   print('======testgemini====');
-      // } else {
-      //   print("Last week's total steps data is unavailable.");
-      // }
-      // walk.lastWeekTotal != null
-      //     ? walk.lastWeekTotal!
-      //         .map((data) =>
-      //             stepsForLast7Days = data.totalAmount as List<double>)
-      //         .toList()
-      //     : SizedBox();
-      // print('======lastweek====');
-      // print(walk.lastWeekTotal);
-      // print(stepsForLast7Days);
-      // print('======lastweek====');
       if (walk.balanceAmount == 0 || walk.balanceAmount == null) {
         setState(() {
           stepped = 0;
@@ -99,14 +72,12 @@ class _StepStatusCardState extends State<StepStatusCard> with AfterLayoutMixin {
         });
       }
       setState(() {
-        isButtonLoad = false;
-
+        isGraphLoad = false;
         isLoading = false;
       });
     } catch (e) {
       setState(() {
-        isButtonLoad = false;
-
+        isGraphLoad = false;
         isLoading = false;
       });
       print(e.toString());
@@ -263,12 +234,11 @@ class _StepStatusCardState extends State<StepStatusCard> with AfterLayoutMixin {
                     ),
                   ),
                   Text(
-                    isLoading == false
-                        ? walk.balanceAmount != null && walk.balanceAmount != 0
+                    isLoading == true
+                        ? "0"
+                        : walk.balanceAmount != null && walk.balanceAmount != 0
                             ? '${stepped}'
-                            : '0'
-                        : "-",
-                    // '${walk.balanceAmount}',
+                            : '0',
                     style: TextStyle(
                       color: white,
                       fontSize: 24,
@@ -282,7 +252,7 @@ class _StepStatusCardState extends State<StepStatusCard> with AfterLayoutMixin {
           SizedBox(
             height: 50,
           ),
-          isButtonLoad == true
+          isGraphLoad == true
               ? SizedBox(
                   height: 120,
                   child: Center(
@@ -301,54 +271,33 @@ class _StepStatusCardState extends State<StepStatusCard> with AfterLayoutMixin {
           SizedBox(
             height: 10,
           ),
-          show == true
-              ? Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      100,
-                    ),
-                    border: Border.all(color: red),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Урамшуулал авах боломжгүй байна.',
-                      style: TextStyle(
-                        color: white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              : SizedBox(),
-          SizedBox(
-            height: 20,
-          ),
           CustomButton(
             circular: 100,
             labelText: 'Урамшуулал татах',
             height: 40,
-            buttonColor: greentext,
-            isLoading: isLoading,
-            onClick: () async {
-              Accumlation walk = Accumlation();
-              // await getWalk();
-              walk.type = "WALK";
-              walk.code = "WALK_01";
-              walk = await ScoreApi().getStep(walk);
-              walk.isRedeem == true
-                  ? Navigator.of(context).pushNamed(
-                      CollectScorePage.routeName,
-                      arguments: CollectScorePageArguments(id: walk.id!),
-                    )
-                  : setState(() {
-                      show = true;
-                    });
-            },
             textColor: white,
+            buttonColor: isLoading == true
+                ? greytext
+                : walk.green!.threshold! < stepped
+                    ? greentext
+                    : greytext,
+            isLoading: isLoading == true
+                ? false
+                : walk.green!.threshold! < stepped
+                    ? isLoading
+                    : false,
+            onClick: isLoading == true
+                ? () {}
+                : walk.green!.threshold! < stepped
+                    ? () {
+                        if (walk.green!.threshold! < stepped) {
+                          Navigator.of(context).pushNamed(
+                            CollectScorePage.routeName,
+                            arguments: CollectScorePageArguments(id: walk.id!),
+                          );
+                        }
+                      }
+                    : () {},
           ),
         ],
       ),

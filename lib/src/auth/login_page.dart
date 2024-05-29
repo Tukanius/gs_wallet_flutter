@@ -49,133 +49,140 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: BackgroundShapes(
-        body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 100),
-                  height: 150,
-                  width: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(45),
-                    color: buttonbg,
-                  ),
-                  alignment: Alignment.center,
-                  child: Center(
-                    child: SvgPicture.asset(
-                      'assets/svg/splash.svg',
-                      fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: PopScope(
+        canPop: false,
+        child: BackgroundShapes(
+          body: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 100),
+                    height: 150,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(45),
+                      color: buttonbg,
+                    ),
+                    alignment: Alignment.center,
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'assets/svg/splash.svg',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 80,
-                ),
-                FormBuilder(
-                  key: fbkey,
-                  child: Column(
-                    children: [
-                      FormTextField(
-                        labelText: "Утасны дугаар",
-                        color: buttonbg,
-                        name: "username",
-                        hintText: 'Утасны дугаар',
-                        colortext: white,
-                        hintTextColor: white.withOpacity(0.5),
-                        inputType: TextInputType.number,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: 'Утасны дугаар оруулна уу.'),
-                        ]),
-                      ),
-                      const SizedBox(height: 20),
-                      FormTextField(
-                        labelText: "Нууц үг",
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isVisible = !isVisible;
-                            });
-                          },
-                          icon: isVisible == false
-                              ? Icon(Icons.visibility, color: white)
-                              : Icon(Icons.visibility_off, color: white),
+                  SizedBox(
+                    height: 80,
+                  ),
+                  FormBuilder(
+                    key: fbkey,
+                    child: Column(
+                      children: [
+                        FormTextField(
+                          labelText: "Утасны дугаар",
+                          color: buttonbg,
+                          name: "username",
+                          hintText: 'Утасны дугаар',
+                          colortext: white,
+                          hintTextColor: white.withOpacity(0.5),
+                          inputType: TextInputType.number,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                                errorText: 'Утасны дугаар оруулна уу.'),
+                          ]),
                         ),
-                        inputType: TextInputType.visiblePassword,
-                        color: buttonbg,
-                        hintText: 'Нууц үг',
-                        name: "password",
-                        colortext: white,
-                        obscureText: isVisible,
-                        hintTextColor: white.withOpacity(0.5),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: 'Нууц үгээ оруулна уу.'),
-                        ]),
+                        const SizedBox(height: 20),
+                        FormTextField(
+                          labelText: "Нууц үг",
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isVisible = !isVisible;
+                              });
+                            },
+                            icon: isVisible == false
+                                ? Icon(Icons.visibility, color: white)
+                                : Icon(Icons.visibility_off, color: white),
+                          ),
+                          inputType: TextInputType.visiblePassword,
+                          color: buttonbg,
+                          hintText: 'Нууц үг',
+                          name: "password",
+                          colortext: white,
+                          obscureText: isVisible,
+                          hintTextColor: white.withOpacity(0.5),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                                errorText: 'Нууц үгээ оруулна уу.'),
+                          ]),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 35,
+                  ),
+                  CustomButton(
+                    onClick: () {
+                      onSubmit();
+                    },
+                    buttonColor: greentext,
+                    height: 40,
+                    isLoading: isLoading,
+                    labelText: 'Нэвтрэх',
+                    textColor: white,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextButton(
+                    style: ButtonStyle(
+                      overlayColor:
+                          MaterialStateProperty.all(Colors.transparent),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(ForgetPassword.routeName);
+                    },
+                    child: Text(
+                      "Нууц үг сэргээх",
+                      style: TextStyle(color: greentext),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Бүртгэл үүсгэх бол энд дарна уу !",
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 12,
+                        ),
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          overlayColor:
+                              MaterialStateProperty.all(Colors.transparent),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(RegisterPage.routeName);
+                        },
+                        child: Text(
+                          "Бүртгүүлэх",
+                          style: TextStyle(color: greentext),
+                        ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: 35,
-                ),
-                CustomButton(
-                  onClick: () {
-                    onSubmit();
-                  },
-                  buttonColor: greentext,
-                  height: 40,
-                  isLoading: isLoading,
-                  labelText: 'Нэвтрэх',
-                  textColor: white,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextButton(
-                  style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(ForgetPassword.routeName);
-                  },
-                  child: Text(
-                    "Нууц үг сэргээх",
-                    style: TextStyle(color: greentext),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Бүртгэл үүсгэх бол энд дарна уу !",
-                      style: TextStyle(
-                        color: white,
-                        fontSize: 12,
-                      ),
-                    ),
-                    TextButton(
-                      style: ButtonStyle(
-                        overlayColor:
-                            MaterialStateProperty.all(Colors.transparent),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(RegisterPage.routeName);
-                      },
-                      child: Text(
-                        "Бүртгүүлэх",
-                        style: TextStyle(color: greentext),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
