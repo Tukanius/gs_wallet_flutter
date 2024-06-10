@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:green_score/models/qr_read.dart';
+import 'package:green_score/models/order.dart';
 import 'package:green_score/utils/utils.dart';
 import 'package:green_score/widget/ui/color.dart';
 
 class OrderHistoryCard extends StatefulWidget {
-  final QrRead data;
+  final Order data;
 
   const OrderHistoryCard({
     super.key,
@@ -70,15 +70,15 @@ class _TokenHistoryCardState extends State<OrderHistoryCard> {
                     'Төлсөн дүн:',
                     style: TextStyle(
                       color: greytext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
-                    '${widget.data.totalAmount}₮',
+                    '${Utils().formatCurrency(widget.data.totalAmount.toString())}₮',
                     style: TextStyle(
                       color: black,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -91,7 +91,7 @@ class _TokenHistoryCardState extends State<OrderHistoryCard> {
                     'Ашигласан оноо: ',
                     style: TextStyle(
                       color: greytext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -99,7 +99,7 @@ class _TokenHistoryCardState extends State<OrderHistoryCard> {
                     '${widget.data.saleTokenAmount} GS',
                     style: TextStyle(
                       color: greentext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -112,7 +112,7 @@ class _TokenHistoryCardState extends State<OrderHistoryCard> {
                     'Огноо:',
                     style: TextStyle(
                       color: greytext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -120,7 +120,7 @@ class _TokenHistoryCardState extends State<OrderHistoryCard> {
                     '${createdDate}',
                     style: TextStyle(
                       color: black,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -162,7 +162,7 @@ class _TokenHistoryCardState extends State<OrderHistoryCard> {
                       ),
                     ),
                     Text(
-                      'Төлсөн дүн: ${widget.data.totalAmount}₮',
+                      'Төлсөн дүн: ${Utils().formatCurrency(widget.data.totalAmount.toString())}₮',
                       style: TextStyle(
                         color: white,
                         fontSize: 16,

@@ -70,15 +70,15 @@ class _TokenHistoryCardState extends State<ScooterHistoryCard> {
                     'Зарцуулсан төгрөг:',
                     style: TextStyle(
                       color: greytext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
-                    '${data.amount}₮',
+                    '${Utils().formatCurrency(widget.data.amount.toString())}₮',
                     style: TextStyle(
                       color: black,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -91,7 +91,7 @@ class _TokenHistoryCardState extends State<ScooterHistoryCard> {
                     'Авсан пойнт:',
                     style: TextStyle(
                       color: greytext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -99,7 +99,7 @@ class _TokenHistoryCardState extends State<ScooterHistoryCard> {
                     '${data.tokenAmount} GS',
                     style: TextStyle(
                       color: greentext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -112,7 +112,7 @@ class _TokenHistoryCardState extends State<ScooterHistoryCard> {
                     'Огноо:',
                     style: TextStyle(
                       color: greytext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -120,7 +120,7 @@ class _TokenHistoryCardState extends State<ScooterHistoryCard> {
                     '${createdDate}',
                     style: TextStyle(
                       color: black,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -162,7 +162,7 @@ class _TokenHistoryCardState extends State<ScooterHistoryCard> {
                       ),
                     ),
                     Text(
-                      'Зарцуулсан төгрөг: ${widget.data.amount}₮',
+                      'Зарцуулсан төгрөг: ${Utils().formatCurrency(widget.data.amount.toString())}₮',
                       style: TextStyle(
                         color: white,
                         fontSize: 16,
@@ -172,7 +172,7 @@ class _TokenHistoryCardState extends State<ScooterHistoryCard> {
                     Row(
                       children: [
                         Text(
-                          'Авсан пойнт:  ',
+                          'Авсан пойнт: ',
                           style: TextStyle(
                             color: white,
                             fontSize: 16,

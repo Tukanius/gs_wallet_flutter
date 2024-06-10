@@ -3,18 +3,20 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:green_score/api/score_api.dart';
+import 'package:green_score/api/user_api.dart';
 import 'package:green_score/components/action_button/action_button.dart';
 import 'package:green_score/components/trade_bottom_sheet/trade_bottom_sheet.dart';
 import 'package:green_score/models/location_info.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
-import 'package:green_score/src/collect_score_page/score_page.dart';
+import 'package:green_score/src/score_page/score_page.dart';
 import 'package:green_score/src/home_page/home_page.dart';
 import 'package:green_score/src/notification_page/notification_page.dart';
 import 'package:green_score/src/profile_page/profile_page.dart';
@@ -37,11 +39,12 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AfterLayoutMixin {
   User user = User();
   bool _isKeyboardVisible = false;
   bool isLoading = false;
   int currentIndex = 1;
+  int count = 0;
   late TabController tabController;
   late LocationSettings locationSettings;
   late ScrollController _scrollController;
@@ -50,6 +53,23 @@ class _MainPageState extends State<MainPage>
   // int stepped = 0;
   // String? step;
   // List<double> stepsForLast7Days = [0, 0, 0, 0, 0, 0, 0];
+  @override
+  FutureOr<void> afterFirstLayout(BuildContext context) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      count = await UserApi().getNotCount();
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e.toString());
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -169,6 +189,9 @@ class _MainPageState extends State<MainPage>
         await initializeService();
       }
     }
+    print('====LOCATION STATUS====');
+    print(status);
+    print('====LOCATION STATUS====');
 
     if (status == PermissionStatus.granted) {
       await initializeService();
@@ -207,11 +230,27 @@ class _MainPageState extends State<MainPage>
                     actions: [
                       Stack(
                         children: [
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: SvgPicture.asset('assets/svg/notnumber.svg'),
-                          ),
+                          count == 0
+                              ? SizedBox()
+                              : Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                          'assets/svg/notnumber.svg'),
+                                      Text(
+                                        '${count}',
+                                        style: TextStyle(
+                                          color: white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                           Center(
                             child: ActionButton(
                               svgAssetPath: "assets/svg/notification.svg",
@@ -514,7 +553,7 @@ void onStart(ServiceInstance service) async {
             android: AndroidNotificationDetails(
               'my_foreground',
               'MY FOREGROUND SERVICE',
-              icon: 'ic_bg_service_small',
+              icon: '@mipmap/launcher_icon',
               ongoing: true,
             ),
           ),

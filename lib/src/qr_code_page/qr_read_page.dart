@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:green_score/components/back_button/back_button.dart';
-import 'package:green_score/src/qr_code_page/qr_transfer.dart';
+import 'package:green_score/src/qr_code_page/qr_check.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -49,17 +49,10 @@ class _QrReadPageState extends State<QrReadPage> {
                 backgroundColor: transparent,
                 automaticallyImplyLeading: false,
                 centerTitle: true,
-                leading: Row(
-                  children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-                    CustomBackButton(
-                      onClick: () {
-                        Navigator.of(context).pop();
-                      },
-                    )
-                  ],
+                leading: CustomBackButton(
+                  onClick: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
                 title: Text(
                   'QR унших',

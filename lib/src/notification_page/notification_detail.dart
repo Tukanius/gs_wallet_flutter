@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/controller/listen.dart';
+import 'package:green_score/models/notify.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 
 class NotificationDetailPageArguments {
   ListenController listenController;
+  Notify data;
 
   NotificationDetailPageArguments({
     required this.listenController,
+    required this.data,
   });
 }
 
 class NotificationDetailPage extends StatefulWidget {
   final ListenController listenController;
+  final Notify data;
+
   static const routeName = "NotificationDetailPage";
 
-  const NotificationDetailPage({super.key, required this.listenController});
+  const NotificationDetailPage(
+      {super.key, required this.listenController, required this.data});
 
   @override
   State<NotificationDetailPage> createState() => _NotificationDetailPageState();
@@ -37,17 +43,10 @@ class _NotificationDetailPageState extends State<NotificationDetailPage> {
               floating: true,
               elevation: 0,
               backgroundColor: transparent,
-              leading: Row(
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  CustomBackButton(
-                    onClick: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
+              leading: CustomBackButton(
+                onClick: () {
+                  Navigator.of(context).pop();
+                },
               ),
               centerTitle: true,
               title: Text(

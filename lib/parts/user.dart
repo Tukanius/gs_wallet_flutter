@@ -87,6 +87,8 @@ User _$UserFromJson(Map<String, dynamic> json) {
         ? json['danVerifiedDate'] as String
         : null,
     address: json['address'] != null ? json['address'] as String : null,
+    deviceToken:
+        json['deviceToken'] != null ? json['deviceToken'] as String : null,
   );
 }
 
@@ -157,6 +159,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
   if (instance.danVerifiedDate != null)
     json['danVerifiedDate'] = instance.danVerifiedDate;
   if (instance.address != null) json['address'] = instance.address;
+  if (instance.deviceToken != null) json['deviceToken'] = instance.deviceToken;
 
   return json;
 }

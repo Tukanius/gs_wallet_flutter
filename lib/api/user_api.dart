@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:green_score/models/result.dart';
 import 'package:green_score/models/user.dart';
+import 'package:green_score/models/notify.dart';
 import 'package:green_score/utils/http_request.dart';
 
 class UserApi extends HttpRequest {
@@ -25,6 +27,22 @@ class UserApi extends HttpRequest {
 
   danVerify() async {
     var res = await post('/user/verify', "USER", handler: true);
+    return res;
+  }
+
+  getNotification(ResultArguments resultArguments) async {
+    var res = await get('/notification', "USER",
+        handler: true, data: resultArguments.toJson());
+    return Result.fromJson(res, Notify.fromJson);
+  }
+
+  getNotCount() async {
+    var res = await get('/notification/count', "USER", handler: false);
+    return res;
+  }
+
+  seenNot(String id) async {
+    var res = await put('/notification/$id', "USER", handler: false);
     return res;
   }
 }

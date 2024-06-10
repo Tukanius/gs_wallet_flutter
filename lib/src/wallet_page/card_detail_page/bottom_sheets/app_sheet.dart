@@ -1,7 +1,6 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/wallet_api.dart';
 import 'package:green_score/models/deposit.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -69,11 +68,11 @@ app(BuildContext context, String text, String id) {
                     height: 20,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: 20,
-                      ),
+                      // SizedBox(
+                      //   width: 20,
+                      // ),
                       Center(
                         child: Text(
                           'Апп-аар',
@@ -84,12 +83,12 @@ app(BuildContext context, String text, String id) {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: SvgPicture.asset('assets/svg/close.svg'),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Navigator.of(context).pop();
+                      //   },
+                      //   child: SvgPicture.asset('assets/svg/close.svg'),
+                      // ),
                     ],
                   ),
                   SizedBox(height: 30),

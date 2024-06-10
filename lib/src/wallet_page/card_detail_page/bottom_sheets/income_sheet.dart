@@ -181,11 +181,11 @@ income(BuildContext context, String id) {
                     height: 20,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: 20,
-                      ),
+                      // SizedBox(
+                      //   width: 20,
+                      // ),
                       Text(
                         'Хэтэвч цэнэглэх',
                         style: TextStyle(
@@ -194,12 +194,12 @@ income(BuildContext context, String id) {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: SvgPicture.asset('assets/svg/close.svg'),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Navigator.of(context).pop();
+                      //   },
+                      //   child: SvgPicture.asset('assets/svg/close.svg'),
+                      // ),
                     ],
                   ),
                   SizedBox(height: 20),

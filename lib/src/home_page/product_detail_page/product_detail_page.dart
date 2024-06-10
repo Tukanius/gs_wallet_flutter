@@ -43,17 +43,10 @@ class _ProductDetailState extends State<ProductDetail> {
               elevation: 0,
               titleSpacing: 60,
               backgroundColor: transparent,
-              leading: Row(
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  CustomBackButton(
-                    onClick: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
+              leading: CustomBackButton(
+                onClick: () {
+                  Navigator.of(context).pop();
+                },
               ),
               centerTitle: true,
               title: Text(

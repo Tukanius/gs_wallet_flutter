@@ -167,7 +167,7 @@ class _MerchantProductState extends State<MerchantProduct>
                       : Column(
                           children: [
                             SizedBox(
-                              height: 50,
+                              height: 80,
                             ),
                             SvgPicture.asset(
                               'assets/svg/notfound.svg',
@@ -183,6 +183,9 @@ class _MerchantProductState extends State<MerchantProduct>
                                   fontSize: 14,
                                 ),
                               ),
+                            ),
+                            SizedBox(
+                              height: 80,
                             ),
                           ],
                         ),

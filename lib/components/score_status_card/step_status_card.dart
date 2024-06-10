@@ -7,7 +7,7 @@ import 'package:green_score/api/score_api.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/components/score_status_card/bar_data/bar_graph.dart';
 import 'package:green_score/models/accumlation.dart';
-import 'package:green_score/src/collect_score_page/collect_score_page/collect_score_page.dart';
+import 'package:green_score/src/score_page/collect_score_page/collect_step_page.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pedometer/pedometer.dart';
@@ -95,11 +95,13 @@ class _StepStatusCardState extends State<StepStatusCard> with AfterLayoutMixin {
     } else {
       calculateStep();
     }
+    if (status == PermissionStatus.permanentlyDenied) {
+      // openAppSettings();
+    }
   }
 
   void calculateStep() async {
     Accumlation sendWalk = Accumlation();
-
     // await getWalk();
     int? previousStepCount;
     subscription = Pedometer.stepCountStream.listen(
@@ -292,8 +294,8 @@ class _StepStatusCardState extends State<StepStatusCard> with AfterLayoutMixin {
                     ? () {
                         if (walk.green!.threshold! < stepped) {
                           Navigator.of(context).pushNamed(
-                            CollectScorePage.routeName,
-                            arguments: CollectScorePageArguments(id: walk.id!),
+                            CollectStepScore.routeName,
+                            arguments: CollectStepScoreArguments(id: walk.id!),
                           );
                         }
                       }

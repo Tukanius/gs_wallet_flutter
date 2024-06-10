@@ -1,7 +1,7 @@
 import 'package:green_score/models/account.dart';
 import 'package:green_score/models/deposit.dart';
 import 'package:green_score/models/history.dart';
-import 'package:green_score/models/qr_read.dart';
+import 'package:green_score/models/order.dart';
 import 'package:green_score/models/result.dart';
 
 import 'package:green_score/utils/http_request.dart';
@@ -27,11 +27,11 @@ class WalletApi extends HttpRequest {
     return Deposit.fromJson(res);
   }
 
-  readQr(String id, QrRead iv) async {
+  readQr(String id, Order iv) async {
     var res = await post('/qr/$id/scan', "MERCHANT",
         data: iv.toJson(), handler: true);
 
-    return QrRead.fromJson(res);
+    return Order.fromJson(res);
   }
 
   confirmQr(String id) async {
@@ -48,6 +48,6 @@ class WalletApi extends HttpRequest {
   getSaleHistory(ResultArguments resultArguments) async {
     var res =
         await get('/order/history', "MERCHANT", data: resultArguments.toJson());
-    return Result.fromJson(res, QrRead.fromJson);
+    return Result.fromJson(res, Order.fromJson);
   }
 }

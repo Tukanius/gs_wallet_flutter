@@ -49,11 +49,11 @@ class _ModalAppState extends State<ModalApp> {
                     height: 20,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: 20,
-                      ),
+                      // SizedBox(
+                      //   width: 20,
+                      // ),
                       Center(
                         child: Text(
                           'Данс $amount',
@@ -64,12 +64,12 @@ class _ModalAppState extends State<ModalApp> {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: SvgPicture.asset('assets/svg/close.svg'),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Navigator.of(context).pop();
+                      //   },
+                      //   child: SvgPicture.asset('assets/svg/close.svg'),
+                      // ),
                     ],
                   ),
                   SizedBox(height: 20),

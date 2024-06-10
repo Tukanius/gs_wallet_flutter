@@ -1,3 +1,4 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -5,6 +6,7 @@ import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
+import 'package:green_score/src/auth/login_page.dart';
 import 'package:green_score/src/splash_screen/splash_screen.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -28,19 +30,22 @@ class PassWordPage extends StatefulWidget {
   State<PassWordPage> createState() => _PassWordPageState();
 }
 
-class _PassWordPageState extends State<PassWordPage> {
+class _PassWordPageState extends State<PassWordPage> with AfterLayoutMixin {
   GlobalKey<FormBuilderState> fbkey = GlobalKey<FormBuilderState>();
   bool isVisible = true;
   bool isVisible1 = true;
   bool isLoading = false;
-
+  String deviceToken = '';
+  bool isLoadingPage = false;
   onSubmit() async {
     if (fbkey.currentState!.saveAndValidate()) {
       try {
         setState(() {
           isLoading = true;
         });
+        initFireBase();
         User save = User.fromJson(fbkey.currentState!.value);
+        save.deviceToken = deviceToken;
         await Provider.of<UserProvider>(context, listen: false)
             .setPassword(save);
         setState(() {
@@ -53,6 +58,31 @@ class _PassWordPageState extends State<PassWordPage> {
           isLoading = false;
         });
       }
+    }
+  }
+
+  initFireBase() async {
+    deviceToken = await getDeviceToken();
+    print('====CHECKDEVICETOKEN=====');
+    print(deviceToken);
+    print('====CHECKDEVICETOKEN=====');
+  }
+
+  @override
+  afterFirstLayout(BuildContext context) {
+    try {
+      setState(() {
+        isLoadingPage = true;
+      });
+      initFireBase();
+      setState(() {
+        isLoadingPage = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingPage = false;
+      });
+      print(e.toString());
     }
   }
 
@@ -135,17 +165,10 @@ class _PassWordPageState extends State<PassWordPage> {
             backgroundColor: transparent,
             elevation: 0,
             centerTitle: true,
-            leading: Row(
-              children: [
-                SizedBox(
-                  width: 20,
-                ),
-                CustomBackButton(
-                  onClick: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+            leading: CustomBackButton(
+              onClick: () {
+                Navigator.of(context).pop();
+              },
             ),
             title: Container(
               margin: EdgeInsets.only(left: 5),
@@ -159,91 +182,99 @@ class _PassWordPageState extends State<PassWordPage> {
               ),
             ),
           ),
-          body: Container(
-            margin: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                FormBuilder(
-                  key: fbkey,
+          body: isLoadingPage == true
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: greentext,
+                  ),
+                )
+              : Container(
+                  margin: EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      FormTextField(
-                        labelText: "Нууц үг",
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isVisible = !isVisible;
-                            });
-                          },
-                          icon: isVisible == false
-                              ? Icon(
-                                  Icons.visibility,
-                                  color: white,
-                                )
-                              : Icon(Icons.visibility_off, color: white),
+                      FormBuilder(
+                        key: fbkey,
+                        child: Column(
+                          children: [
+                            FormTextField(
+                              labelText: "Нууц үг",
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isVisible = !isVisible;
+                                  });
+                                },
+                                icon: isVisible == false
+                                    ? Icon(
+                                        Icons.visibility,
+                                        color: white,
+                                      )
+                                    : Icon(Icons.visibility_off, color: white),
+                              ),
+                              inputType: TextInputType.visiblePassword,
+                              color: buttonbg,
+                              colortext: white,
+                              hintText: 'Нууц үг',
+                              name: "password",
+                              obscureText: isVisible,
+                              validators: FormBuilderValidators.compose([
+                                (value) {
+                                  return validatePassword(
+                                      value.toString(), context);
+                                }
+                              ]),
+                            ),
+                            const SizedBox(height: 20),
+                            FormTextField(
+                              labelText: "Нууц үг баталгаажуулах",
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isVisible1 = !isVisible1;
+                                  });
+                                },
+                                icon: isVisible1 == false
+                                    ? Icon(Icons.visibility, color: white)
+                                    : Icon(Icons.visibility_off, color: white),
+                              ),
+                              inputType: TextInputType.visiblePassword,
+                              color: buttonbg,
+                              colortext: white,
+                              hintText: 'Нууц үг',
+                              name: "password1",
+                              obscureText: isVisible1,
+                              validators: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(
+                                    errorText: "Нууц үгээ давтан оруулна уу"),
+                                (value) {
+                                  if (fbkey.currentState?.fields['password']
+                                          ?.value !=
+                                      value) {
+                                    return 'Оруулсан нууц үгтэй таарахгүй байна';
+                                  }
+                                  return null;
+                                }
+                              ]),
+                            ),
+                          ],
                         ),
-                        inputType: TextInputType.visiblePassword,
-                        color: buttonbg,
-                        colortext: white,
-                        hintText: 'Нууц үг',
-                        name: "password",
-                        obscureText: isVisible,
-                        validators: FormBuilderValidators.compose([
-                          (value) {
-                            return validatePassword(value.toString(), context);
-                          }
-                        ]),
                       ),
-                      const SizedBox(height: 20),
-                      FormTextField(
-                        labelText: "Нууц үг баталгаажуулах",
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isVisible1 = !isVisible1;
-                            });
-                          },
-                          icon: isVisible1 == false
-                              ? Icon(Icons.visibility, color: white)
-                              : Icon(Icons.visibility_off, color: white),
-                        ),
-                        inputType: TextInputType.visiblePassword,
-                        color: buttonbg,
-                        colortext: white,
-                        hintText: 'Нууц үг',
-                        name: "password1",
-                        obscureText: isVisible1,
-                        validators: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: "Нууц үгээ давтан оруулна уу"),
-                          (value) {
-                            if (fbkey.currentState?.fields['password']?.value !=
-                                value) {
-                              return 'Оруулсан нууц үгтэй таарахгүй байна';
-                            }
-                            return null;
-                          }
-                        ]),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      CustomButton(
+                        onClick: () {
+                          onSubmit();
+                        },
+                        height: 40,
+                        buttonColor: greentext,
+                        labelText: 'Хадгалах',
+                        textColor: white,
+                        isLoading: isLoading,
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 30,
-                ),
-                CustomButton(
-                  onClick: () {
-                    onSubmit();
-                  },
-                  height: 40,
-                  buttonColor: greentext,
-                  labelText: 'Хадгалах',
-                  textColor: white,
-                  isLoading: isLoading,
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

@@ -37,11 +37,11 @@ void transfer(BuildContext context) {
                   height: 20,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 20,
-                    ),
+                    // SizedBox(
+                    //   width: 20,
+                    // ),
                     Center(
                       child: Text(
                         'Шилжүүлэх',
@@ -52,12 +52,12 @@ void transfer(BuildContext context) {
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: SvgPicture.asset('assets/svg/close.svg'),
-                    ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     Navigator.of(context).pop();
+                    //   },
+                    //   child: SvgPicture.asset('assets/svg/close.svg'),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 20),

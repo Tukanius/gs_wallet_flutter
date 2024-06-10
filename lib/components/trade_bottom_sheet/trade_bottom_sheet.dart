@@ -37,11 +37,11 @@ void trade(BuildContext context, String id) {
                   height: 20,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 20,
-                    ),
+                    // SizedBox(
+                    //   width: 20,
+                    // ),
                     Center(
                       child: Text(
                         id == "1" ? 'Зарах' : 'Авах',
@@ -52,12 +52,12 @@ void trade(BuildContext context, String id) {
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: SvgPicture.asset('assets/svg/close.svg'),
-                    ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     Navigator.of(context).pop();
+                    //   },
+                    //   child: SvgPicture.asset('assets/svg/close.svg'),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 20),

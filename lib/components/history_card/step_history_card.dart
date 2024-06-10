@@ -67,19 +67,19 @@ class _TokenHistoryCardState extends State<StepHistoryCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Алхсан тоо:',
+                    'Авсан пойнт:',
                     style: TextStyle(
                       color: greytext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
-                    '${data.amount}',
+                    '${data.tokenAmount} GS',
                     style: TextStyle(
-                      color: black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                      color: greentext,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -88,19 +88,19 @@ class _TokenHistoryCardState extends State<StepHistoryCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Авсан пойнт:',
+                    'Алхсан тоо:',
                     style: TextStyle(
                       color: greytext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
-                    '${data.tokenAmount} GS',
+                    '${data.amount}',
                     style: TextStyle(
-                      color: greentext,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      color: black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -112,7 +112,7 @@ class _TokenHistoryCardState extends State<StepHistoryCard> {
                     'Огноо:',
                     style: TextStyle(
                       color: greytext,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -120,7 +120,7 @@ class _TokenHistoryCardState extends State<StepHistoryCard> {
                     '${createdDate}',
                     style: TextStyle(
                       color: black,
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -161,21 +161,13 @@ class _TokenHistoryCardState extends State<StepHistoryCard> {
                         fontSize: 13,
                       ),
                     ),
-                    Text(
-                      'Алхалтын тоо: ${widget.data.amount}',
-                      style: TextStyle(
-                        color: white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                     Row(
                       children: [
                         Text(
-                          'Авсан пойнт:   ',
+                          'Авсан пойнт: ',
                           style: TextStyle(
                             color: white,
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -183,11 +175,19 @@ class _TokenHistoryCardState extends State<StepHistoryCard> {
                           '${widget.data.tokenAmount} GS',
                           style: TextStyle(
                             color: greentext,
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
+                    ),
+                    Text(
+                      'Алхалтын тоо: ${widget.data.amount}',
+                      style: TextStyle(
+                        color: white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),

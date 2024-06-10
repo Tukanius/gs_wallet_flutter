@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/wallet_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/controller/listen.dart';
-import 'package:green_score/components/custom_cards/walking_card.dart';
+import 'package:green_score/components/account_card/account_card.dart';
 import 'package:green_score/components/history_card/fiat_history_card.dart';
 import 'package:green_score/components/history_card/token_history_card.dart';
 import 'package:green_score/components/refresher/refresher.dart';
@@ -161,9 +161,9 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                 height: 20,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(),
+                  // SizedBox(),
                   Text(
                     'Гүйлгээний дэлгэрэнгүй',
                     style: TextStyle(
@@ -172,12 +172,12 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: SvgPicture.asset('assets/svg/close.svg'),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Navigator.of(context).pop();
+                  //   },
+                  //   child: SvgPicture.asset('assets/svg/close.svg'),
+                  // ),
                 ],
               ),
               SizedBox(
@@ -373,17 +373,10 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
               floating: true,
               elevation: 0,
               backgroundColor: transparent,
-              leading: Row(
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  CustomBackButton(
-                    onClick: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
+              leading: CustomBackButton(
+                onClick: () {
+                  Navigator.of(context).pop();
+                },
               ),
               centerTitle: true,
               title: Text(
@@ -414,7 +407,7 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WalkingCard(
+                        AccountCard(
                           data: widget.data,
                           isAll: false,
                         ),
@@ -549,7 +542,7 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      height: 60,
+                                      height: 80,
                                     ),
                                     SvgPicture.asset(
                                       'assets/svg/notfound.svg',
@@ -575,6 +568,9 @@ class _CardDetailPageState extends State<CardDetailPage> with AfterLayoutMixin {
                                         fontSize: 13,
                                         fontWeight: FontWeight.w400,
                                       ),
+                                    ),
+                                    SizedBox(
+                                      height: 80,
                                     ),
                                   ],
                                 ),

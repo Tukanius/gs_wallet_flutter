@@ -1,35 +1,39 @@
 // import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:green_score/firebase_options.dart';
 // import 'package:green_score/provider/tools_provider.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/services/dialog.dart';
 import 'package:green_score/services/navigation.dart';
-import 'package:green_score/src/auth/forget_page.dart';
+import 'package:green_score/src/auth/forget_password_page.dart';
 import 'package:green_score/src/auth/login_page.dart';
-import 'package:green_score/src/auth/opt_page.dart';
+import 'package:green_score/src/auth/otp_page.dart';
 import 'package:green_score/src/auth/password_page.dart';
 import 'package:green_score/src/auth/register_page.dart';
-import 'package:green_score/src/collect_score_page/all_opportunity_page.dart';
-import 'package:green_score/src/collect_score_page/collect_score_page/collect_scooter_page.dart';
-import 'package:green_score/src/collect_score_page/collect_score_page/collect_score_page.dart';
-import 'package:green_score/src/collect_score_page/opportunities_pages/autobus_detail_page.dart';
-import 'package:green_score/src/collect_score_page/opportunities_pages/sale_detail_page.dart';
-import 'package:green_score/src/collect_score_page/opportunities_pages/scooter_detail_page.dart';
-import 'package:green_score/src/collect_score_page/opportunities_pages/step_detail_page.dart';
+import 'package:green_score/services/notify_service.dart';
+import 'package:green_score/src/score_page/all_opportunity_page.dart';
+import 'package:green_score/src/score_page/collect_score_page/collect_scooter_page.dart';
+import 'package:green_score/src/score_page/collect_score_page/collect_step_page.dart';
+import 'package:green_score/src/score_page/opportunities_pages/autobus_detail_page.dart';
+import 'package:green_score/src/score_page/opportunities_pages/sale_detail_page.dart';
+import 'package:green_score/src/score_page/opportunities_pages/school_card_page.dart';
+import 'package:green_score/src/score_page/opportunities_pages/scooter_detail_page.dart';
+import 'package:green_score/src/score_page/opportunities_pages/step_detail_page.dart';
 import 'package:green_score/src/home_page/company_page/company_page.dart';
 import 'package:green_score/src/home_page/company_page/map_page.dart';
 import 'package:green_score/src/home_page/product_detail_page/product_detail_page.dart';
 import 'package:green_score/src/main_page.dart';
 import 'package:green_score/src/notification_page/notification_detail.dart';
 import 'package:green_score/src/notification_page/notification_page.dart';
-import 'package:green_score/src/profile_page/camera_page.dart';
-import 'package:green_score/src/profile_page/dan_verify/dan_verify_page.dart';
-import 'package:green_score/src/profile_page/profile_edit_page.dart';
+import 'package:green_score/src/profile_page/profile_edit_page/camera_page.dart';
+import 'package:green_score/src/profile_page/dan_verify_page/dan_verify_page.dart';
+import 'package:green_score/src/profile_page/profile_edit_page/profile_edit_page.dart';
 import 'package:green_score/src/profile_page/profile_page.dart';
-import 'package:green_score/src/qr_code_page/confirm_qr_page.dart';
+import 'package:green_score/src/qr_code_page/confirm_payment.dart';
 import 'package:green_score/src/qr_code_page/qr_read_page.dart';
-import 'package:green_score/src/qr_code_page/qr_transfer.dart';
+import 'package:green_score/src/qr_code_page/qr_check.dart';
 import 'package:green_score/src/splash_screen/splash_screen.dart';
 import 'package:green_score/src/trade_page/trade_page.dart';
 import 'package:green_score/src/wallet_page/card_detail_page/card_detail_page.dart';
@@ -40,8 +44,9 @@ import 'package:get_it/get_it.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  NotifyService().initNotify();
+  // await FireBaseApi().initNotifications();
   // FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
   //   if (message != null) {
   //     print("Received message: ${message.messageId}");
@@ -63,6 +68,7 @@ void main() async {
   runApp(const MyApp());
 }
 
+final navigatorKey = GlobalKey<NavigatorState>();
 GetIt locator = GetIt.instance;
 
 class MyApp extends StatelessWidget {
@@ -88,6 +94,11 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(useMaterial3: true),
             debugShowCheckedModeBanner: false,
             initialRoute: SplashScreen.routeName,
+            navigatorKey: navigatorKey,
+            routes: {
+              'NotificationPage': (context) => const NotificationPage(),
+              'SplashScreen': (context) => const SplashScreen(),
+            },
             onGenerateRoute: (RouteSettings settings) {
               switch (settings.name) {
                 case SplashScreen.routeName:
@@ -142,11 +153,11 @@ class MyApp extends StatelessWidget {
                   return MaterialPageRoute(builder: (context) {
                     return const DanVerifyPage();
                   });
-                case CollectScorePage.routeName:
-                  CollectScorePageArguments arguments =
-                      settings.arguments as CollectScorePageArguments;
+                case CollectStepScore.routeName:
+                  CollectStepScoreArguments arguments =
+                      settings.arguments as CollectStepScoreArguments;
                   return MaterialPageRoute(builder: (context) {
-                    return CollectScorePage(
+                    return CollectStepScore(
                       id: arguments.id,
                     );
                   });
@@ -268,7 +279,6 @@ class MyApp extends StatelessWidget {
                       settings.arguments as ScooterDetailPageArguments;
                   return MaterialPageRoute(builder: (context) {
                     return ScooterDetailPage(
-                      id: arguments.id,
                       title: arguments.title,
                       assetPath: arguments.assetPath,
                     );
@@ -278,7 +288,6 @@ class MyApp extends StatelessWidget {
                       settings.arguments as SaleDetailPageArguments;
                   return MaterialPageRoute(builder: (context) {
                     return SaleDetailPage(
-                      id: arguments.id,
                       title: arguments.title,
                       assetPath: arguments.assetPath,
                     );
@@ -288,7 +297,15 @@ class MyApp extends StatelessWidget {
                       settings.arguments as AutobusDetailPageArguments;
                   return MaterialPageRoute(builder: (context) {
                     return AutobusDetailPage(
-                      id: arguments.id,
+                      title: arguments.title,
+                      assetPath: arguments.assetPath,
+                    );
+                  });
+                case SchoolCardPage.routeName:
+                  SchoolCardPageArguments arguments =
+                      settings.arguments as SchoolCardPageArguments;
+                  return MaterialPageRoute(builder: (context) {
+                    return SchoolCardPage(
                       title: arguments.title,
                       assetPath: arguments.assetPath,
                     );
@@ -299,6 +316,7 @@ class MyApp extends StatelessWidget {
                   return MaterialPageRoute(builder: (context) {
                     return NotificationDetailPage(
                       listenController: arguments.listenController,
+                      data: arguments.data,
                     );
                   });
                 case CollectScooterScore.routeName:

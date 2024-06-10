@@ -66,17 +66,10 @@ class _MapPageState extends State<MapPage> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: Row(
-          children: [
-            SizedBox(
-              width: 20,
-            ),
-            CustomBackButton(
-              onClick: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+        leading: CustomBackButton(
+          onClick: () {
+            Navigator.of(context).pop();
+          },
         ),
       ),
       body: isLoading == true

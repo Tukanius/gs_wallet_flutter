@@ -6,7 +6,7 @@ import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
-import 'package:green_score/src/auth/opt_page.dart';
+import 'package:green_score/src/auth/otp_page.dart';
 import 'package:green_score/utils/is_device_size.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -80,17 +80,10 @@ class _RegisterPageState extends State<RegisterPage> {
           backgroundColor: transparent,
           elevation: 0,
           centerTitle: true,
-          leading: Row(
-            children: [
-              SizedBox(
-                width: 20,
-              ),
-              CustomBackButton(
-                onClick: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+          leading: CustomBackButton(
+            onClick: () {
+              Navigator.of(context).pop();
+            },
           ),
           title: Container(
             margin: EdgeInsets.only(left: 5),
@@ -170,7 +163,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         ]),
                       ),
                       const SizedBox(height: 20),
-
                       Container(
                         margin: EdgeInsets.only(bottom: 8, left: 6),
                         child: Text(
@@ -295,20 +287,11 @@ class _RegisterPageState extends State<RegisterPage> {
                           );
                         },
                       ),
-                      // FormTextField(
-                      //   labelText: "Регистрийн дугаар",
-                      //   color: buttonbg,
-                      //   hintText: 'Регистрийн дугаар',
-                      //   name: "registerNo",
-                      //   colortext: white,
-                      //   hintTextColor: white.withOpacity(0.5),
-                      // ),
-                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 35,
                 ),
                 CustomButton(
                   buttonColor: greentext,
@@ -319,6 +302,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     onSubmit();
                   },
                   textColor: white,
+                ),
+                SizedBox(
+                  height: 35,
                 ),
               ],
             ),

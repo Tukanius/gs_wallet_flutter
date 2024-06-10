@@ -127,7 +127,7 @@ class _SaleProductPageState extends State<SaleProductPage>
                         : Column(
                             children: [
                               SizedBox(
-                                height: 50,
+                                height: 80,
                               ),
                               SvgPicture.asset(
                                 'assets/svg/notfound.svg',
@@ -143,6 +143,9 @@ class _SaleProductPageState extends State<SaleProductPage>
                                     fontSize: 14,
                                   ),
                                 ),
+                              ),
+                              SizedBox(
+                                height: 80,
                               ),
                             ],
                           ),

@@ -2,6 +2,7 @@ import 'package:green_score/models/accumlation.dart';
 import 'package:green_score/models/deposit.dart';
 import 'package:green_score/models/history.dart';
 import 'package:green_score/models/location_info.dart';
+import 'package:green_score/models/nfc_data.dart';
 import 'package:green_score/models/result.dart';
 import 'package:green_score/utils/http_request.dart';
 
@@ -35,5 +36,10 @@ class ScoreApi extends HttpRequest {
   trackLocation(LocationInfo data) async {
     var res = await post('/track/add', "SCORE", data: data.toJson());
     return LocationInfo.fromJson(res);
+  }
+
+  nfcConnect(NfcData data) async {
+    var res = await post('/e-school/link', "SCORE", data: data.toJson());
+    return res;
   }
 }

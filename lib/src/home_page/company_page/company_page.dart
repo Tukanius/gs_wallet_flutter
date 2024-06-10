@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/product_api.dart';
@@ -39,36 +37,15 @@ class CompanyPage extends StatefulWidget {
 
 class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
   bool isLoading = true;
+  bool isMapLoading = false;
   Set<Marker> markers = {};
-  late final CameraPosition _kGooglePlex;
+  late CameraPosition cameraPosition = CameraPosition(
+    target: LatLng(47.920517, 106.917141),
+    zoom: 13,
+  );
   final Completer<GoogleMapController> _controller = Completer();
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
-
-  @override
-  void initState() {
-    _kGooglePlex = CameraPosition(
-      target: widget.data.latitude != null && widget.data.longitude != null
-          ? LatLng(widget.data.latitude!, widget.data.longitude!)
-          : LatLng(47.920517, 106.917141),
-      zoom: 13,
-    );
-    widget.data.latitude != null && widget.data.longitude != null
-        ? markers.add(
-            Marker(
-              markerId: const MarkerId('Location'),
-              position:
-                  widget.data.latitude != null && widget.data.longitude != null
-                      ? LatLng(widget.data.latitude!, widget.data.longitude!)
-                      : LatLng(47.920517, 106.917141),
-              icon: BitmapDescriptor.defaultMarker,
-              infoWindow: const InfoWindow(title: 'Location'),
-              onTap: () {},
-            ),
-          )
-        : SizedBox();
-    super.initState();
-  }
 
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
@@ -89,6 +66,43 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
   @override
   afterFirstLayout(BuildContext context) async {
     await list(page, limit, '');
+    try {
+      setState(() {
+        isMapLoading = true;
+      });
+      if (widget.data.latitude != null && widget.data.longitude != null) {
+        setState(() {
+          cameraPosition = CameraPosition(
+            target: LatLng(
+              widget.data.latitude!,
+              widget.data.longitude!,
+            ),
+            zoom: 13,
+          );
+          markers.add(
+            Marker(
+              markerId: const MarkerId('Location'),
+              position:
+                  widget.data.latitude != null && widget.data.longitude != null
+                      ? LatLng(widget.data.latitude!, widget.data.longitude!)
+                      : LatLng(47.920517, 106.917141),
+              icon: BitmapDescriptor.defaultMarker,
+              infoWindow: const InfoWindow(title: 'Location'),
+              onTap: () {},
+            ),
+          );
+        });
+      }
+      setState(() {
+        isMapLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isMapLoading = false;
+      });
+      print(e.toString());
+    }
+
     setState(() {
       isLoading = false;
     });
@@ -155,17 +169,10 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
               floating: true,
               elevation: 0,
               backgroundColor: transparent,
-              leading: Row(
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  CustomBackButton(
-                    onClick: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
+              leading: CustomBackButton(
+                onClick: () {
+                  Navigator.of(context).pop();
+                },
               ),
               centerTitle: true,
               title: Text(
@@ -350,23 +357,23 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           height: 140,
-                          child: GoogleMap(
-                            zoomControlsEnabled: false,
-                            mapType: MapType.normal,
-                            compassEnabled: false,
-                            myLocationButtonEnabled: false,
-                            markers: Set<Marker>.of(markers),
-                            initialCameraPosition: _kGooglePlex,
-                            gestureRecognizers:
-                                <Factory<OneSequenceGestureRecognizer>>[
-                              Factory<OneSequenceGestureRecognizer>(
-                                () => EagerGestureRecognizer(),
-                              ),
-                            ].toSet(),
-                            onMapCreated: (mapcontroller) {
-                              _controller.complete(mapcontroller);
-                            },
-                          ),
+                          child: isMapLoading == true
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: greentext,
+                                  ),
+                                )
+                              : GoogleMap(
+                                  zoomControlsEnabled: false,
+                                  mapType: MapType.normal,
+                                  compassEnabled: false,
+                                  myLocationButtonEnabled: false,
+                                  markers: Set<Marker>.of(markers),
+                                  initialCameraPosition: cameraPosition,
+                                  onMapCreated: (mapcontroller) {
+                                    _controller.complete(mapcontroller);
+                                  },
+                                ),
                         ),
                       ),
                       GestureDetector(
@@ -466,7 +473,7 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
                           : Column(
                               children: [
                                 SizedBox(
-                                  height: 50,
+                                  height: 80,
                                 ),
                                 SvgPicture.asset(
                                   'assets/svg/notfound.svg',
@@ -482,6 +489,9 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
                                       fontSize: 14,
                                     ),
                                   ),
+                                ),
+                                SizedBox(
+                                  height: 80,
                                 ),
                               ],
                             ),

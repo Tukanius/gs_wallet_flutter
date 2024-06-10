@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Хямдрал",
+                      "Зарцуулах",
                       style: TextStyle(
                         color: white,
                         fontSize: 18,
@@ -177,6 +177,9 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                   ),
+                                ),
+                                SizedBox(
+                                  height: 80,
                                 ),
                               ],
                             ),

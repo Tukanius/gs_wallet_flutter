@@ -1,33 +1,24 @@
-// import 'package:tw_app/screens/forgot/forgot_page.dart';
-
 import 'package:flutter/cupertino.dart';
+// import 'package:green_score/main.dart';
+// import 'package:green_score/services/dialog.dart';
 
 class HttpHandler {
   int? statusCode;
   String? message;
   String? code;
-
+  // static bool _isNavigating = false;
   HttpHandler({this.statusCode, this.message, this.code});
 
-  parseMessage(dynamic data) {
-    String? message;
-
-    // debugPrint("% % % % % % % % % % % % % % % % % % % % % % % % % % % % %");
-    // debugPrint(data.runtimeType == Map<String, dynamic>().runtimeType);
-    // debugPrint("% % % % % % % % % % % % % % % % % % % % % % % % % % % % %");
-
+  String? parseMessage(dynamic data) {
     if (data.runtimeType == <String, dynamic>{}.runtimeType) {
       Map<String, dynamic> json = data as Map<String, dynamic>;
-
-      message = json['message'] as String?;
+      return json['message'] as String?;
     } else {
-      message = data as String;
+      return data as String;
     }
-
-    return message;
   }
 
-  handle(response) {
+  handle(dynamic response) {
     debugPrint(
         '+++++++++++++++++++++++++API HANDLER++++++++++++++++++++++++++');
     debugPrint('HttpHandler: ' +
@@ -48,9 +39,19 @@ class HttpHandler {
       case 200:
       case 304:
         return data;
-      // case 401:
-      //   locator<DialogService>().showErrorDialogListener("Нэвтэрнэ үү");
-      //   break;
+      case 401:
+        // locator<DialogService>().showErrorDialogListener("Нэвтэрнэ үү");
+        // Navigator.of(context).pushNamed(SplashScreen.routeName);
+        // navigatorKey.currentState?.pushNamed('SplashScreen');
+        // break;
+        // if (!_isNavigating) {
+        //   _isNavigating = true;
+        //   // locator<DialogService>().showErrorDialogListener("Нэвтэрнэ үү");
+        //   navigatorKey.currentState?.pushNamed('SplashScreen').then((_) {
+        //     _isNavigating = false;
+        //   });
+        // }
+        break;
       default:
         HttpHandler error = HttpHandler(
             statusCode: statusCode,

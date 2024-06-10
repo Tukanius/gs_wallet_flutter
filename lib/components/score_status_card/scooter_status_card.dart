@@ -1,11 +1,12 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/score_api.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/accumlation.dart';
 import 'package:green_score/models/deposit.dart';
-import 'package:green_score/src/collect_score_page/collect_score_page/collect_scooter_page.dart';
+import 'package:green_score/src/score_page/collect_score_page/collect_scooter_page.dart';
 import 'package:green_score/widget/ui/color.dart';
 
 class ScooterStatusCard extends StatefulWidget {

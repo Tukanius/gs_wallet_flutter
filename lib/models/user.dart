@@ -19,6 +19,7 @@ class User {
   String? danVerifiedDate;
   String? username;
   String? address;
+  String? deviceToken;
 
   String? deletedAt;
   bool? isEmailVerified;
@@ -106,6 +107,7 @@ class User {
     this.danVerified,
     this.danVerifiedDate,
     this.address,
+    this.deviceToken,
   });
 
   static $fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

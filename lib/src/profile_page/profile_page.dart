@@ -3,11 +3,11 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
-import 'package:green_score/components/custom_button/profile_button.dart';
+import 'package:green_score/components/custom_button/profile_info_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
-import 'package:green_score/src/profile_page/dan_verify/dan_verify_page.dart';
-import 'package:green_score/src/profile_page/profile_edit_page.dart';
+import 'package:green_score/src/profile_page/dan_verify_page/dan_verify_page.dart';
+import 'package:green_score/src/profile_page/profile_edit_page/profile_edit_page.dart';
 import 'package:green_score/src/splash_screen/splash_screen.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -87,17 +87,10 @@ class _ProfilePageState extends State<ProfilePage> {
               floating: true,
               elevation: 0,
               backgroundColor: transparent,
-              leading: Row(
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  CustomBackButton(
-                    onClick: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
+              leading: CustomBackButton(
+                onClick: () {
+                  Navigator.of(context).pop();
+                },
               ),
               centerTitle: true,
               title: Text(
@@ -166,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
-                ProfileButton(
+                ProfileInfoButton(
                   text: 'Мэдээлэл засах',
                   svgPath: 'assets/svg/edit.svg',
                   onClick: () {
@@ -176,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(
                   height: 15,
                 ),
-                ProfileButton(
+                ProfileInfoButton(
                   text: user.danVerified == true
                       ? "ДАН баталгаажуулсан"
                       : 'ДАН баталгаажуулалт',
