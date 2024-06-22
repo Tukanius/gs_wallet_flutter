@@ -8,6 +8,29 @@ class UserProvider extends ChangeNotifier {
   User user = User();
   bool isView = false;
 
+  bool isVerified = false;
+
+  String myToken = '';
+
+  UserProvider() {
+    _loadAccessToken();
+  }
+
+  danVerify() async {
+    isVerified = await UserApi().danVerify();
+    print(isVerified);
+    notifyListeners();
+  }
+
+  Future<void> _loadAccessToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString("ACCESS_TOKEN");
+    if (token != null) {
+      myToken = token;
+      notifyListeners();
+    }
+  }
+
   me(bool handler) async {
     user = await AuthApi().me(handler);
     setAccessToken(user.accessToken);
@@ -38,9 +61,14 @@ class UserProvider extends ChangeNotifier {
     return user;
   }
 
-  login(User data) async {
+  Future<User> login(User data) async {
     user = await AuthApi().login(data);
     setAccessToken(user.accessToken);
+    myToken == '' ? myToken = user.accessToken! : '';
+    print('=====MYTOKEN===');
+    print(user.accessToken);
+    print(myToken);
+    print('=====MYTOKEN===');
     notifyListeners();
     return user;
   }
@@ -59,6 +87,11 @@ class UserProvider extends ChangeNotifier {
   setPassword(User data) async {
     user = await AuthApi().setPassword(data);
     setAccessToken(user.accessToken);
+    myToken == '' ? myToken = user.accessToken! : '';
+    print('=====FORGETPASS===');
+    print(user.accessToken);
+    print(myToken);
+    print('=====FORGETPASS===');
     notifyListeners();
     return user;
   }

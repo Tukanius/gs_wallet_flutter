@@ -206,7 +206,7 @@ class _SaleDetailPageState extends State<SaleDetailPage> with AfterLayoutMixin {
                           dateend = null;
                         });
                       },
-                      backgroundColor: Theme.of(context).colorScheme.background,
+                      backgroundColor: white,
                       primaryColor: greentext,
                     );
                   },

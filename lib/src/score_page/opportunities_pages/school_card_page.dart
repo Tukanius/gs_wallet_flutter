@@ -53,9 +53,6 @@ class _SchoolCardPageState extends State<SchoolCardPage> with AfterLayoutMixin {
       schoolCard.type = "COMMUNITY";
       schoolCard.code = "SCHOOL";
       schoolCard = await ScoreApi().getStep(schoolCard);
-      print('=======+TEST=======');
-      print(schoolCard);
-      print('=======+TEST=======');
     } catch (e) {
       print(e.toString());
       setState(() {
@@ -258,7 +255,6 @@ class _SchoolCardPageState extends State<SchoolCardPage> with AfterLayoutMixin {
                 ),
                 isConnected == false
                     ? CustomButton(
-                        circular: 100,
                         labelText: 'Карт холбох',
                         height: 40,
                         buttonColor: buttonbg,
@@ -269,7 +265,6 @@ class _SchoolCardPageState extends State<SchoolCardPage> with AfterLayoutMixin {
                         textColor: white,
                       )
                     : CustomButton(
-                        circular: 100,
                         labelText: 'Урамшуулал авах',
                         height: 40,
                         buttonColor: greentext,

@@ -39,11 +39,12 @@ class _LoginPageState extends State<LoginPage> with AfterLayoutMixin {
         setState(() {
           isLoading = true;
         });
-        initFireBase();
+        await initFireBase();
         User save = User.fromJson(fbkey.currentState!.value);
         save.deviceToken = deviceToken;
         await Provider.of<UserProvider>(context, listen: false).login(save);
         await Provider.of<UserProvider>(context, listen: false).me(true);
+
         setState(() {
           isLoading = false;
         });
@@ -83,6 +84,26 @@ class _LoginPageState extends State<LoginPage> with AfterLayoutMixin {
     print('====CHECKDEVICETOKEN=====');
     print(deviceToken);
     print('====CHECKDEVICETOKEN=====');
+  }
+
+  Future getDeviceToken() async {
+    FirebaseMessaging.instance.requestPermission();
+    FirebaseMessaging _fireBaseMessage = FirebaseMessaging.instance;
+    String? deviceToken = await _fireBaseMessage.getToken();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Message data: ${message.data}');
+      if (message.notification != null) {
+        print('ehelsee');
+        NotifyService().showNotification(
+          title: message.notification?.title,
+          body: message.notification?.body,
+        );
+        print('${message.notification?.title}');
+        print('${message.notification?.body}');
+        print('duusasaa');
+      }
+    });
+    return (deviceToken == null) ? "" : deviceToken;
   }
 
   @override
@@ -238,24 +259,4 @@ class _LoginPageState extends State<LoginPage> with AfterLayoutMixin {
       ),
     );
   }
-}
-
-Future getDeviceToken() async {
-  FirebaseMessaging.instance.requestPermission();
-  FirebaseMessaging _fireBaseMessage = FirebaseMessaging.instance;
-  String? deviceToken = await _fireBaseMessage.getToken();
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Message data: ${message.data}');
-    if (message.notification != null) {
-      print('ehelsee');
-      NotifyService().showNotification(
-        title: message.notification?.title,
-        body: message.notification?.body,
-      );
-      print('${message.notification?.title}');
-      print('${message.notification?.body}');
-      print('duusasaa');
-    }
-  });
-  return (deviceToken == null) ? "" : deviceToken;
 }

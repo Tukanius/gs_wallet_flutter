@@ -30,9 +30,6 @@ class _SchoolCardState extends State<SchoolCard> with AfterLayoutMixin {
       schoolCard.type = "COMMUNITY";
       schoolCard.code = "SCHOOL";
       schoolCard = await ScoreApi().getStep(schoolCard);
-      print('=======+TEST=======');
-      print(schoolCard);
-      print('=======+TEST=======');
       setState(() {
         isLoading = false;
       });

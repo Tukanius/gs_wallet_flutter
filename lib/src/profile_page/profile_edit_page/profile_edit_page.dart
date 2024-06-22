@@ -7,7 +7,6 @@ import 'package:green_score/components/controller/listen.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
-import 'package:green_score/src/main_page.dart';
 import 'package:green_score/src/profile_page/profile_edit_page/camera_page.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -44,10 +43,18 @@ class _ProfileEditState extends State<ProfileEdit> {
         User save = User.fromJson(fbkey.currentState!.value);
         await Provider.of<UserProvider>(context, listen: false)
             .editProfile(save, user.id!);
-        Navigator.of(context).pushNamed(MainPage.routeName);
+        // Navigator.of(context).pushNamed(MainPage.routeName);
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: white,
+            dismissDirection: DismissDirection.up,
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).size.height - 150,
+              left: 10,
+              right: 10,
+            ),
             content: Row(
               children: [
                 SizedBox(
@@ -94,6 +101,7 @@ class _ProfileEditState extends State<ProfileEdit> {
   }
 
   Future showOptions() async {
+    FocusScope.of(context).unfocus();
     showCupertinoModalPopup(
       context: context,
       builder: (context) => CupertinoActionSheet(
@@ -147,193 +155,200 @@ class _ProfileEditState extends State<ProfileEdit> {
   Widget build(BuildContext context) {
     user = Provider.of<UserProvider>(context, listen: true).user;
 
-    return BackgroundShapes(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              toolbarHeight: 60,
-              automaticallyImplyLeading: false,
-              pinned: false,
-              snap: true,
-              floating: true,
-              elevation: 0,
-              backgroundColor: transparent,
-              leading: CustomBackButton(
-                onClick: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              centerTitle: true,
-              title: Text(
-                'Мэдээлэл засах',
-                style: TextStyle(
-                  color: white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: BackgroundShapes(
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                toolbarHeight: 60,
+                automaticallyImplyLeading: false,
+                pinned: false,
+                snap: true,
+                floating: true,
+                elevation: 0,
+                backgroundColor: transparent,
+                leading: CustomBackButton(
+                  onClick: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                centerTitle: true,
+                title: Text(
+                  'Мэдээлэл засах',
+                  style: TextStyle(
+                    color: white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-          ];
-        },
-        body: Container(
-          padding: EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: showOptions,
-                        child: Stack(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(3),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                border: Border.all(
-                                  color: white.withOpacity(0.3),
-                                  width: 2,
-                                ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: user.avatar != null && image == null
-                                    ? Image.network(
-                                        '${user.avatar}',
-                                        height: 120,
-                                        width: 120,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : image != null
-                                        ? Image.file(
-                                            image!,
-                                            height: 120,
-                                            width: 120,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : SvgPicture.asset(
-                                            'assets/svg/avatar.svg',
-                                            height: 120,
-                                            width: 120,
-                                            fit: BoxFit.cover,
-                                          ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
+            ];
+          },
+          body: Container(
+            padding: EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            showOptions();
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(3),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
-                                  color: white.withOpacity(0.6),
+                                  border: Border.all(
+                                    color: white.withOpacity(0.3),
+                                    width: 2,
+                                  ),
                                 ),
-                                height: 45,
-                                width: 45,
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    'assets/svg/camera.svg',
-                                    height: 30,
-                                    width: 30,
-                                    // ignore: deprecated_member_use
-                                    color: black,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: user.avatar != null && image == null
+                                      ? Image.network(
+                                          '${user.avatar}',
+                                          height: 120,
+                                          width: 120,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : image != null
+                                          ? Image.file(
+                                              image!,
+                                              height: 120,
+                                              width: 120,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : SvgPicture.asset(
+                                              'assets/svg/avatar.svg',
+                                              height: 120,
+                                              width: 120,
+                                              fit: BoxFit.cover,
+                                            ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: white.withOpacity(0.6),
+                                  ),
+                                  height: 45,
+                                  width: 45,
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      'assets/svg/camera.svg',
+                                      height: 30,
+                                      width: 30,
+                                      // ignore: deprecated_member_use
+                                      color: black,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                FormBuilder(
-                  key: fbkey,
-                  child: Column(
-                    children: [
-                      FormTextField(
-                        labelText: 'Овог',
-                        initialValue: user.lastName,
-                        color: buttonbg,
-                        name: "firstName",
-                        hintText: 'Овог',
-                        colortext: white,
-                        hintTextColor: white.withOpacity(0.5),
-                      ),
-                      const SizedBox(height: 20),
-                      FormTextField(
-                        initialValue: user.firstName,
-                        labelText: 'Нэр',
-                        color: buttonbg,
-                        hintText: 'Нэр',
-                        name: "lastName",
-                        colortext: white,
-                        hintTextColor: white.withOpacity(0.5),
-                      ),
-                      const SizedBox(height: 20),
-                      FormTextField(
-                        readOnly: user.danVerified == true ? true : false,
-                        labelText: 'Регистрийн дугаар',
-                        initialValue: user.registerNo,
-                        color: buttonbg,
-                        hintText: 'Регистрийн дугаар',
-                        name: "registerNo",
-                        colortext: white,
-                        hintTextColor: white.withOpacity(0.5),
-                      ),
-                      const SizedBox(height: 20),
-                      FormTextField(
-                        labelText: 'Утас',
-                        initialValue: user.phone,
-                        color: buttonbg,
-                        hintText: 'Утас',
-                        name: "phone",
-                        colortext: white,
-                        hintTextColor: white.withOpacity(0.5),
-                      ),
-                      const SizedBox(height: 20),
-                      FormTextField(
-                        labelText: 'И-мэйл',
-                        initialValue: user.email,
-                        color: buttonbg,
-                        hintText: 'И-мэйл',
-                        name: "email",
-                        colortext: white,
-                        hintTextColor: white.withOpacity(0.5),
-                      ),
-                      const SizedBox(height: 20),
-                      FormTextField(
-                        initialValue: user.address,
-                        labelText: 'Хаяг',
-                        color: buttonbg,
-                        hintText: 'Хаяг',
-                        name: "address",
-                        colortext: white,
-                        hintTextColor: white.withOpacity(0.5),
-                      ),
-                      const SizedBox(height: 40),
-                    ],
+                  FormBuilder(
+                    key: fbkey,
+                    child: Column(
+                      children: [
+                        FormTextField(
+                          labelText: 'Овог',
+                          initialValue: user.lastName,
+                          color: buttonbg,
+                          name: "firstName",
+                          hintText: 'Овог',
+                          colortext: white,
+                          hintTextColor: white.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 20),
+                        FormTextField(
+                          initialValue: user.firstName,
+                          labelText: 'Нэр',
+                          color: buttonbg,
+                          hintText: 'Нэр',
+                          name: "lastName",
+                          colortext: white,
+                          hintTextColor: white.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 20),
+                        FormTextField(
+                          readOnly: user.danVerified == true ? true : false,
+                          labelText: 'Регистрийн дугаар',
+                          initialValue: user.registerNo,
+                          color: buttonbg,
+                          hintText: 'Регистрийн дугаар',
+                          name: "registerNo",
+                          colortext: white,
+                          hintTextColor: white.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 20),
+                        FormTextField(
+                          labelText: 'Утас',
+                          initialValue: user.phone,
+                          color: buttonbg,
+                          hintText: 'Утас',
+                          name: "phone",
+                          colortext: white,
+                          hintTextColor: white.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 20),
+                        FormTextField(
+                          labelText: 'И-мэйл',
+                          initialValue: user.email,
+                          color: buttonbg,
+                          hintText: 'И-мэйл',
+                          name: "email",
+                          colortext: white,
+                          hintTextColor: white.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 20),
+                        FormTextField(
+                          initialValue: user.address,
+                          labelText: 'Хаяг',
+                          color: buttonbg,
+                          hintText: 'Хаяг',
+                          name: "address",
+                          colortext: white,
+                          hintTextColor: white.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 40),
+                      ],
+                    ),
                   ),
-                ),
-                CustomButton(
-                  buttonColor: greentext,
-                  height: 40,
-                  isLoading: isLoading,
-                  labelText: 'Хадгалах',
-                  onClick: () {
-                    onsubmit();
-                  },
-                  textColor: white,
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-              ],
+                  CustomButton(
+                    buttonColor: greentext,
+                    height: 40,
+                    isLoading: isLoading,
+                    labelText: 'Хадгалах',
+                    onClick: () {
+                      onsubmit();
+                    },
+                    textColor: white,
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

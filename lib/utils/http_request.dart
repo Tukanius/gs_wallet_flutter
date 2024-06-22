@@ -34,6 +34,7 @@ class HttpRequest {
   // static const gsTransaction = 'http://192.168.1.15:30827';
 
   static const gsScore = 'https://dev-gs.zto.mn/sco';
+  // static const gsScore = 'http://192.168.1.15:30826';
 
   static const version = '/api';
 

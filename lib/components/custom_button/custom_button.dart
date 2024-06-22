@@ -32,7 +32,7 @@ class _CustomButtonState extends State<CustomButton> {
         width: MediaQuery.of(context).size.width,
         height: widget.height ?? 50,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.circular ?? 16),
+          borderRadius: BorderRadius.circular(widget.circular ?? 100),
           color: widget.buttonColor,
         ),
         child: ElevatedButton(
@@ -64,7 +64,7 @@ class _CustomButtonState extends State<CustomButton> {
           ),
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(widget.circular ?? 16),
+              borderRadius: BorderRadius.circular(widget.circular ?? 100),
             ),
             shadowColor: Colors.transparent,
             backgroundColor: widget.buttonColor,

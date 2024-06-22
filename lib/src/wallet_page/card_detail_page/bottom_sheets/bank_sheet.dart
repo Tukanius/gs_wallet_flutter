@@ -287,7 +287,6 @@ bank(BuildContext context, Deposit data) {
                       ? CustomButton(
                           height: 40,
                           buttonColor: greentext,
-                          circular: 100,
                           isLoading: isLoading,
                           labelText: 'Төлбөр төлөх',
                           onClick: () {
@@ -298,7 +297,6 @@ bank(BuildContext context, Deposit data) {
                       : CustomButton(
                           height: 40,
                           buttonColor: greentext,
-                          circular: 100,
                           isLoading: isLoading,
                           labelText: 'Төлбөр шалгах',
                           onClick: () {

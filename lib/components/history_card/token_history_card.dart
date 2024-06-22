@@ -81,7 +81,9 @@ class _TokenHistoryCardState extends State<TokenHistoryCard> {
                   Text(
                     '${data.totalAmount} GS',
                     style: TextStyle(
-                      color: greentext,
+                      color: widget.data.type == "DEPOSIT"
+                          ? greentext
+                          : expenditure,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),

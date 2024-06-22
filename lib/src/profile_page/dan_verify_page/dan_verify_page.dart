@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:green_score/api/user_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
+import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/src/main_page.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class DanVerifyPage extends StatefulWidget {
   static const routeName = "DanVerifyPage";
@@ -65,7 +66,7 @@ class _DanVerifyPageState extends State<DanVerifyPage> {
                                 MaterialStateProperty.all(Colors.transparent),
                           ),
                           child: const Text(
-                            "Буцах",
+                            "хаах",
                             style: TextStyle(color: dark),
                           ),
                           onPressed: () {
@@ -90,7 +91,8 @@ class _DanVerifyPageState extends State<DanVerifyPage> {
       setState(() {
         isLoading = true;
       });
-      var res = await UserApi().danVerify();
+      // var res = await UserApi().danVerify();
+      var res = await Provider.of<UserProvider>(context).danVerify();
       print(res);
       Timer(Duration(seconds: 3), () {
         setState(() {
@@ -123,7 +125,7 @@ class _DanVerifyPageState extends State<DanVerifyPage> {
               backgroundColor: transparent,
               leading: CustomBackButton(
                 onClick: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(MainPage.routeName);
                 },
               ),
               centerTitle: true,

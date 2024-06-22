@@ -6,7 +6,7 @@ Accumlation _$AccumlationFromJson(Map<String, dynamic> json) {
     user: json['user'] != null ? json['user'] as String : null,
     type: json['type'] != null ? json['type'] as String : null,
     unit: json['unit'] != null ? json['unit'] as String : null,
-    amount: json['amount'] != null ? json['amount'] as String : null,
+    amount: json['amount'] != null ? json['amount'] as num : null,
     balanceAmount:
         json['balanceAmount'] != null ? json['balanceAmount'] as int : null,
     holdAmount: json['holdAmount'] != null ? json['holdAmount'] as int : null,

@@ -1,15 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:green_score/models/accumlation.dart';
 import 'package:green_score/widget/ui/color.dart';
 
 class MyBarGraph extends StatefulWidget {
-  final List weeklySum;
-  final Accumlation data;
+  final List<double> weeklySum;
+
   const MyBarGraph({
     Key? key,
     required this.weeklySum,
-    required this.data,
   }) : super(key: key);
 
   @override
@@ -17,14 +15,14 @@ class MyBarGraph extends StatefulWidget {
 }
 
 class _MyBarGraphState extends State<MyBarGraph> {
-  int selectedIndex = 0;
+  int selectedIndex = -1;
   late List<String> weekDays;
 
   @override
   void initState() {
     super.initState();
-    selectedIndex = widget.weeklySum.length - 1;
     weekDays = generateWeekDays();
+    selectedIndex = widget.weeklySum.length - 1;
   }
 
   List<String> generateWeekDays() {
@@ -42,13 +40,13 @@ class _MyBarGraphState extends State<MyBarGraph> {
   @override
   Widget build(BuildContext context) {
     BarData myBarData = BarData(
-      sun1: widget.weeklySum[0],
-      sun2: widget.weeklySum[1],
-      sun3: widget.weeklySum[2],
-      sun4: widget.weeklySum[3],
-      sun5: widget.weeklySum[4],
-      sun6: widget.weeklySum[5],
-      sun7: widget.weeklySum[6],
+      day1: widget.weeklySum[0],
+      day2: widget.weeklySum[1],
+      day3: widget.weeklySum[2],
+      day4: widget.weeklySum[3],
+      day5: widget.weeklySum[4],
+      day6: widget.weeklySum[5],
+      day7: widget.weeklySum[6],
     );
     myBarData.initBarData();
 
@@ -88,6 +86,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
           touchTooltipData: BarTouchTooltipData(
             tooltipRoundedRadius: 8,
             tooltipBgColor: greentext,
+            // tooltipMargin: 20,
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               return BarTooltipItem(
                 '${rod.toY.toInt()}',
@@ -121,8 +120,14 @@ class _MyBarGraphState extends State<MyBarGraph> {
                   BarChartRodData(
                     toY: entry.value.y,
                     color: entry.key == selectedIndex ? greentext : greytext,
-                    width: 35,
+                    width: 30,
                     borderRadius: BorderRadius.circular(26),
+                    backDrawRodData: BackgroundBarChartRodData(
+                      show: true,
+                      toY: widget.weeklySum.reduce((value, element) =>
+                          element > value ? element : value),
+                      color: Colors.transparent,
+                    ),
                   )
                 ],
                 showingTooltipIndicators: selectedIndex == entry.key ? [0] : [],
@@ -135,28 +140,28 @@ class _MyBarGraphState extends State<MyBarGraph> {
 }
 
 class BarData {
-  final double sun1, sun2, sun3, sun4, sun5, sun6, sun7;
+  final double day1, day2, day3, day4, day5, day6, day7;
   late List<BarDataModel> barData;
 
   BarData({
-    required this.sun1,
-    required this.sun2,
-    required this.sun3,
-    required this.sun4,
-    required this.sun5,
-    required this.sun6,
-    required this.sun7,
+    required this.day1,
+    required this.day2,
+    required this.day3,
+    required this.day4,
+    required this.day5,
+    required this.day6,
+    required this.day7,
   });
 
   void initBarData() {
     barData = [
-      BarDataModel(y: sun1),
-      BarDataModel(y: sun2),
-      BarDataModel(y: sun3),
-      BarDataModel(y: sun4),
-      BarDataModel(y: sun5),
-      BarDataModel(y: sun6),
-      BarDataModel(y: sun7),
+      BarDataModel(y: day1),
+      BarDataModel(y: day2),
+      BarDataModel(y: day3),
+      BarDataModel(y: day4),
+      BarDataModel(y: day5),
+      BarDataModel(y: day6),
+      BarDataModel(y: day7),
     ];
   }
 }

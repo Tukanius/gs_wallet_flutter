@@ -10,11 +10,17 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:green_score/api/score_api.dart';
+import 'package:green_score/models/accumlation.dart';
+import 'package:green_score/provider/loading_provider.dart';
+import 'package:green_score/provider/socket_provider.dart';
 import 'package:green_score/api/user_api.dart';
 import 'package:green_score/components/action_button/action_button.dart';
 import 'package:green_score/components/trade_bottom_sheet/trade_bottom_sheet.dart';
+// import 'package:green_score/models/accumlation.dart';
 import 'package:green_score/models/location_info.dart';
 import 'package:green_score/models/user.dart';
+import 'package:green_score/provider/tools_provider.dart';
+// import 'package:green_score/provider/tools_provider.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/src/score_page/score_page.dart';
 import 'package:green_score/src/home_page/home_page.dart';
@@ -25,6 +31,8 @@ import 'package:green_score/src/qr_code_page/qr_read_page.dart';
 import 'package:green_score/src/wallet_page/wallet_page.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
+import 'package:pedometer/pedometer.dart';
+// import 'package:pedometer/pedometer.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -48,22 +56,128 @@ class _MainPageState extends State<MainPage>
   late TabController tabController;
   late LocationSettings locationSettings;
   late ScrollController _scrollController;
-  // late StreamSubscription<StepCount> subscription;
-  // Accumlation walk = Accumlation();
-  // int stepped = 0;
-  // String? step;
-  // List<double> stepsForLast7Days = [0, 0, 0, 0, 0, 0, 0];
+
+  Accumlation walk = Accumlation();
+  Accumlation scooter = Accumlation();
+
+  List<double> stepsForLast7Days = List<double>.filled(7, 0.0);
+  late StreamSubscription<StepCount> subscription;
+
+  requestMotionForAndroid() async {
+    try {
+      PermissionStatus status = await Permission.activityRecognition.request();
+      print('===========STEP FOR ANDROID PERMISSION========');
+      print(status);
+      print('===========STEP FOR ANDROID PERMISSION========');
+      if (status == PermissionStatus.granted) {
+        calculateStep();
+      } else if (status == PermissionStatus.denied) {
+        PermissionStatus retryStatus = await Permission.sensors.request();
+        if (retryStatus == PermissionStatus.granted) {
+          calculateStep();
+        } else if (retryStatus == PermissionStatus.permanentlyDenied) {
+          print(
+              'Permission permanently denied. Please enable it from settings.');
+          openAppSettings();
+        } else {
+          print('Can not calculate steps!!!');
+        }
+      } else if (status == PermissionStatus.permanentlyDenied) {
+        print('Permission permanently denied. Please enable it from settings.');
+        openAppSettings();
+      } else {
+        print('Can not calculate steps!!!');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  requestMotionForIos() async {
+    try {
+      PermissionStatus status = await Permission.sensors.request();
+      print('===========STEP FOR IOS PERMISSION========');
+      print(status);
+      print('===========STEP FOR IOS PERMISSION========');
+
+      if (status == PermissionStatus.granted) {
+        calculateStep();
+      } else if (status == PermissionStatus.denied) {
+        PermissionStatus retryStatus = await Permission.sensors.request();
+        if (retryStatus == PermissionStatus.granted) {
+          calculateStep();
+        } else if (retryStatus == PermissionStatus.permanentlyDenied) {
+          print(
+              'Permission permanently denied. Please enable it from settings.');
+          openAppSettings();
+        } else {
+          print('Can not calculate steps!!!');
+        }
+      } else if (status == PermissionStatus.permanentlyDenied) {
+        print('Permission permanently denied. Please enable it from settings.');
+        openAppSettings();
+      } else {
+        print('Can not calculate steps!!!');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
-  FutureOr<void> afterFirstLayout(BuildContext context) async {
+  afterFirstLayout(BuildContext context) async {
+    Platform.isAndroid
+        ? await requestMotionForAndroid()
+        : Platform.isIOS
+            ? await requestMotionForIos()
+            : await requestMotionForAndroid();
+    await requestLocation();
+
+    final loading = Provider.of<LoadingProvider>(context, listen: false);
+    final tools = Provider.of<ToolsProvider>(context, listen: false);
+
     try {
       setState(() {
         isLoading = true;
       });
+      loading.loading(true);
+      walk.type = "WALK";
+      walk.code = "WALK_01";
+      walk = await ScoreApi().getStep(walk);
+      scooter.type = "COMMUNITY";
+      scooter.code = "SCOOTER_01";
+      scooter = await ScoreApi().getStep(scooter);
+      walk.lastWeekTotal != null
+          ? stepsForLast7Days = walk.lastWeekTotal!
+              .map((data) => data.totalAmount!.toDouble())
+              .toList()
+          : List<double>.filled(7, 0.0);
+
+      tools.thresholdUpdate(walk.green!.threshold!);
+      tools.updateSteps(stepsForLast7Days);
+      tools.updateId(walk.id!);
+      tools.updatewalkDescription(
+          '${walk.green?.threshold} алхам = ${walk.green?.scoreAmount}GS');
+      tools.updatescooterDescription(
+          '${scooter.green?.threshold} төг = ${scooter.green?.scoreAmount}GS');
+
+      if (walk.balanceAmount == 0 || walk.balanceAmount == null) {
+        tools.setStepped(0);
+      } else {
+        print('===PROVIDERSTEP=====');
+        print(walk.balanceAmount);
+        print('===PROVIDERSTEP=====');
+        tools.setStepped(walk.balanceAmount!);
+      }
       count = await UserApi().getNotCount();
+      loading.loading(false);
+
       setState(() {
         isLoading = false;
       });
     } catch (e) {
+      loading.loading(false);
+
       print(e.toString());
       setState(() {
         isLoading = false;
@@ -71,10 +185,50 @@ class _MainPageState extends State<MainPage>
     }
   }
 
+  void calculateStep() async {
+    Accumlation sendWalk = Accumlation();
+    int? previousStepCount;
+    final tool = Provider.of<ToolsProvider>(context, listen: false);
+    final socket = Provider.of<SocketProvider>(context, listen: false);
+
+    subscription = Pedometer.stepCountStream.listen(
+      (event) async {
+        int currentStepCount = event.steps;
+        int stepsSinceLastEvent = previousStepCount != null
+            ? currentStepCount - previousStepCount!
+            : 0;
+        previousStepCount = currentStepCount;
+
+        if (stepsSinceLastEvent > 0) {
+          tool.addDifference(stepsSinceLastEvent);
+        }
+        setState(() {
+          tool.addSteps(stepsSinceLastEvent);
+          print('=====ULDEGDEL====');
+          print(tool.accumulatedSteps);
+          print('=====ULDEGDEL====');
+        });
+        if (tool.accumulatedSteps > 20) {
+          sendWalk.amount = tool.accumulatedSteps;
+          tool.accumulatedSteps = tool.accumulatedSteps - tool.accumulatedSteps;
+          if (previousStepCount != null) {
+            await socket.sendStep(sendWalk.amount!, 0, 0);
+          }
+        }
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    requestLocation();
+
+    print('=====HELO=======');
+    print('${Provider.of<UserProvider>(context, listen: false).myToken}');
+    print('=====HELO=======');
+
+    Provider.of<SocketProvider>(context, listen: false).initSocket(
+        '${Provider.of<UserProvider>(context, listen: false).myToken}');
     // requestStep();
     // initializeService();
     tabController = TabController(length: 3, vsync: this, initialIndex: 1);
@@ -101,85 +255,8 @@ class _MainPageState extends State<MainPage>
     });
   }
 
-  // @override
-  // afterFirstLayout(BuildContext context) async {
-  //   await requestStep();
-  // }
-
-  // getWalk() async {
-  //   try {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
-  //     print('=======CHECKPROV====');
-  //     walk = await Provider.of<ToolsProvider>(context, listen: false).getStep();
-  //     print(walk.amount);
-  //     print('=======CHECKPROV====');
-
-  //     if (walk.balanceAmount == 0 || walk.balanceAmount == null) {
-  //       setState(() {
-  //         stepped = 0;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         stepped = walk.balanceAmount!;
-  //       });
-  //     }
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     print(e.toString());
-  //   }
-  // }
-
-  // requestStep() async {
-  //   final PermissionStatus status =
-  //       await Permission.activityRecognition.request();
-  //   print('===========STEP PERMISSION========');
-  //   print(status);
-  //   print('===========STEP PERMISSION========');
-  //   if (status == PermissionStatus.granted) {
-  //     calculateStep();
-  //   } else if (status == PermissionStatus.permanentlyDenied) {
-  //     // requestStep();
-  //     calculateStep();
-  //   }
-  // }
-
-  // void calculateStep() async {
-  //   await getWalk();
-  //   int? previousStepCount;
-  //   Position position = await Geolocator.getCurrentPosition(
-  //     desiredAccuracy: LocationAccuracy.high,
-  //   );
-  //   subscription = Pedometer.stepCountStream.listen(
-  //     (event) {
-  //       int currentStepCount = event.steps;
-  //       int stepsSinceLastEvent = previousStepCount != null
-  //           ? currentStepCount - previousStepCount!
-  //           : 0;
-  //       previousStepCount = currentStepCount;
-  //       if (mounted) {
-  //         setState(() {
-  //           walk.amount = stepsSinceLastEvent.toString();
-  //           stepped += stepsSinceLastEvent;
-  //           walk.latitude = position.latitude;
-  //           walk.longitude = position.longitude;
-  //           if (previousStepCount != null && stepsSinceLastEvent != 0) {
-  //             ScoreApi().sendStep(walk);
-  //           }
-  //           step = stepsSinceLastEvent.toString();
-  //         });
-  //       }
-  //     },
-  //   );
-  // }
-
   requestLocation() async {
+    await Future.delayed(const Duration(seconds: 3));
     LocationPermission permission = await Geolocator.checkPermission();
     final PermissionStatus status = await Permission.location.request();
 
@@ -508,15 +585,14 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 
 void onStart(ServiceInstance service) async {
   WidgetsFlutterBinding.ensureInitialized();
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //     FlutterLocalNotificationsPlugin();
 
   service.on('stopService').listen((event) {
     service.stopSelf();
   });
 
-  bool isForeground = false;
-
+  // bool isForeground = false;
   Timer.periodic(const Duration(seconds: 60), (timer) async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -543,33 +619,33 @@ void onStart(ServiceInstance service) async {
     } catch (e) {
       print("Error getting location: $e");
     }
-    if (Platform.isAndroid) {
-      if (isForeground) {
-        flutterLocalNotificationsPlugin.show(
-          888,
-          'COOL SERVICE',
-          'Awesome ${DateTime.now()}',
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'my_foreground',
-              'MY FOREGROUND SERVICE',
-              icon: '@mipmap/launcher_icon',
-              ongoing: true,
-            ),
-          ),
-        );
-      }
-    }
+    // if (Platform.isAndroid) {
+    //   if (isForeground) {
+    //     flutterLocalNotificationsPlugin.show(
+    //       888,
+    //       'COOL SERVICE',
+    //       'Awesome ${DateTime.now()}',
+    //       const NotificationDetails(
+    //         android: AndroidNotificationDetails(
+    //           'my_foreground',
+    //           'MY FOREGROUND SERVICE',
+    //           icon: '@mipmap/launcher_icon',
+    //           ongoing: true,
+    //         ),
+    //       ),
+    //     );
+    //   }
+    // }
 
     print('FLUTTER BACKGROUND SERVICE:  TEST');
   });
 
   service.on('data').listen((event) {
-    final message = event;
-    if (message == 'setAsForeground') {
-      isForeground = true;
-    } else if (message == 'setAsBackground') {
-      isForeground = false;
-    }
+    // final message = event;
+    // if (message == 'setAsForeground') {
+    //   isForeground = true;
+    // } else if (message == 'setAsBackground') {
+    //   isForeground = false;
+    // }
   });
 }

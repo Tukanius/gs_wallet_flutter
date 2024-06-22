@@ -2,7 +2,10 @@
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:green_score/provider/loading_provider.dart';
+import 'package:green_score/provider/socket_provider.dart';
 import 'package:green_score/firebase_options.dart';
+import 'package:green_score/provider/tools_provider.dart';
 // import 'package:green_score/provider/tools_provider.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/services/dialog.dart';
@@ -13,6 +16,7 @@ import 'package:green_score/src/auth/otp_page.dart';
 import 'package:green_score/src/auth/password_page.dart';
 import 'package:green_score/src/auth/register_page.dart';
 import 'package:green_score/services/notify_service.dart';
+import 'package:green_score/src/profile_page/dan_verify_page/user_detail_page.dart';
 import 'package:green_score/src/score_page/all_opportunity_page.dart';
 import 'package:green_score/src/score_page/collect_score_page/collect_scooter_page.dart';
 import 'package:green_score/src/score_page/collect_score_page/collect_step_page.dart';
@@ -41,6 +45,7 @@ import 'package:green_score/src/wallet_page/wallet_page.dart';
 import 'package:green_score/widget/dialog_manager/dialog_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,7 +70,12 @@ void main() async {
 
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => DialogService());
-  runApp(const MyApp());
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(MyApp());
+  });
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -79,7 +89,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        // ChangeNotifierProvider(create: (_) => ToolsProvider()),
+        ChangeNotifierProvider(create: (_) => ToolsProvider()),
+        ChangeNotifierProvider(create: (_) => SocketProvider()),
+        ChangeNotifierProvider(create: (_) => LoadingProvider()),
       ],
       child: Consumer<UserProvider>(
         builder: (context, userProvider, _) {
@@ -153,12 +165,17 @@ class MyApp extends StatelessWidget {
                   return MaterialPageRoute(builder: (context) {
                     return const DanVerifyPage();
                   });
+                case UserDetailPage.routeName:
+                  return MaterialPageRoute(builder: (context) {
+                    return const UserDetailPage();
+                  });
                 case CollectStepScore.routeName:
                   CollectStepScoreArguments arguments =
                       settings.arguments as CollectStepScoreArguments;
                   return MaterialPageRoute(builder: (context) {
                     return CollectStepScore(
                       id: arguments.id,
+                      pushWhere: arguments.pushWhere,
                     );
                   });
                 case MapPage.routeName:
@@ -179,43 +196,51 @@ class MyApp extends StatelessWidget {
                     );
                   });
                 case ProfilePage.routeName:
-                  return PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        const ProfilePage(),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      var begin = const Offset(-1.0, 0.0);
-                      var end = Offset.zero;
-                      var curve = Curves.ease;
+                  return MaterialPageRoute(builder: (context) {
+                    return const ProfilePage();
+                  });
+                // case ProfilePage.routeName:
+                //   return PageRouteBuilder(
+                //     pageBuilder: (context, animation, secondaryAnimation) =>
+                //         const ProfilePage(),
+                //     transitionsBuilder:
+                //         (context, animation, secondaryAnimation, child) {
+                //       var begin = const Offset(-1.0, 0.0);
+                //       var end = Offset.zero;
+                //       var curve = Curves.ease;
 
-                      var tween = Tween(begin: begin, end: end)
-                          .chain(CurveTween(curve: curve));
+                //       var tween = Tween(begin: begin, end: end)
+                //           .chain(CurveTween(curve: curve));
 
-                      return SlideTransition(
-                        position: animation.drive(tween),
-                        child: child,
-                      );
-                    },
-                  );
+                //       return SlideTransition(
+                //         position: animation.drive(tween),
+                //         child: child,
+                //       );
+                //     },
+                //   );
                 case ProfileEdit.routeName:
-                  return PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        const ProfileEdit(),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      var begin = const Offset(-1.0, 0.0);
-                      var end = Offset.zero;
-                      var curve = Curves.ease;
+                  return MaterialPageRoute(builder: (context) {
+                    return const ProfileEdit();
+                  });
+                // case ProfileEdit.routeName:
+                //   return PageRouteBuilder(
+                //     pageBuilder: (context, animation, secondaryAnimation) =>
+                //         const ProfileEdit(),
+                //     transitionsBuilder:
+                //         (context, animation, secondaryAnimation, child) {
+                //       var begin = const Offset(-1.0, 0.0);
+                //       var end = Offset.zero;
+                //       var curve = Curves.ease;
 
-                      var tween = Tween(begin: begin, end: end)
-                          .chain(CurveTween(curve: curve));
+                //       var tween = Tween(begin: begin, end: end)
+                //           .chain(CurveTween(curve: curve));
 
-                      return SlideTransition(
-                        position: animation.drive(tween),
-                        child: child,
-                      );
-                    },
-                  );
+                //       return SlideTransition(
+                //         position: animation.drive(tween),
+                //         child: child,
+                //       );
+                //     },
+                //   );
                 case QrTransferPage.routeName:
                   QrTransferPageArguments arguments =
                       settings.arguments as QrTransferPageArguments;

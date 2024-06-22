@@ -60,7 +60,6 @@ class _StepDetailPageState extends State<StepDetailPage> with AfterLayoutMixin {
       walk.code = "WALK_01";
       walk = await ScoreApi().getStep(walk);
 
-      print('=======+TEST=======');
       print(
         DateFormat('yyyy-MM-dd')
             .format(
@@ -190,7 +189,9 @@ class _StepDetailPageState extends State<StepDetailPage> with AfterLayoutMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 StepStatusCard(
+                  isActive: true,
                   assetPath: "${widget.assetPath}",
+                  pushWhere: "PAGE",
                 ),
                 SizedBox(
                   height: 30,
@@ -230,7 +231,7 @@ class _StepDetailPageState extends State<StepDetailPage> with AfterLayoutMixin {
                           dateend = null;
                         });
                       },
-                      backgroundColor: Theme.of(context).colorScheme.background,
+                      backgroundColor: white,
                       primaryColor: greentext,
                     );
                   },

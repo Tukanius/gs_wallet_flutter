@@ -1,246 +1,381 @@
- // void _requestPermission() async {
-  //   final PermissionStatus status =
-  //       await Permission.activityRecognition.request();
-  //   print(status);
-  //   if (status == PermissionStatus.granted) {
-  //     initSteps();
-  //   } else if (status == PermissionStatus.denied) {
-  //     // Permission denied, prompt the user to grant it again
-  //     final bool secondTry = await showDialog(
-  //       context: context, // Replace 'context' with your BuildContext
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text('Permission Needed'),
-  //           content:
-  //               Text('Please grant permission to access activity recognition.'),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               onPressed: () => Navigator.pop(context, true),
-  //               child: Text('Try Again'),
-  //             ),
-  //             TextButton(
-  //               onPressed: () => Navigator.pop(context, false),
-  //               child: Text('Cancel'),
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //     if (secondTry) {
-  //       _requestPermission();
-  //     } else {
-  //       print('Permission denied');
-  //     }
-  //   }
-  // }
-  // void initStep() {
-  //   subscription = Pedometer.stepCountStream.listen(
-  //     (event) {
-  //       print('===EVENT=====');
-  //       print(event);
-  //       print('===EVENT=====');
-  //       setState(() {
-  //         step = event.steps.toString();
-  //       });
-  //     },
-  //   );
-  // }
+// import 'dart:async';
 
-  // @override
-  // void dispose() {
-  //   // _startListeningStep();
-  //   // subscription?.cancel();
-  //   super.dispose();
-  // }
+// import 'package:after_layout/after_layout.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:green_score/api/auth_api.dart';
+// import 'package:green_score/api/score_api.dart';
+// import 'package:green_score/components/custom_button/custom_button.dart';
+// import 'package:green_score/components/score_status_card/bar_data/bar_graph.dart';
+// import 'package:green_score/models/accumlation.dart';
+// import 'package:green_score/models/user.dart';
+// import 'package:green_score/provider/user_provider.dart';
+// import 'package:green_score/src/profile_page/dan_verify_page/dan_verify_page.dart';
+// import 'package:green_score/src/score_page/collect_score_page/collect_step_page.dart';
+// import 'package:green_score/widget/ui/color.dart';
+// import 'package:lottie/lottie.dart';
+// import 'package:pedometer/pedometer.dart';
+// import 'package:permission_handler/permission_handler.dart';
+// import 'package:provider/provider.dart';
+// import 'package:socket_io_client/socket_io_client.dart' as io;
 
-  // void _startListening() async {
-  //   subscription = Pedometer.stepCountStream.listen(
-  //     (event) {
-  //       if (isToday(event.timeStamp)) {
-  //         setState(() {
-  //           todaysSteps = event.steps;
-  //         });
-  //       }
-  //       print('===EVENT=====');
-  //       print(isToday(event.timeStamp));
-  //       print('===EVENT=====');
-  //       setState(() {
-  //         todaysSteps = event.steps.toInt();
-  //       });
-  //     },
-  //   );
-  // }
+// class StepStatusCard extends StatefulWidget {
+//   final bool? isActive;
+//   final String assetPath;
+//   final String pushWhere;
+//   const StepStatusCard({
+//     super.key,
+//     required this.assetPath,
+//     this.isActive,
+//     required this.pushWhere,
+//   });
 
-  // bool isToday(DateTime dateTime) {
-  //   DateTime now = DateTime.now();
-  //   return now.year == dateTime.year &&
-  //       now.month == dateTime.month &&
-  //       now.day == dateTime.day;
-  // }
+//   @override
+//   State<StepStatusCard> createState() => _StepStatusCardState();
+// }
 
-  // initIosHealth() async {
-  //   Timer.periodic(Duration(seconds: 1), (timer) async {
-  //     HealthFactory health = HealthFactory();
-  //     var types = [HealthDataType.STEPS];
-  //     var permissions = [HealthDataAccess.READ];
+// class _StepStatusCardState extends State<StepStatusCard> with AfterLayoutMixin {
+//   late io.Socket socket;
+//   socketListener() {
+//     socket.onConnect((data) => debugPrint('Socket Connection'));
+//     socket.onDisconnect((data) => debugPrint('Disconnect'));
+//     socket.onConnectError((data) => debugPrint('Socket Connection Error'));
+//     socket.on('data', (data) {
+//       debugPrint('Received data from server: $data');
+//     });
+//     socket.onReconnect((data) {
+//       debugPrint('Reconnected to the socket server');
+//     });
+//     socket.onReconnecting((data) {
+//       debugPrint('Reconnecting to the socket server');
+//     });
+//   }
 
-  //     bool requested =
-  //         await health.requestAuthorization(types, permissions: permissions);
-  //     if (requested) {
-  //       final now = DateTime.now();
-  //       final todayStart = DateTime(now.year, now.month, now.day);
-  //       final todayEnd =
-  //           todayStart.add(Duration(days: 1)).subtract(Duration(seconds: 1));
-  //       try {
-  //         var qwerty =
-  //             await health.getHealthDataFromTypes(todayEnd, todayEnd, types);
-  //         print(qwerty);
-  //         int? stepsTd =
-  //             await health.getTotalStepsInInterval(todayStart, todayEnd);
-  //         setState(() {
-  //           stepIos = stepsTd!;
-  //         });
-  //         print("Today's steps: $stepsTd");
-  //       } catch (error) {
-  //         print(error);
-  //       }
-  //     } else {
-  //       print('=======Auth not granted======');
-  //     }
-  //   });
-  // }
+//   List<double> stepsForLast7Days = List<double>.filled(7, 0.0);
+//   bool isLoading = true;
+//   bool isGraphLoad = false;
+//   Accumlation walk = Accumlation();
+//   User user = User();
+//   num stepped = 0;
+//   late StreamSubscription<StepCount> subscription;
+//   bool show = false;
+//   @override
+//   afterFirstLayout(BuildContext context) async {
+//     user = await AuthApi().me(false);
+//     await requestPermission();
+//     await getWalk();
 
-  // initIos() async {
-  //   DateTime startDate = DateTime.now().toUtc();
-  //   DateTime endDate = DateTime.now().toUtc();
+//     String url = 'https://dev-gs.zto.mn';
+//     socket = io.io(
+//       url,
+//       io.OptionBuilder().setTransports(['websocket']).setQuery({
+//         'token': '${Provider.of<UserProvider>(context, listen: false).myToken}',
+//       }).build(),
+//     );
+//     // socket.onConnect((_) {
+//     //   print('Connected');
+//     //   Accumlation test =
+//     //       Accumlation(balanceAmount: 123, latitude: 1, longitude: 2);
+//     //   print('========');
+//     //   // socket.emitWithAck('action', test.toJson(), ack: (data) {
+//     //   //   print('Server acknowledgment received: $data');
+//     //   // });
 
-  //   try {
-  //     List<HealthDataPoint> healthData =
-  //         await HealthDataPoint.getHealthDataFromType(
-  //       startDate: startDate,
-  //       endDate: endDate,
-  //       dataType: HealthDataType.STEPS,
-  //     );
+//     //   socket.emit('action', {
+//     //     {
+//     //       'type': 'walk',
+//     //       'payload': {
+//     //         'amount': 123,
+//     //         'latitude': 1,
+//     //         'longitude': 2,
+//     //       }
+//     //     }
+//     //   });
 
-  //     int totalSteps = 0;
-  //     for (var dataPoint in healthData) {
-  //       totalSteps += dataPoint.value.round();
-  //     }
+//     //   print('========');
+//     // });
 
-  //     setState(() {
-  //       _steps = totalSteps;
-  //     });
-  //   } catch (e) {
-  //     print("Failed to fetch steps: $e");
-  //   }
-  // }
+//     socketListener();
+//   }
 
-  // This Code for swift ?
-  // int _stepCount = 0;
+//   getWalk() async {
+//     try {
+//       walk.type = "WALK";
+//       walk.code = "WALK_01";
+//       walk = await ScoreApi().getStep(walk);
+//       walk.lastWeekTotal != null
+//           ? stepsForLast7Days = walk.lastWeekTotal!
+//               .map((data) => data.totalAmount!.toDouble())
+//               .toList()
+//           : List<double>.filled(7, 0.0);
 
-  // static const platform = const MethodChannel('samples.health.io/stepcount');
+//       if (walk.balanceAmount == 0 || walk.balanceAmount == null) {
+//         setState(() {
+//           stepped = 0;
+//         });
+//       } else {
+//         setState(() {
+//           stepped = walk.balanceAmount!;
+//         });
+//       }
+//       setState(() {
+//         isGraphLoad = false;
+//         isLoading = false;
+//       });
+//     } catch (e) {
+//       setState(() {
+//         isGraphLoad = false;
+//         isLoading = false;
+//       });
+//       print(e.toString());
+//     }
+//   }
 
-  // Future<void> initIos() async {
-  //   int stepCount;
-  //   try {
-  //     final int result = await platform.invokeMethod('getStepCount');
-  //     stepCount = result;
-  //   } on PlatformException catch (e) {
-  //     print("Failed to get step count: '${e.message}'.");
-  //     stepCount = 0;
-  //   }
+//   requestPermission() async {
+//     final PermissionStatus status =
+//         await Permission.activityRecognition.request();
+//     print('===========STEP PERMISSION========');
+//     print(status);
+//     print('===========STEP PERMISSION========');
+//     if (status == PermissionStatus.granted) {
+//       calculateStep();
+//     } else {
+//       calculateStep();
+//     }
+//     if (status == PermissionStatus.permanentlyDenied) {
+//       // openAppSettings();
+//     }
+//   }
 
-  //   setState(() {
-  //     _stepCount = stepCount;
-  //   });
-  // }
-  // int stepforIOS = 0;
+//   // void calculateStep() async {
+//   //   Accumlation sendWalk = Accumlation();
+//   //   int? previousStepCount;
+//   //   subscription = Pedometer.stepCountStream.listen(
+//   //     (event) {
+//   //       int currentStepCount = event.steps;
+//   //       int stepsSinceLastEvent = previousStepCount != null
+//   //           ? currentStepCount - previousStepCount!
+//   //           : 0;
+//   //       previousStepCount = currentStepCount;
+//   //       if (mounted) {
+//   //         setState(() {
+//   //           sendWalk.amount = stepsSinceLastEvent.toString();
+//   //           stepped += stepsSinceLastEvent;
+//   //           if (previousStepCount != null && stepsSinceLastEvent != 0) {
+//   //             ScoreApi().sendStep(sendWalk);
+//   //           }
+//   //         });
+//   //       }
+//   //     },
+//   //   );
+//   // }
+//   int accumulatedSteps = 0;
 
-  // static const platform = const MethodChannel('step_counter_channel');
+//   void calculateStep() async {
+//     Accumlation sendWalk = Accumlation();
+//     int? previousStepCount;
 
-  // void _startListeningStep() async {
-  //   Timer.periodic(Duration(seconds: 1), (timer) async {
-  //     try {
-  //       final int result = await platform.invokeMethod('startListening');
-  //       print('======STEPFORIOS=====');
-  //       print(result);
-  //       if (mounted) {
-  //         setState(() {
-  //           stepforIOS += result;
-  //         });
-  //       }
-  //       print('======STEPFORIOS=====');
-  //     } on PlatformException catch (e) {
-  //       print("Failed to start listening: '${e.message}'.");
-  //     }
-  //   });
-  // }
+//     subscription = Pedometer.stepCountStream.listen(
+//       (event) async {
+//         int currentStepCount = event.steps;
+//         int stepsSinceLastEvent = previousStepCount != null
+//             ? currentStepCount - previousStepCount!
+//             : 0;
+//         previousStepCount = currentStepCount;
 
+//         if (stepsSinceLastEvent > 0) {
+//           accumulatedSteps += stepsSinceLastEvent;
+//         }
+//         setState(() {
+//           stepped += stepsSinceLastEvent;
+//           print('=====ULDEGDEL====');
+//           print(accumulatedSteps);
+//           print('=====ULDEGDEL====');
+//         });
+//         if (mounted && accumulatedSteps > 20) {
+//           sendWalk.amount = accumulatedSteps;
+//           accumulatedSteps = accumulatedSteps - accumulatedSteps;
+//           if (previousStepCount != null) {
+//             socket.emit('action', {
+//               {
+//                 'type': 'walk',
+//                 'payload': {
+//                   'amount': sendWalk.amount,
+//                   // 'latitude': 1,
+//                   // 'longitude': 2,
+//                 }
+//               }
+//             });
+//             // socket.onConnect((_) {
+//             //   print('Connected');
+//             //   print('========');
 
-  //TEST FROM FIX CARD
-  // _requestLocation() async {
-  //   LocationPermission permission = await Geolocator.checkPermission();
-  //   final PermissionStatus status = await Permission.locationAlways.request();
+//             //   socket.emit('action', {
+//             //     {
+//             //       'type': 'walk',
+//             //       'payload': {
+//             //         'amount': sendWalk.amount,
+//             //         // 'latitude': 1,
+//             //         // 'longitude': 2,
+//             //       }
+//             //     }
+//             //   });
 
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission != LocationPermission.denied) {
-  //       await _getLocation();
-  //     }
-  //   }
-  //   if (status == PermissionStatus.granted) {
-  //     await _getLocation();
-  //   } else if (status == PermissionStatus.denied) {
-  //     print('Permission denied');
-  //   } else if (status == PermissionStatus.permanentlyDenied) {
-  //     await _getLocation();
-  //     print('Permission permanently denied');
-  //   }
-  // }
+//             //   print('========');
+//             // });
+//             // await ScoreApi().sendStep(sendWalk);
+//           }
+//         }
+//       },
+//     );
+//   }
 
-  // Future<void> _getLocation() async {
-  //   if (TargetPlatform.android == true) {
-  //     locationSettings = AndroidSettings(
-  //         accuracy: LocationAccuracy.high,
-  //         distanceFilter: 100,
-  //         forceLocationManager: true,
-  //         intervalDuration: const Duration(seconds: 10),
-  //         foregroundNotificationConfig: const ForegroundNotificationConfig(
-  //           notificationText:
-  //               "Example app will continue to receive your location even when you aren't using it",
-  //           notificationTitle: "Running in Background",
-  //           enableWakeLock: true,
-  //         ));
-  //   } else if (true == TargetPlatform.iOS) {
-  //     locationSettings = AppleSettings(
-  //       accuracy: LocationAccuracy.high,
-  //       allowBackgroundLocationUpdates: true,
-  //       timeLimit: Duration(milliseconds: 100),
-  //       activityType: ActivityType.fitness,
-  //       distanceFilter: 100,
-  //       pauseLocationUpdatesAutomatically: true,
-  //       showBackgroundLocationIndicator: true,
-  //     );
-  //   } else {
-  //     locationSettings = LocationSettings(
-  //       accuracy: LocationAccuracy.high,
-  //       distanceFilter: 100,
-  //     );
-  //   }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: MediaQuery.of(context).size.width,
+//       padding: EdgeInsets.all(20),
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(26),
+//         color: buttonbg,
+//       ),
+//       child: Column(
+//         children: [
+//           Row(
+//             children: [
+//               widget.isActive == true
+//                   ? Row(
+//                       children: [
+//                         Lottie.asset(
+//                           'assets/lottie/live.json',
+//                           height: 50,
+//                           width: 50,
+//                         ),
+//                         SizedBox(
+//                           width: 10,
+//                         ),
+//                       ],
+//                     )
+//                   : SizedBox(),
+//               SvgPicture.asset(
+//                 '${widget.assetPath}',
+//                 height: 36,
+//                 width: 36,
+//               ),
+//               SizedBox(
+//                 width: 10,
+//               ),
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     'Алхалт',
+//                     style: TextStyle(
+//                       color: white,
+//                       fontSize: 12,
+//                     ),
+//                   ),
+//                   Text(
+//                     isLoading == true
+//                         ? "0"
+//                         : walk.balanceAmount != null && walk.balanceAmount != 0
+//                             // ? '${stepCounter.stepped}'
+//                             ? '${stepped}'
+//                             : '0',
+//                     style: TextStyle(
+//                       color: white,
+//                       fontSize: 24,
+//                       fontWeight: FontWeight.w600,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//           SizedBox(
+//             height: 50,
+//           ),
+//           isGraphLoad == true
+//               ? SizedBox(
+//                   height: 120,
+//                   child: Center(
+//                     child: CircularProgressIndicator(
+//                       color: greentext,
+//                     ),
+//                   ),
+//                 )
+//               : SizedBox(
+//                   height: 120,
+//                   child: MyBarGraph(
+//                     data: walk,
+//                     weeklySum: stepsForLast7Days,
+//                   ),
+//                 ),
+//           SizedBox(
+//             height: 10,
+//           ),
+//           CustomButton(
+//             labelText: 'Урамшуулал татах',
+//             height: 40,
+//             textColor: white,
+//             buttonColor: isLoading == true
+//                 ? greytext
+//                 : walk.green!.threshold! <= stepped
+//                     ? greentext
+//                     : greytext,
+//             isLoading: isLoading == true
+//                 ? false
+//                 : walk.green!.threshold! <= stepped
+//                     ? isLoading
+//                     : false,
+//             onClick: isLoading == true
+//                 ? () {}
+//                 : walk.green!.threshold! <= stepped
+//                     ? () async {
+//                         Accumlation difference = Accumlation();
+//                         if (walk.green!.threshold! <= stepped) {
+//                           print('======STEPPED====');
+//                           print(stepped);
+//                           print(walk.balanceAmount);
+//                           difference.amount = accumulatedSteps;
+//                           print(accumulatedSteps);
+//                           print('======STEPPED====');
+//                           if (accumulatedSteps != 0) {
+//                             print('Connected');
+//                             print('========');
 
-  //   try {
-  //     Position position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high,
-  //     );
-  //     setState(() {
-  //       data.latitude = position.latitude;
-  //       data.longitude = position.longitude;
-  //       print('=====Loc=====');
-  //       print(position.latitude);
-  //       print(position.longitude);
-  //       print('=====Loc=====');
-  //     });
-  //   } catch (e) {
-  //     print("Error getting location: $e");
-  //   }
-  // }
+//                             socket.emit('action', {
+//                               {
+//                                 'type': 'walk',
+//                                 'payload': {
+//                                   'amount': difference.amount,
+//                                   // 'latitude': 1,
+//                                   // 'longitude': 2,
+//                                 }
+//                               }
+//                             });
+//                             print('========');
+//                             // await ScoreApi().sendStep(difference);
+//                           }
+//                           accumulatedSteps = 0;
+//                           if (user.danVerified == false) {
+//                             Navigator.of(context)
+//                                 .pushNamed(DanVerifyPage.routeName);
+//                           } else {
+//                             Navigator.of(context).pushNamed(
+//                               CollectStepScore.routeName,
+//                               arguments: CollectStepScoreArguments(
+//                                 id: walk.id!,
+//                                 pushWhere: widget.pushWhere,
+//                               ),
+//                             );
+//                           }
+//                         }
+//                       }
+//                     : () {},
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

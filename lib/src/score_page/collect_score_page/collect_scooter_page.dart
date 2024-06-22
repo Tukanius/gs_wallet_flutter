@@ -202,7 +202,7 @@ class _CollectScorePageState extends State<CollectScooterScore>
                                 MaterialStateProperty.all(Colors.transparent),
                           ),
                           child: const Text(
-                            "Буцах",
+                            "хаах",
                             style: TextStyle(color: dark),
                           ),
                           onPressed: () {
@@ -287,7 +287,7 @@ class _CollectScorePageState extends State<CollectScooterScore>
                                   height: 32,
                                 ),
                                 Text(
-                                  'Цуглуулсан',
+                                  'Цуглуулах',
                                   style: TextStyle(
                                     color: white,
                                     fontSize: 30,
@@ -412,7 +412,6 @@ class _CollectScorePageState extends State<CollectScooterScore>
                     child: Column(
                       children: [
                         CustomButton(
-                          circular: 100,
                           buttonColor: greentext,
                           height: 40,
                           isLoading: isLoadingButton,
@@ -426,7 +425,6 @@ class _CollectScorePageState extends State<CollectScooterScore>
                           height: 10,
                         ),
                         CustomButton(
-                          circular: 100,
                           buttonColor: buttonbg,
                           height: 40,
                           isLoading: false,

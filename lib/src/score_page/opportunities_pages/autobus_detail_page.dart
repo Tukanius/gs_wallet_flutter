@@ -211,7 +211,6 @@ class _AutobusDetailPageState extends State<AutobusDetailPage>
                 ),
                 isConnected == false
                     ? CustomButton(
-                        circular: 100,
                         labelText: 'Карт холбох',
                         height: 40,
                         buttonColor: buttonbg,
@@ -222,7 +221,6 @@ class _AutobusDetailPageState extends State<AutobusDetailPage>
                         textColor: white,
                       )
                     : CustomButton(
-                        circular: 100,
                         labelText: 'Урамшуулал авах',
                         height: 40,
                         buttonColor: greentext,

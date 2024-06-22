@@ -1,11 +1,13 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:green_score/api/auth_api.dart';
 import 'package:green_score/api/score_api.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/accumlation.dart';
 import 'package:green_score/models/deposit.dart';
+import 'package:green_score/models/user.dart';
+import 'package:green_score/src/profile_page/dan_verify_page/dan_verify_page.dart';
 import 'package:green_score/src/score_page/collect_score_page/collect_scooter_page.dart';
 import 'package:green_score/widget/ui/color.dart';
 
@@ -28,9 +30,10 @@ class _ScooterStatusCardState extends State<ScooterStatusCard>
   bool isLoading = true;
   bool isButtonLoad = false;
   Deposit getData = Deposit();
-
+  User user = User();
   @override
   afterFirstLayout(BuildContext context) async {
+    user = await AuthApi().me(false);
     await _getWalk();
   }
 
@@ -154,7 +157,6 @@ class _ScooterStatusCardState extends State<ScooterStatusCard>
             ],
           ),
           CustomButton(
-            circular: 100,
             labelText: 'Урамшуулал татах',
             height: 40,
             textColor: white,
@@ -181,7 +183,12 @@ class _ScooterStatusCardState extends State<ScooterStatusCard>
                           );
                         }
                       }
-                    : () {},
+                    : () {
+                        if (user.danVerified == false) {
+                          Navigator.of(context)
+                              .pushNamed(DanVerifyPage.routeName);
+                        }
+                      },
           ),
         ],
       ),

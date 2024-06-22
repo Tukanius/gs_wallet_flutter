@@ -5,25 +5,30 @@ import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/accumlation.dart';
 import 'package:green_score/models/deposit.dart';
+import 'package:green_score/provider/tools_provider.dart';
 import 'package:green_score/src/main_page.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class CollectStepScoreArguments {
   String id;
-
+  String pushWhere;
   CollectStepScoreArguments({
     required this.id,
+    required this.pushWhere,
   });
 }
 
 class CollectStepScore extends StatefulWidget {
   final String id;
+  final String pushWhere;
   static const routeName = "CollectStepScore";
   const CollectStepScore({
     super.key,
     required this.id,
+    required this.pushWhere,
   });
 
   @override
@@ -40,6 +45,9 @@ class _CollectStepScoreState extends State<CollectStepScore>
   @override
   afterFirstLayout(BuildContext context) async {
     await _getWalk();
+    print('========widget=======');
+    print(widget.pushWhere);
+    print('========widget=======');
   }
 
   _getWalk() async {
@@ -138,6 +146,7 @@ class _CollectStepScoreState extends State<CollectStepScore>
   }
 
   onRedeem() async {
+    final step = Provider.of<ToolsProvider>(context, listen: false);
     try {
       setState(() {
         isLoadingButton = true;
@@ -145,10 +154,20 @@ class _CollectStepScoreState extends State<CollectStepScore>
       var res = await ScoreApi().onRedeem(widget.id);
       print(res);
       showSuccess(context);
+      step.setStepped(0);
       setState(() {
         isLoadingButton = false;
       });
       Navigator.of(context).pushNamed(MainPage.routeName);
+      // widget.pushWhere == "MAIN"
+      //     ? Navigator.of(context).pushNamed(MainPage.routeName)
+      //     : Navigator.of(context).pushNamed(
+      //         StepDetailPage.routeName,
+      //         arguments: StepDetailPageArguments(
+      //           title: "Алхалт",
+      //           assetPath: 'assets/svg/man.svg',
+      //         ),
+      //       );
     } catch (e) {
       setState(() {
         isLoadingButton = false;
@@ -202,7 +221,7 @@ class _CollectStepScoreState extends State<CollectStepScore>
                                 MaterialStateProperty.all(Colors.transparent),
                           ),
                           child: const Text(
-                            "Буцах",
+                            "хаах",
                             style: TextStyle(color: dark),
                           ),
                           onPressed: () {
@@ -238,7 +257,8 @@ class _CollectStepScoreState extends State<CollectStepScore>
               backgroundColor: transparent,
               leading: CustomBackButton(
                 onClick: () {
-                  Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(MainPage.routeName);
                 },
               ),
               centerTitle: true,
@@ -287,7 +307,7 @@ class _CollectStepScoreState extends State<CollectStepScore>
                                   height: 32,
                                 ),
                                 Text(
-                                  'Цуглуулсан',
+                                  'Цуглуулах',
                                   style: TextStyle(
                                     color: white,
                                     fontSize: 30,
@@ -411,7 +431,6 @@ class _CollectStepScoreState extends State<CollectStepScore>
                     child: Column(
                       children: [
                         CustomButton(
-                          circular: 100,
                           buttonColor: greentext,
                           height: 40,
                           isLoading: isLoadingButton,
@@ -425,7 +444,6 @@ class _CollectStepScoreState extends State<CollectStepScore>
                           height: 10,
                         ),
                         CustomButton(
-                          circular: 100,
                           buttonColor: buttonbg,
                           height: 40,
                           isLoading: false,

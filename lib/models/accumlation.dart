@@ -7,7 +7,7 @@ class Accumlation {
   String? user;
   String? type;
   String? unit;
-  String? amount;
+  num? amount;
   int? balanceAmount;
   int? holdAmount;
   String? createdAt;

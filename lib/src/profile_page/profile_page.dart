@@ -7,6 +7,7 @@ import 'package:green_score/components/custom_button/profile_info_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/src/profile_page/dan_verify_page/dan_verify_page.dart';
+import 'package:green_score/src/profile_page/dan_verify_page/user_detail_page.dart';
 import 'package:green_score/src/profile_page/profile_edit_page/profile_edit_page.dart';
 import 'package:green_score/src/splash_screen/splash_screen.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
@@ -180,7 +181,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     user.danVerified == false
                         ? Navigator.of(context)
                             .pushNamed(DanVerifyPage.routeName)
-                        : SizedBox();
+                        : Navigator.of(context)
+                            .pushNamed(UserDetailPage.routeName);
                   },
                 ),
                 SizedBox(

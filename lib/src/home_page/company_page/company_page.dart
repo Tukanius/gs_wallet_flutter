@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/product_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
@@ -175,6 +176,7 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
                 },
               ),
               centerTitle: true,
+              titleSpacing: 100,
               title: Text(
                 '${widget.data.name}',
                 style: TextStyle(
@@ -219,12 +221,14 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
                       SizedBox(
                         width: 12,
                       ),
-                      Text(
-                        '${widget.data.name}',
-                        style: TextStyle(
-                          color: white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
+                      Expanded(
+                        child: Text(
+                          '${widget.data.name}',
+                          style: TextStyle(
+                            color: white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ],

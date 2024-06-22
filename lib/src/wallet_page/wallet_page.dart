@@ -10,7 +10,7 @@ import 'package:green_score/components/history_card/token_history_card.dart';
 import 'package:green_score/components/refresher/refresher.dart';
 import 'package:green_score/models/result.dart';
 import 'package:green_score/models/user.dart';
-import 'package:green_score/src/profile_page/profile_page.dart';
+import 'package:green_score/src/profile_page/dan_verify_page/dan_verify_page.dart';
 import 'package:green_score/src/wallet_page/card_detail_page/card_detail_page.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -138,7 +138,8 @@ class _WalletPageState extends State<WalletPage> with AfterLayoutMixin {
                       isLoading: false,
                       labelText: "Баталгаажуулах",
                       onClick: () {
-                        Navigator.of(context).pushNamed(ProfilePage.routeName);
+                        Navigator.of(context)
+                            .pushNamed(DanVerifyPage.routeName);
                       },
                       textColor: white,
                     ),

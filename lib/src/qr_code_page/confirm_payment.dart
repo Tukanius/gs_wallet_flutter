@@ -93,7 +93,7 @@ class _ConfirmQrCodePageState extends State<ConfirmQrCodePage> {
                                 MaterialStateProperty.all(Colors.transparent),
                           ),
                           child: const Text(
-                            "Буцах",
+                            "хаах",
                             style: TextStyle(color: dark),
                           ),
                           onPressed: () {
@@ -260,7 +260,6 @@ class _ConfirmQrCodePageState extends State<ConfirmQrCodePage> {
                       child: Column(
                         children: [
                           CustomButton(
-                            circular: 100,
                             buttonColor: greentext,
                             height: 40,
                             isLoading: isLoading,
@@ -274,7 +273,6 @@ class _ConfirmQrCodePageState extends State<ConfirmQrCodePage> {
                             height: 10,
                           ),
                           CustomButton(
-                            circular: 100,
                             buttonColor: buttonbg,
                             height: 40,
                             isLoading: false,

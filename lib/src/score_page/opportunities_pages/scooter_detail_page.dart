@@ -8,6 +8,7 @@ import 'package:green_score/components/history_card/scooter_history_card.dart';
 import 'package:green_score/components/score_status_card/scooter_status_card.dart';
 import 'package:green_score/models/accumlation.dart';
 import 'package:green_score/models/result.dart';
+import 'package:green_score/src/main_page.dart';
 // import 'package:green_score/components/history_card/fiat_history_card.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -60,7 +61,6 @@ class _ScooterDetailPageState extends State<ScooterDetailPage>
       scooter.code = "SCOOTER_01";
       scooter = await ScoreApi().getStep(scooter);
 
-      print('=======+TEST=======');
       print(
         DateFormat('yyyy-MM-dd')
             .format(
@@ -168,7 +168,7 @@ class _ScooterDetailPageState extends State<ScooterDetailPage>
               backgroundColor: transparent,
               leading: CustomBackButton(
                 onClick: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(MainPage.routeName);
                 },
               ),
               centerTitle: true,
@@ -230,7 +230,7 @@ class _ScooterDetailPageState extends State<ScooterDetailPage>
                           dateend = null;
                         });
                       },
-                      backgroundColor: Theme.of(context).colorScheme.background,
+                      backgroundColor: white,
                       primaryColor: greentext,
                     );
                   },

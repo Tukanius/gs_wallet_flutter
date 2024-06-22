@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:green_score/components/opportunity_card/opportunity_card.dart';
 import 'package:green_score/components/score_status_card/step_status_card.dart';
 import 'package:green_score/models/user.dart';
+import 'package:green_score/provider/tools_provider.dart';
 import 'package:green_score/provider/user_provider.dart';
-// import 'package:green_score/components/score_status_card/score_test.dart';
 import 'package:green_score/src/score_page/all_opportunity_page.dart';
 import 'package:green_score/src/score_page/opportunities_pages/autobus_detail_page.dart';
 import 'package:green_score/src/score_page/opportunities_pages/sale_detail_page.dart';
@@ -27,6 +27,8 @@ class _ScorePageState extends State<ScorePage> {
   @override
   Widget build(BuildContext context) {
     user = Provider.of<UserProvider>(context, listen: true).user;
+    var tool = Provider.of<ToolsProvider>(context, listen: true);
+
     return Container(
       padding: EdgeInsets.all(20),
       child: SingleChildScrollView(
@@ -44,7 +46,6 @@ class _ScorePageState extends State<ScorePage> {
             SizedBox(
               height: 10,
             ),
-
             Text(
               '${user.firstName} ${user.lastName}',
               style: TextStyle(
@@ -59,6 +60,7 @@ class _ScorePageState extends State<ScorePage> {
             StepStatusCard(
               assetPath: "assets/svg/man.svg",
               isActive: true,
+              pushWhere: "MAIN",
             ),
             SizedBox(
               height: 25,
@@ -105,7 +107,7 @@ class _ScorePageState extends State<ScorePage> {
             OpportunityCard(
               assetPath: 'assets/svg/man.svg',
               title: 'Алхалт',
-              subtitle: '1км = 1GS',
+              subtitle: '${tool.walkDescription}',
               onClick: () {
                 Navigator.of(context).pushNamed(
                   StepDetailPage.routeName,
@@ -119,7 +121,7 @@ class _ScorePageState extends State<ScorePage> {
             OpportunityCard(
               assetPath: 'assets/svg/scooter.svg',
               title: 'Скүүтер',
-              subtitle: '5000төг = 1GS',
+              subtitle: '${tool.scooterDescription}',
               onClick: () {
                 Navigator.of(context).pushNamed(
                   ScooterDetailPage.routeName,

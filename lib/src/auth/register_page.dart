@@ -150,6 +150,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 20),
                       FormTextField(
+                        onComplete: () {
+                          FocusScope.of(context).nextFocus();
+                        },
                         labelText: "И-мэйл",
                         color: buttonbg,
                         hintText: 'И-мэйл',

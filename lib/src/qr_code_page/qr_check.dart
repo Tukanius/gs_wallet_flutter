@@ -188,7 +188,7 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
                                 MaterialStateProperty.all(Colors.transparent),
                           ),
                           child: const Text(
-                            "Буцах",
+                            "хаах",
                             style: TextStyle(color: dark),
                           ),
                           onPressed: () {
@@ -281,7 +281,6 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
                             },
                             buttonColor: buttonbg,
                             height: 40,
-                            circular: 100,
                             isLoading: false,
                             labelText: "Буцах",
                             textColor: white,
@@ -394,7 +393,6 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
                               child: Column(
                                 children: [
                                   CustomButton(
-                                    circular: 100,
                                     buttonColor: greentext,
                                     height: 40,
                                     isLoading: isLoading,
@@ -408,7 +406,6 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
                                     height: 10,
                                   ),
                                   CustomButton(
-                                    circular: 100,
                                     buttonColor: buttonbg,
                                     height: 40,
                                     isLoading: false,

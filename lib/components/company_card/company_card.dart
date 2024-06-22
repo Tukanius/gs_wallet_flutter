@@ -73,38 +73,39 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: widget.data.image != null
-                              ? CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage:
-                                      NetworkImage('${widget.data.image}'),
-                                  backgroundColor: greytext,
-                                )
-                              : SvgPicture.asset(
-                                  'assets/svg/avatar.svg',
-                                  height: 40,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: widget.data.image != null
+                          ? CircleAvatar(
+                              radius: 20,
+                              backgroundImage:
+                                  NetworkImage('${widget.data.image}'),
+                              backgroundColor: greytext,
+                            )
+                          : SvgPicture.asset(
+                              'assets/svg/avatar.svg',
+                              height: 40,
+                              width: 40,
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Expanded(
+                      child: Text(
+                        '${widget.data.name}',
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                         ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Text(
-                          '${widget.data.name}',
-                          style: TextStyle(
-                            color: white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 12,
                     ),
                     Text(
                       DateFormat("yyyy-MM-dd HH:mm").format(
