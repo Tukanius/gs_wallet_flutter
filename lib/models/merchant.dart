@@ -1,3 +1,4 @@
+import 'package:green_score/models/images.dart';
 import 'package:green_score/models/link.dart';
 
 part '../parts/merchant.dart';
@@ -6,7 +7,7 @@ class Merchant {
   String? id;
   String? type;
   String? name;
-  String? image;
+  Images? image;
   String? registerNo;
   String? taxNo;
   String? email;

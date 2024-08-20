@@ -94,7 +94,7 @@ class _DanVerifyPageState extends State<DanVerifyPage> {
       // var res = await UserApi().danVerify();
       var res = await Provider.of<UserProvider>(context).danVerify();
       print(res);
-      Timer(Duration(seconds: 3), () {
+      Timer(Duration(seconds: 2), () {
         setState(() {
           isLoading = false;
         });

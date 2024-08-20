@@ -131,7 +131,7 @@ class _ConfirmQrCodePageState extends State<ConfirmQrCodePage> {
                 backgroundColor: transparent,
                 leading: CustomBackButton(
                   onClick: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pushNamed(MainPage.routeName);
                   },
                 ),
                 centerTitle: true,
@@ -278,7 +278,8 @@ class _ConfirmQrCodePageState extends State<ConfirmQrCodePage> {
                             isLoading: false,
                             labelText: 'Болих',
                             onClick: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(context)
+                                  .pushNamed(MainPage.routeName);
                             },
                             textColor: white,
                           ),

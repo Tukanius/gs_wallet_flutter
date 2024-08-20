@@ -117,4 +117,11 @@ class UserProvider extends ChangeNotifier {
     isView = value;
     notifyListeners();
   }
+
+  auth() async {
+    String? token = await getAccessToken();
+    if (token != null) {
+      await clearAccessToken();
+    }
+  }
 }

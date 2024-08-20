@@ -3,7 +3,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketProvider with ChangeNotifier {
   IO.Socket? socket;
-  String url = 'https://dev-gs.zto.mn';
+  String url = 'https://gs.zto.mn';
   bool isConnected = false;
 
   initSocket(String myToken) {

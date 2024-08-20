@@ -73,7 +73,7 @@ class _UserDetailPageState extends State<UserDetailPage> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 10,
+                      vertical: 20,
                       horizontal: 20,
                     ),
                     child: Column(

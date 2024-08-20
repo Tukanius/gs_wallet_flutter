@@ -54,14 +54,223 @@ class _MainPageState extends State<MainPage>
   int currentIndex = 1;
   int count = 0;
   late TabController tabController;
-  late LocationSettings locationSettings;
   late ScrollController _scrollController;
-
   Accumlation walk = Accumlation();
   Accumlation scooter = Accumlation();
-
   List<double> stepsForLast7Days = List<double>.filled(7, 0.0);
   late StreamSubscription<StepCount> subscription;
+  late SharedPreferences prefs;
+  @override
+  afterFirstLayout(BuildContext context) async {
+    prefs = await SharedPreferences.getInstance();
+
+    if (Platform.isAndroid) requestMotionForAndroid();
+    if (Platform.isIOS) requestMotionForIos();
+
+    await requestLocation();
+
+    final loading = Provider.of<LoadingProvider>(context, listen: false);
+    final tools = Provider.of<ToolsProvider>(context, listen: false);
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      loading.loading(true);
+      walk.type = "WALK";
+      walk.code = "WALK_01";
+      walk = await ScoreApi().getStep(walk);
+
+      scooter.type = "COMMUNITY";
+      scooter.code = "SCOOTER_01";
+      scooter = await ScoreApi().getStep(scooter);
+
+      walk.lastWeekTotal != null
+          ? stepsForLast7Days = walk.lastWeekTotal!
+              .map((data) => data.totalAmount!.toDouble())
+              .toList()
+          : List<double>.filled(7, 0.0);
+
+      if (walk.balanceAmount == 0 || walk.balanceAmount == null) {
+        tools.setStepped(0);
+        prefs.setInt('GsStep', 0);
+      } else {
+        print('===PROVIDERSTEP=====');
+        prefs.setInt('GsStep', walk.balanceAmount!);
+        print(walk.balanceAmount);
+        print(prefs.getInt('GsStep'));
+        print('===PROVIDERSTEP=====');
+        tools.setStepped(walk.balanceAmount!);
+      }
+      tools.updateAll(
+        steps: stepsForLast7Days,
+        newId: walk.id!,
+        newWalkDescription:
+            '${walk.green?.threshold} алхам = ${walk.green?.scoreAmount}GS',
+        newScooterDescription:
+            '${scooter.green?.threshold} төг = ${scooter.green?.scoreAmount}GS',
+        newThreshold: walk.green!.threshold!,
+      );
+
+      count = await UserApi().getNotCount();
+      loading.loading(false);
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      loading.loading(false);
+      print(e.toString());
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Accumlation sendWalk = Accumlation();
+
+  void calculateStep() async {
+    int? previousStepCount;
+    final tool = Provider.of<ToolsProvider>(context, listen: false);
+    final socket = Provider.of<SocketProvider>(context, listen: false);
+    subscription = Pedometer.stepCountStream.listen(
+      (event) async {
+        int currentStepCount = event.steps;
+        int stepsSinceLastEvent = previousStepCount != null
+            ? currentStepCount - previousStepCount!
+            : 0;
+        previousStepCount = currentStepCount;
+
+        if (stepsSinceLastEvent > 0) {
+          tool.addDifference(stepsSinceLastEvent);
+          prefs.setInt('AccumulatedSteps', tool.accumulatedSteps);
+
+          print('=====StepSinceLastEvent====');
+          print(stepsSinceLastEvent);
+          print('=====StepSinceLastEvent====');
+        }
+        setState(() {
+          tool.addSteps(stepsSinceLastEvent);
+          print('=====ULDEGDEL====');
+          print(tool.accumulatedSteps);
+          print('=====ULDEGDEL====');
+        });
+        if (tool.accumulatedSteps > 20) {
+          sendWalk.amount = tool.accumulatedSteps;
+          tool.accumulatedSteps = tool.accumulatedSteps - tool.accumulatedSteps;
+          if (previousStepCount != null) {
+            await socket.sendStep(sendWalk.amount!, 0, 0);
+          }
+        }
+      },
+    );
+  }
+  // void calculateStep() async {
+  //   Accumlation sendWalk = Accumlation();
+  //   int? previousStepCount;
+  //   final tool = Provider.of<ToolsProvider>(context, listen: false);
+  //   final socket = Provider.of<SocketProvider>(context, listen: false);
+
+  //   print('==========prefs==========');
+  //   print(prefs.setInt('AccumulatedSteps', 123));
+  //   prefs.getInt('AccumulatedSteps')!;
+  //   print('==========prefs==========');
+
+  //   subscription = Pedometer.stepCountStream.listen(
+  //     (event) async {
+  //       int currentStepCount = event.steps;
+  //       int stepsSinceLastEvent = previousStepCount != null
+  //           ? currentStepCount - previousStepCount!
+  //           : 0;
+  //       previousStepCount = currentStepCount;
+
+  //       if (stepsSinceLastEvent > 0) {
+  //         tool.addDifference(stepsSinceLastEvent);
+  //       }
+
+  //       setState(() {
+  //         // Add the new steps to the accumulated steps
+  //         tool.addSteps(stepsSinceLastEvent);
+
+  //         // Store the updated accumulated steps in SharedPreferences
+  //         prefs.setInt('AccumulatedSteps', tool.accumulatedSteps);
+
+  //         print('==========ACCSTEP========');
+  //         print(storedSteps);
+  //         print('==========ACCSTEP========');
+
+  //         print('=====ULDEGDEL====');
+  //         print(tool.accumulatedSteps);
+  //         print('=====ULDEGDEL====');
+  //       });
+
+  //       if (tool.accumulatedSteps > 20) {
+  //         sendWalk.amount = tool.accumulatedSteps;
+  //         tool.accumulatedSteps = 0; // Reset accumulated steps
+  //         prefs.setInt('AccumulatedSteps',
+  //             tool.accumulatedSteps); // Store the reset value
+
+  //         if (previousStepCount != null) {
+  //           await socket.sendStep(sendWalk.amount!, 0, 0);
+  //         }
+  //       }
+  //     },
+  //   );
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+
+    Provider.of<SocketProvider>(context, listen: false).initSocket(
+        '${Provider.of<UserProvider>(context, listen: false).myToken}');
+    tabController = TabController(length: 3, vsync: this, initialIndex: 1);
+    tabController.addListener(_handleTabSelection);
+    KeyboardVisibilityController().onChange.listen((bool visible) {
+      setState(() {
+        _isKeyboardVisible = visible;
+      });
+    });
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    tabController.dispose();
+    super.dispose();
+  }
+
+  _handleTabSelection() {
+    setState(() {
+      currentIndex = tabController.index;
+      _scrollController.jumpTo(0);
+    });
+  }
+
+  requestLocation() async {
+    await Future.delayed(const Duration(seconds: 3));
+    LocationPermission permission = await Geolocator.checkPermission();
+    final PermissionStatus status = await Permission.location.request();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.denied) {
+        await initializeService();
+      }
+    }
+    print('====LOCATION STATUS====');
+    print(status);
+    print('====LOCATION STATUS====');
+
+    if (status == PermissionStatus.granted) {
+      await initializeService();
+    } else if (status == PermissionStatus.denied) {
+      print('Permission denied');
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      print('Permission permanently denied');
+      await initializeService();
+    }
+  }
 
   requestMotionForAndroid() async {
     try {
@@ -125,162 +334,6 @@ class _MainPageState extends State<MainPage>
   }
 
   @override
-  afterFirstLayout(BuildContext context) async {
-    Platform.isAndroid
-        ? await requestMotionForAndroid()
-        : Platform.isIOS
-            ? await requestMotionForIos()
-            : await requestMotionForAndroid();
-    await requestLocation();
-
-    final loading = Provider.of<LoadingProvider>(context, listen: false);
-    final tools = Provider.of<ToolsProvider>(context, listen: false);
-
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      loading.loading(true);
-      walk.type = "WALK";
-      walk.code = "WALK_01";
-      walk = await ScoreApi().getStep(walk);
-      scooter.type = "COMMUNITY";
-      scooter.code = "SCOOTER_01";
-      scooter = await ScoreApi().getStep(scooter);
-      walk.lastWeekTotal != null
-          ? stepsForLast7Days = walk.lastWeekTotal!
-              .map((data) => data.totalAmount!.toDouble())
-              .toList()
-          : List<double>.filled(7, 0.0);
-
-      tools.thresholdUpdate(walk.green!.threshold!);
-      tools.updateSteps(stepsForLast7Days);
-      tools.updateId(walk.id!);
-      tools.updatewalkDescription(
-          '${walk.green?.threshold} алхам = ${walk.green?.scoreAmount}GS');
-      tools.updatescooterDescription(
-          '${scooter.green?.threshold} төг = ${scooter.green?.scoreAmount}GS');
-
-      if (walk.balanceAmount == 0 || walk.balanceAmount == null) {
-        tools.setStepped(0);
-      } else {
-        print('===PROVIDERSTEP=====');
-        print(walk.balanceAmount);
-        print('===PROVIDERSTEP=====');
-        tools.setStepped(walk.balanceAmount!);
-      }
-      count = await UserApi().getNotCount();
-      loading.loading(false);
-
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      loading.loading(false);
-
-      print(e.toString());
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void calculateStep() async {
-    Accumlation sendWalk = Accumlation();
-    int? previousStepCount;
-    final tool = Provider.of<ToolsProvider>(context, listen: false);
-    final socket = Provider.of<SocketProvider>(context, listen: false);
-
-    subscription = Pedometer.stepCountStream.listen(
-      (event) async {
-        int currentStepCount = event.steps;
-        int stepsSinceLastEvent = previousStepCount != null
-            ? currentStepCount - previousStepCount!
-            : 0;
-        previousStepCount = currentStepCount;
-
-        if (stepsSinceLastEvent > 0) {
-          tool.addDifference(stepsSinceLastEvent);
-        }
-        setState(() {
-          tool.addSteps(stepsSinceLastEvent);
-          print('=====ULDEGDEL====');
-          print(tool.accumulatedSteps);
-          print('=====ULDEGDEL====');
-        });
-        if (tool.accumulatedSteps > 20) {
-          sendWalk.amount = tool.accumulatedSteps;
-          tool.accumulatedSteps = tool.accumulatedSteps - tool.accumulatedSteps;
-          if (previousStepCount != null) {
-            await socket.sendStep(sendWalk.amount!, 0, 0);
-          }
-        }
-      },
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    print('=====HELO=======');
-    print('${Provider.of<UserProvider>(context, listen: false).myToken}');
-    print('=====HELO=======');
-
-    Provider.of<SocketProvider>(context, listen: false).initSocket(
-        '${Provider.of<UserProvider>(context, listen: false).myToken}');
-    // requestStep();
-    // initializeService();
-    tabController = TabController(length: 3, vsync: this, initialIndex: 1);
-    tabController.addListener(_handleTabSelection);
-    KeyboardVisibilityController().onChange.listen((bool visible) {
-      setState(() {
-        _isKeyboardVisible = visible;
-      });
-    });
-    _scrollController = ScrollController();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    tabController.dispose();
-    super.dispose();
-  }
-
-  _handleTabSelection() {
-    setState(() {
-      currentIndex = tabController.index;
-      _scrollController.jumpTo(0);
-    });
-  }
-
-  requestLocation() async {
-    await Future.delayed(const Duration(seconds: 3));
-    LocationPermission permission = await Geolocator.checkPermission();
-    final PermissionStatus status = await Permission.location.request();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.denied) {
-        await initializeService();
-      }
-    }
-    print('====LOCATION STATUS====');
-    print(status);
-    print('====LOCATION STATUS====');
-
-    if (status == PermissionStatus.granted) {
-      await initializeService();
-    } else if (status == PermissionStatus.denied) {
-      print('Permission denied');
-    } else if (status == PermissionStatus.permanentlyDenied) {
-      print('Permission permanently denied');
-      await initializeService();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     user = Provider.of<UserProvider>(context, listen: true).user;
     return GestureDetector(
@@ -318,7 +371,7 @@ class _MainPageState extends State<MainPage>
                                       SvgPicture.asset(
                                           'assets/svg/notnumber.svg'),
                                       Text(
-                                        '${count}',
+                                        count >= 99 ? '99+' : '${count}',
                                         style: TextStyle(
                                           color: white,
                                           fontSize: 10,

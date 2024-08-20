@@ -6,6 +6,7 @@ import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/components/custom_button/profile_info_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
+import 'package:green_score/src/main_page.dart';
 import 'package:green_score/src/profile_page/dan_verify_page/dan_verify_page.dart';
 import 'package:green_score/src/profile_page/dan_verify_page/user_detail_page.dart';
 import 'package:green_score/src/profile_page/profile_edit_page/profile_edit_page.dart';
@@ -90,7 +91,8 @@ class _ProfilePageState extends State<ProfilePage> {
               backgroundColor: transparent,
               leading: CustomBackButton(
                 onClick: () {
-                  Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(MainPage.routeName);
                 },
               ),
               centerTitle: true,

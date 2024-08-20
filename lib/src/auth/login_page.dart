@@ -44,7 +44,6 @@ class _LoginPageState extends State<LoginPage> with AfterLayoutMixin {
         save.deviceToken = deviceToken;
         await Provider.of<UserProvider>(context, listen: false).login(save);
         await Provider.of<UserProvider>(context, listen: false).me(true);
-
         setState(() {
           isLoading = false;
         });

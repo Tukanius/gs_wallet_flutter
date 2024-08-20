@@ -10,6 +10,7 @@ import 'package:green_score/widget/ui/color.dart';
 import 'package:intl/intl.dart';
 import 'package:green_score/components/company_card/product_image_card.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 
 class CompanyCard extends StatefulWidget {
   final Merchant data;
@@ -79,9 +80,13 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
                       child: widget.data.image != null
                           ? CircleAvatar(
                               radius: 20,
-                              backgroundImage:
-                                  NetworkImage('${widget.data.image}'),
                               backgroundColor: greytext,
+                              child: BlurHash(
+                                color: greytext,
+                                hash: '${widget.data.image?.blurhash}',
+                                image: '${widget.data.image?.url}',
+                                imageFit: BoxFit.cover,
+                              ),
                             )
                           : SvgPicture.asset(
                               'assets/svg/avatar.svg',
@@ -194,6 +199,13 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
+                    // Container(
+                    //   height: 45,
+                    //   child: ListView(
+                    //     shrinkWrap: true,
+                    //     scrollDirection: Axis.horizontal,
+                    //   ),
+                    // ),
                     Row(
                       children: widget.data.links!
                           .map(
@@ -211,8 +223,8 @@ class _CompanyCardState extends State<CompanyCard> with AfterLayoutMixin {
                                                 : data.type == "INSTAGRAM"
                                                     ? 'assets/images/ig.png'
                                                     : data.type == "TWITTER"
-                                                        ? 'assets/images/ig.png'
-                                                        : '',
+                                                        ? 'assets/images/x.png'
+                                                        : 'assets/images/fb.png',
                                             height: 45,
                                             width: 45,
                                             fit: BoxFit.cover,

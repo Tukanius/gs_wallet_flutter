@@ -53,7 +53,12 @@ class _PassWordPageState extends State<PassWordPage> with AfterLayoutMixin {
         setState(() {
           isLoading = false;
         });
+
         await Navigator.of(context).pushNamed(SplashScreen.routeName);
+        NotifyService().showNotification(
+          title: 'Green Score',
+          body: 'Нууц үг амжилттай шинэчлэгдээ',
+        );
       } catch (e) {
         print(e.toString());
         setState(() {

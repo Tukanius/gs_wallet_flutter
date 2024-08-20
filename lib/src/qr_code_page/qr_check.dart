@@ -39,6 +39,7 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
   Order qr = Order();
   Deposit deposit = Deposit();
   bool success = false;
+
   @override
   afterFirstLayout(BuildContext context) async {
     List<String> parts = widget.data.code!.split('?');
@@ -76,13 +77,12 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
       setState(() {
         isLoading = true;
       });
-      Timer(Duration(seconds: 3), () {
+      Timer(Duration(seconds: 2), () {
         setState(() {
           isLoading = true;
         });
         onConfirm();
         Navigator.of(context).pushNamed(MainPage.routeName);
-        showSuccess(context);
       });
     } catch (e) {
       print(e.toString());
@@ -125,9 +125,6 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
       });
       deposit = await WalletApi().confirmQr(qr.id!);
 
-      setState(() {
-        isLoading = false;
-      });
       deposit.id == null
           ? Navigator.of(context).pushNamed(MainPage.routeName)
           : Navigator.of(context).pushNamed(
@@ -135,6 +132,9 @@ class _QrTransferState extends State<QrTransferPage> with AfterLayoutMixin {
               arguments: ConfirmQrCodePageArguments(data: deposit),
             );
       ;
+      setState(() {
+        isLoading = false;
+      });
     } catch (e) {
       setState(() {
         isLoading = false;

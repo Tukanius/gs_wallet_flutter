@@ -8,6 +8,7 @@ import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/user.dart';
 import 'package:green_score/provider/user_provider.dart';
 import 'package:green_score/src/profile_page/profile_edit_page/camera_page.dart';
+import 'package:green_score/src/profile_page/profile_page.dart';
 import 'package:green_score/widget/ui/backgroundshapes.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:green_score/widget/ui/form_textfield.dart';
@@ -33,6 +34,7 @@ class _ProfileEditState extends State<ProfileEdit> {
   User user = User();
   final picker = ImagePicker();
   File? image;
+  XFile? file;
   String? imageName;
   User result = User();
   ListenController listenController = ListenController();
@@ -40,11 +42,51 @@ class _ProfileEditState extends State<ProfileEdit> {
   onsubmit() async {
     if (fbkey.currentState!.saveAndValidate()) {
       try {
+        setState(() {
+          isLoading = true;
+        });
         User save = User.fromJson(fbkey.currentState!.value);
         await Provider.of<UserProvider>(context, listen: false)
             .editProfile(save, user.id!);
+
         // Navigator.of(context).pushNamed(MainPage.routeName);
-        Navigator.of(context).pop();
+
+        if (file != null) {
+          setState(() {
+            image = File(file!.path);
+            loading = true;
+          });
+          result = await UserApi().upload(file!.path);
+          print('=====RES=====');
+          print(result);
+          print('=====RES=====');
+
+          await UserApi().avatar(
+            User(avatar: result.url.toString()),
+          );
+          await Provider.of<UserProvider>(context, listen: false).me(true);
+          setState(() {
+            loading = false;
+          });
+        }
+        if (isTake == true) {
+          setState(() {
+            image = File(listenController.value!);
+          });
+          result = await UserApi().upload(listenController.value!);
+          await UserApi().avatar(
+            User(avatar: result.url.toString()),
+          );
+          await Provider.of<UserProvider>(context, listen: false).me(true);
+          setState(() {});
+          result = await UserApi().upload(listenController.value!);
+          await UserApi().avatar(
+            User(avatar: result.url.toString()),
+          );
+          await Provider.of<UserProvider>(context, listen: false).me(true);
+          setState(() {});
+        }
+        Navigator.of(context).pushNamed(ProfilePage.routeName);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: white,
@@ -70,32 +112,25 @@ class _ProfileEditState extends State<ProfileEdit> {
             ),
           ),
         );
+        // Navigator.of(context).pop();
+        setState(() {
+          isLoading = false;
+        });
       } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
         print(e.toString());
       }
     }
   }
 
   getImage(ImageSource imageSource) async {
-    XFile? file = await picker.pickImage(
+    file = await picker.pickImage(
         source: imageSource, imageQuality: 40, maxHeight: 1024);
-
     if (file != null) {
       setState(() {
-        image = File(file.path);
-        loading = true;
-      });
-      result = await UserApi().upload(file.path);
-      print('=====RES=====');
-      print(result);
-      print('=====RES=====');
-
-      await UserApi().avatar(
-        User(avatar: result.url.toString()),
-      );
-      await Provider.of<UserProvider>(context, listen: false).me(true);
-      setState(() {
-        loading = false;
+        image = File(file!.path);
       });
     }
   }
@@ -138,15 +173,34 @@ class _ProfileEditState extends State<ProfileEdit> {
     );
   }
 
+  bool isTake = false;
   @override
   void initState() {
     listenController.addListener(() async {
-      result = await UserApi().upload(listenController.value!);
-      await UserApi().avatar(
-        User(avatar: result.url.toString()),
-      );
-      await Provider.of<UserProvider>(context, listen: false).me(true);
-      setState(() {});
+      listenController.value != null
+          ? setState(() {
+              isTake = true;
+              image = File(listenController.value!);
+            })
+          : setState(() {
+              isTake = false;
+            });
+      print('=====istake=======');
+      print(isTake);
+      print('=====istake=======');
+
+      // result = await UserApi().upload(listenController.value!);
+      // await UserApi().avatar(
+      //   User(avatar: result.url.toString()),
+      // );
+      // await Provider.of<UserProvider>(context, listen: false).me(true);
+      // setState(() {});
+      // result = await UserApi().upload(listenController.value!);
+      // await UserApi().avatar(
+      //   User(avatar: result.url.toString()),
+      // );
+      // await Provider.of<UserProvider>(context, listen: false).me(true);
+      // setState(() {});
     });
     super.initState();
   }

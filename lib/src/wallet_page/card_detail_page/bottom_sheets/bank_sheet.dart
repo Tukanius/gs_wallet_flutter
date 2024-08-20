@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/custom_button/custom_button.dart';
 import 'package:green_score/models/deposit.dart';
-import 'package:green_score/src/main_page.dart';
 import 'package:green_score/widget/ui/color.dart';
 import 'package:green_score/widget/ui/form_textfield.dart';
 import 'package:green_score/api/wallet_api.dart';
@@ -54,7 +53,7 @@ showSuccess(context) async {
                               MaterialStateProperty.all(Colors.transparent),
                         ),
                         child: const Text(
-                          "Буцах",
+                          "Хаах",
                           style: TextStyle(color: dark),
                         ),
                         onPressed: () {
@@ -93,7 +92,10 @@ bank(BuildContext context, Deposit data) {
               setState(() {
                 isLoading = false;
               });
-              Navigator.of(context).pushNamed(MainPage.routeName);
+              // Navigator.of(context).pushNamed(MainPage.routeName);
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+
               showSuccess(context);
             });
 

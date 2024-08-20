@@ -17,7 +17,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
-  int isOne = 2;
   @override
   afterFirstLayout(BuildContext context) async {
     try {

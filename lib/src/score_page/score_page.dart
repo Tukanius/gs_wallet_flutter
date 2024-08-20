@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:green_score/components/opportunity_card/opportunity_card.dart';
 import 'package:green_score/components/score_status_card/step_status_card.dart';
@@ -54,6 +55,7 @@ class _ScorePageState extends State<ScorePage> {
                 fontWeight: FontWeight.w400,
               ),
             ),
+
             SizedBox(
               height: 20,
             ),

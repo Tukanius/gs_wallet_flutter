@@ -12,14 +12,12 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
     createdAt: json['createdAt'] != null ? json['createdAt'] as String : null,
     updatedAt: json['updatedAt'] != null ? json['updatedAt'] as String : null,
     images: json['images'] != null
-        ? (json['images'] as List).map((e) => ProductImage.fromJson(e)).toList()
+        ? (json['images'] as List).map((e) => Images.fromJson(e)).toList()
         : null,
     // merchant: json['merchant'] != null
     //     ? (json['merchant'] as List).map((e) => Merchant.fromJson(e)).toList()
     //     : null,
-    merchant: json['merchant'] != null
-        ? new Merchant.fromJson(json['merchant'])
-        : null,
+
     sale: json['sale'] != null ? new Sale.fromJson(json['sale']) : null,
     saleProduct: json['saleProduct'] != null
         ? new SaleProduct.fromJson(json['saleProduct'])
@@ -38,7 +36,6 @@ Map<String, dynamic> _$ProductToJson(Product instance) {
   if (instance.createdAt != null) json['createdAt'] = instance.createdAt;
   if (instance.updatedAt != null) json['updatedAt'] = instance.updatedAt;
   if (instance.images != null) json['images'] = instance.images;
-  if (instance.merchant != null) json['merchant'] = instance.merchant;
   if (instance.sale != null) json['sale'] = instance.sale;
   if (instance.saleProduct != null) json['saleProduct'] = instance.saleProduct;
 

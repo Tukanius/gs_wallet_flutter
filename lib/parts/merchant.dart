@@ -5,7 +5,9 @@ Merchant _$MerchantFromJson(Map<String, dynamic> json) {
     id: json['_id'] != null ? json['_id'] as String : null,
     type: json['type'] != null ? json['type'] as String : null,
     name: json['name'] != null ? json['name'] as String : null,
-    image: json['image'] != null ? json['image'] as String : null,
+    image: json['image'] != null
+        ? Images.fromJson(json['image'] as Map<String, dynamic>)
+        : null,
     taxNo: json['taxNo'] != null ? json['taxNo'] as String : null,
     phoneSecond:
         json['phoneSecond'] != null ? json['phoneSecond'] as String : null,
@@ -29,12 +31,11 @@ Map<String, dynamic> _$MerchantToJson(Merchant instance) {
   if (instance.id != null) json['_id'] = instance.id;
   if (instance.name != null) json['name'] = instance.name;
   if (instance.type != null) json['type'] = instance.type;
-  if (instance.image != null) json['image'] = instance.image;
   if (instance.taxNo != null) json['taxNo'] = instance.taxNo;
   if (instance.phoneSecond != null) json['phoneSecond'] = instance.phoneSecond;
   if (instance.latitude != null) json['latitude'] = instance.latitude;
   if (instance.longitude != null) json['longitude'] = instance.longitude;
-
+  if (instance.image != null) json['image'] = instance.image;
   if (instance.phone != null) json['phone'] = instance.phone;
   if (instance.address != null) json['address'] = instance.address;
   if (instance.registerNo != null) json['registerNo'] = instance.registerNo;

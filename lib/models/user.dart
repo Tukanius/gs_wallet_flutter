@@ -20,7 +20,6 @@ class User {
   String? username;
   String? address;
   String? deviceToken;
-
   String? deletedAt;
   bool? isEmailVerified;
   String? emailVerifiedDate;

@@ -55,7 +55,7 @@ showSuccess(context) async {
                               MaterialStateProperty.all(Colors.transparent),
                         ),
                         child: const Text(
-                          "Буцах",
+                          "Хаах",
                           style: TextStyle(color: dark),
                         ),
                         onPressed: () {
@@ -134,7 +134,7 @@ income(BuildContext context, String id) {
           try {
             value = int.parse(textEditingController.text);
             deposit.amount = value;
-            deposit.paymentMethod = "SOCIALPAY";
+            deposit.paymentMethod = "SOCIAL_PAY";
             deposit = await WalletApi().depositAccount(id, deposit);
             deposit = await WalletApi().depositConfirm(deposit.id!);
             setState(() {
@@ -287,68 +287,68 @@ income(BuildContext context, String id) {
                           ],
                         ),
                       ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                qpay();
-                              },
-                              child: Container(
-                                height: 52,
-                                width: 52,
-                                child: Center(
-                                  child: Image.asset(
-                                    'assets/images/qpay.png',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'Qpay',
-                              style: TextStyle(
-                                color: black,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                socialpay();
-                              },
-                              child: Container(
-                                height: 52,
-                                width: 52,
-                                child: Center(
-                                  child: Image.asset(
-                                    'assets/images/socialpay.png',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'Social Pay',
-                              style: TextStyle(
-                                color: black,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Expanded(
+                      //   child: Column(
+                      //     children: [
+                      //       GestureDetector(
+                      //         onTap: () {
+                      //           qpay();
+                      //         },
+                      //         child: Container(
+                      //           height: 52,
+                      //           width: 52,
+                      //           child: Center(
+                      //             child: Image.asset(
+                      //               'assets/images/qpay.png',
+                      //               fit: BoxFit.cover,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       SizedBox(
+                      //         height: 10,
+                      //       ),
+                      //       Text(
+                      //         'Qpay',
+                      //         style: TextStyle(
+                      //           color: black,
+                      //           fontSize: 14,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Expanded(
+                      //   child: Column(
+                      //     children: [
+                      //       GestureDetector(
+                      //         onTap: () {
+                      //           socialpay();
+                      //         },
+                      //         child: Container(
+                      //           height: 52,
+                      //           width: 52,
+                      //           child: Center(
+                      //             child: Image.asset(
+                      //               'assets/images/socialpay.png',
+                      //               fit: BoxFit.cover,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       SizedBox(
+                      //         height: 10,
+                      //       ),
+                      //       Text(
+                      //         'Social Pay',
+                      //         style: TextStyle(
+                      //           color: black,
+                      //           fontSize: 14,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],

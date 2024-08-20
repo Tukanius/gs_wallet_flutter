@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/api/product_api.dart';
 import 'package:green_score/components/back_button/back_button.dart';
@@ -207,9 +207,13 @@ class _CompanyPageState extends State<CompanyPage> with AfterLayoutMixin {
                         child: widget.data.image != null
                             ? CircleAvatar(
                                 radius: 20,
-                                backgroundImage:
-                                    NetworkImage('${widget.data.image}'),
                                 backgroundColor: greytext,
+                                child: BlurHash(
+                                  color: greytext,
+                                  hash: '${widget.data.image?.blurhash}',
+                                  image: '${widget.data.image?.url}',
+                                  imageFit: BoxFit.cover,
+                                ),
                               )
                             : SvgPicture.asset(
                                 'assets/svg/avatar.svg',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/models/product.dart';
 import 'package:green_score/widget/ui/color.dart';
@@ -40,10 +41,11 @@ class _ProductCardState extends State<ProductCard> {
                 borderRadius: BorderRadius.circular(19),
                 child: widget.data.images?.length == 0
                     ? SizedBox()
-                    : Image(
-                        image:
-                            NetworkImage('${widget.data.images!.first.image}'),
-                        fit: BoxFit.cover,
+                    : BlurHash(
+                        color: greytext,
+                        hash: '${widget.data.images?.first.blurhash}',
+                        image: '${widget.data.images?.first.url}',
+                        imageFit: BoxFit.cover,
                       ),
               ),
             ),

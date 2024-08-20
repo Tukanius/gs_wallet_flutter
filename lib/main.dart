@@ -81,9 +81,19 @@ void main() async {
 final navigatorKey = GlobalKey<NavigatorState>();
 GetIt locator = GetIt.instance;
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+  static int invalidTokenCount = 0;
 
+  static setInvalidToken(int count) {
+    invalidTokenCount = count;
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -106,7 +116,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(useMaterial3: true),
             debugShowCheckedModeBanner: false,
             initialRoute: SplashScreen.routeName,
-            navigatorKey: navigatorKey,
+            navigatorKey: locator<NavigationService>().navigatorKey,
             routes: {
               'NotificationPage': (context) => const NotificationPage(),
               'SplashScreen': (context) => const SplashScreen(),

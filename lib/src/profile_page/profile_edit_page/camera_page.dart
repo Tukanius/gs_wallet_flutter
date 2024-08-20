@@ -116,7 +116,7 @@ class _CameraPageState extends State<CameraPage> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          direction = direction == 1 ? 0 : 1;
+                          direction == 1 ? direction = 0 : direction = 1;
                           startCamera(direction);
                         });
                       },

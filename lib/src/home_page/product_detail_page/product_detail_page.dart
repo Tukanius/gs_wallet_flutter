@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:green_score/components/back_button/back_button.dart';
 import 'package:green_score/models/product.dart';
@@ -106,10 +107,16 @@ class _ProductDetailState extends State<ProductDetail> {
                                   margin: EdgeInsets.symmetric(horizontal: 5.0),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage('${data.image}'),
-                                    ),
+                                    // image: DecorationImage(
+                                    //   fit: BoxFit.cover,
+                                    //   image: NetworkImage('${data.url}'),
+                                    // ),
+                                  ),
+                                  child: BlurHash(
+                                    color: greytext,
+                                    hash: '${data.blurhash}',
+                                    image: '${data.url}',
+                                    imageFit: BoxFit.cover,
                                   ),
                                   alignment: Alignment.center,
                                 );
